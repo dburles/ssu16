@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { Flex, Box } from 'rebass';
 import Tone from 'tone';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
+import HhC from '../samples/Roland_TR-707/HhC.wav';
 import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 import BorderBox from './BorderBox';
 import Pads from './Pads.container';
@@ -19,6 +20,11 @@ const samples = [
     id: 1,
     sample: new Tone.Player(Snare1).toMaster(),
     name: 'Snare1.wav',
+  },
+  {
+    id: 2,
+    sample: new Tone.Player(HhC).toMaster(),
+    name: 'HhC.wav',
   },
 ];
 
