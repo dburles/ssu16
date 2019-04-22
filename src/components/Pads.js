@@ -7,6 +7,7 @@ const Pads = props => {
     return {
       litPad: props.litPads.includes(pos),
       litIndicator: props.litIndicators.includes(pos),
+      onPadPress: () => props.onPadPress(pos),
     };
   }
 

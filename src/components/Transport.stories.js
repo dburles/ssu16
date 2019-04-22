@@ -6,9 +6,10 @@ import Transport from './Transport';
 
 const TransportProps = {
   playing: boolean('Playing', false),
-  pattern: number('Pattern', 1),
+  pattern: number('Pattern', 0),
   onChange: action('onChange'),
   onChangeMode: action('onChangeMode'),
+  onTogglePlay: action('onTogglePlay'),
 };
 
 storiesOf('Components/Transport', module)

@@ -17,7 +17,7 @@ const Divider = styled.div`
 Divider.defaultProps = {
   p: '1px',
   mx: 3,
-  bg: 'gray',
+  bg: 'gray2',
 };
 
 const PatternText = styled.span`
@@ -29,7 +29,7 @@ const Transport = props => {
     <Flex alignItems="center" justifyContent="center">
       <Text color="silver" fontWeight="bold" fontSize={4}>
         <PatternText>P</PatternText>
-        {String(props.pattern).padStart(2, '0')}
+        {String(props.pattern + 1).padStart(2, '0')}
       </Text>
       <Divider />
       <TransportSection title="Mode">
@@ -77,7 +77,7 @@ const Transport = props => {
           <Input
             name="bpm"
             type="number"
-            width="3em"
+            width="4em"
             value={props.bpm}
             onChange={props.onChange}
           />
@@ -107,7 +107,7 @@ const Transport = props => {
       </TransportSection>
       <Divider />
       <TransportSection>
-        <Button bg="olive" py={1} px={2}>
+        <Button bg="olive" py={1} px={2} onClick={props.onTogglePlay}>
           {props.playing ? <Stop /> : <Play />}
         </Button>
       </TransportSection>
@@ -117,7 +117,7 @@ const Transport = props => {
 
 Transport.defaultProps = {
   mode: 'prf',
-  pattern: 1,
+  pattern: 0,
   bpm: 120,
   swing: 0,
 };

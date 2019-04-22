@@ -22,6 +22,7 @@ const Pad = props => {
         p="3em"
         m={2}
         borderRadius={4}
+        onClick={props.onPadPress}
       />
       <Flex justifyContent="center">
         <Indicator

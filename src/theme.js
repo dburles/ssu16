@@ -15,7 +15,7 @@ const theme = {
     fuchsia: '#f012be',
     gray: '#aaaaaa',
     gray2: '#666666',
-    darkGray: '#333333',
+    darkGray: '#444444',
     white: '#ffffff',
     black: '#111111',
     silver: '#dddddd',

@@ -15,11 +15,11 @@ const SoundPoolProps = {
     },
   ],
   onAddSamples: action('onAddSamples'),
-  onSoundClick: action('onSoundClick'),
+  onSoundPress: action('onSoundPress'),
 };
 
 storiesOf('Components/SoundPool', module)
   .add('Default', () => <SoundPool {...SoundPoolProps} />)
   .add('Selected Sound', () => (
-    <SoundPool {...SoundPoolProps} selectedSampleId={1} />
+    <SoundPool {...SoundPoolProps} activeSampleId={1} />
   ));
