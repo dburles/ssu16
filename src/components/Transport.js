@@ -20,30 +20,53 @@ Divider.defaultProps = {
   bg: 'gray',
 };
 
+const PatternText = styled.span`
+  color: ${themeGet('colors.olive')};
+`;
+
 const Transport = props => {
   return (
     <Flex alignItems="center" justifyContent="center">
       <Text color="silver" fontWeight="bold" fontSize={4}>
-        P{props.pattern}
+        <PatternText>P</PatternText>
+        {String(props.pattern).padStart(2, '0')}
       </Text>
       <Divider />
       <TransportSection title="Mode">
         <Flex>
           <Box>
             <Text color="silver">
-              <input id="prf" type="radio" /> <label htmlFor="prf">PRF</label>
+              <input
+                id="prf"
+                type="radio"
+                checked={props.mode === 'prf'}
+                onChange={props.onChangeMode}
+              />{' '}
+              <label htmlFor="prf">PRF</label>
             </Text>
           </Box>
           <Space mx={2} />
           <Box>
             <Text color="silver">
-              <input id="pat" type="radio" /> <label htmlFor="pat">PAT</label>
+              <input
+                id="pat"
+                type="radio"
+                checked={props.mode === 'pat'}
+                onChange={props.onChangeMode}
+              />{' '}
+              <label htmlFor="pat">PAT</label>
             </Text>
           </Box>
           <Space mx={2} />
           <Box>
             <Text color="silver">
-              <input id="seq" type="radio" /> <label htmlFor="seq">SEQ</label>
+              <input
+                id="seq"
+                type="radio"
+                checked={props.mode === 'seq'}
+                onChange={props.onChangeMode}
+              />{' '}
+              <label htmlFor="seq">SEQ</label>
             </Text>
           </Box>
         </Flex>
@@ -84,7 +107,7 @@ const Transport = props => {
       </TransportSection>
       <Divider />
       <TransportSection>
-        <Button bg="gray2" py={1} px={2}>
+        <Button bg="olive" py={1} px={2}>
           {props.playing ? <Stop /> : <Play />}
         </Button>
       </TransportSection>
@@ -93,7 +116,8 @@ const Transport = props => {
 };
 
 Transport.defaultProps = {
-  pattern: '01',
+  mode: 'prf',
+  pattern: 1,
   bpm: 120,
   swing: 0,
 };

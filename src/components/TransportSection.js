@@ -1,21 +1,14 @@
 import React from 'react';
-import { Flex, Text, Box } from 'rebass';
-import styled from 'styled-components';
+import { Flex, Box } from 'rebass';
 import Space from './Space';
-
-const Title = styled(Text)`
-  text-transform: uppercase;
-`;
+import Title from './Title';
 
 const TransportSection = props => {
   return (
     <Flex alignItems="center">
       {props.title ? (
         <>
-          <Title color="gray2" fontWeight="bold" fontSize={1}>
-            {props.title}
-          </Title>{' '}
-          <Space mx={2} />
+          <Title>{props.title}</Title> <Space mx={2} />
         </>
       ) : (
         undefined

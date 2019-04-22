@@ -1,8 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { ThemeProvider } from 'styled-components';
+import { Normalize } from 'styled-normalize';
 import Tone from 'tone';
+import GlobalStyle from './components/GlobalStyle'
 import Transport from './components/Transport';
 import kick from './samples/bd02.wav';
+import App from './components/App';
 
 Tone.Transport.bpm.value = 90;
 
@@ -43,4 +47,11 @@ Tone.Transport.bpm.value = 90;
     Start
   </button> */
 }
-render(<Transport />, document.getElementById('root'));
+render(
+  <ThemeProvider theme={theme}>
+    <Normalize />
+    <GlobalStyle />
+    <App />
+  </ThemeProvider>,
+  document.getElementById('root'),
+);

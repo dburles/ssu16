@@ -6,8 +6,9 @@ import Transport from './Transport';
 
 const TransportProps = {
   playing: boolean('Playing', false),
-  pattern: number('Pattern', 0),
+  pattern: number('Pattern', 1),
   onChange: action('onChange'),
+  onChangeMode: action('onChangeMode'),
 };
 
 storiesOf('Components/Transport', module)

@@ -42,7 +42,7 @@ const Pads = props => {
 
 Pads.defaultProps = {
   litPads: [],
-  litIndicators: [],
+  litIndicators: [0],
 };
 
 export default Pads;
