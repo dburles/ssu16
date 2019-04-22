@@ -106,7 +106,14 @@ const App = props => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    // https://tonejs.github.io/docs/r13/Context#latencyhint
+    // Tone.context.latencyHint = state.playing ? 'interactive' : 'fastest';
+    Tone.context.latencyHint = 'fastest';
+  }, []);
+
+  useEffect(() => {
     Tone.Transport.bpm.value = state.bpm;
+
     // Tone.Transport.loop = true;
     // Tone.Transport.loopEnd = '4m';
 
