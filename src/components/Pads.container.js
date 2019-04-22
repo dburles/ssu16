@@ -56,15 +56,19 @@ const chromaticMap = [
 const PadsContainer = ({ state, dispatch }) => {
   return (
     <Pads
-      litPads={state.steps
-        .map((step, n) => {
-          return step[state.activePattern].some(
-            sample => sample.id === state.activeSampleId,
-          )
-            ? n
-            : undefined;
-        })
-        .filter(value => value !== undefined)}
+      litPads={
+        state.mode === 'seq'
+          ? state.steps
+              .map((step, n) => {
+                return step[state.activePattern].some(
+                  sample => sample.id === state.activeSampleId,
+                )
+                  ? n
+                  : undefined;
+              })
+              .filter(value => value !== undefined)
+          : []
+      }
       litIndicators={[state.activeStep]}
       onPadPress={padId => {
         if (state.mode === 'prf') {
