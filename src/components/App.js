@@ -95,7 +95,7 @@ function reducer(state, action) {
         });
       }
 
-      console.log(state.steps);
+      // console.log(state.steps);
 
       return {
         ...state,
@@ -108,7 +108,7 @@ function reducer(state, action) {
   }
 }
 
-const App = props => {
+const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
