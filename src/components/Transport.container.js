@@ -20,6 +20,13 @@ const TransportContainer = ({ state, dispatch }) => {
           Tone.Transport.start();
         }
       }}
+      onChange={event => {
+        const { name, value } = event.target;
+        if (name === 'swing') {
+          dispatch({ type: 'swing', swing: value });
+        }
+      }}
+      swing={state.swing}
     />
   );
 };

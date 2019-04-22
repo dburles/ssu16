@@ -53,6 +53,7 @@ const initialState = {
   ],
   activeStep: 0,
   bpm: 120,
+  swing: 0,
   mode: 'prf',
 };
 
@@ -76,9 +77,6 @@ function reducer(state, action) {
     case 'active-sample':
       return { ...state, activeSampleId: action.sampleId };
     case 'toggle-step':
-      // const newSteps = [...state.steps];
-      // const currentStep = state.steps[padId];
-
       // Already active?
       if (
         state.steps[action.padId][state.activePattern].some(
@@ -103,6 +101,8 @@ function reducer(state, action) {
         ...state,
         steps: state.steps,
       };
+    case 'swing':
+      return { ...state, swing: Number(action.swing) };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -116,6 +116,10 @@ const App = props => {
     // Tone.context.latencyHint = state.playing ? 'interactive' : 'fastest';
     Tone.context.latencyHint = 'fastest';
   }, []);
+
+  useEffect(() => {
+    Tone.Transport.swing = state.swing / 100;
+  }, [state.swing]);
 
   useEffect(() => {
     Tone.Transport.bpm.value = state.bpm;

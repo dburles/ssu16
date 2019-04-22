@@ -100,7 +100,9 @@ const Transport = props => {
         <Input
           name="swing"
           type="number"
-          width="3em"
+          width="4em"
+          min="0"
+          max="100"
           value={props.swing}
           onChange={props.onChange}
         />
