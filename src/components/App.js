@@ -27,11 +27,33 @@ const initialState = {
   playing: false,
   activePattern: 0,
   activeSampleId: 0,
-  pads: [],
+  steps: [
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+  ],
   activeStep: 0,
   bpm: 120,
   mode: 'prf',
 };
+
+// hit step 0
+
+//       [step][pattern] => [{},{}]
+// steps[0][0]
 
 function reducer(state, action) {
   switch (action.type) {
@@ -47,6 +69,34 @@ function reducer(state, action) {
       return { ...state, mode: action.mode };
     case 'active-sample':
       return { ...state, activeSampleId: action.sampleId };
+    case 'toggle-step':
+      // const newSteps = [...state.steps];
+      // const currentStep = state.steps[padId];
+
+      // Already active?
+      if (
+        state.steps[action.padId][state.activePattern].some(
+          sample => sample.id === state.activeSampleId,
+        )
+      ) {
+        state.steps[action.padId][state.activePattern] = state.steps[
+          action.padId
+        ][state.activePattern].filter(
+          sample => sample.id !== state.activeSampleId,
+        );
+      } else {
+        state.steps[action.padId][state.activePattern].push({
+          id: state.activeSampleId,
+          // ... etc
+        });
+      }
+
+      console.log(state.steps);
+
+      return {
+        ...state,
+        steps: state.steps,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -63,6 +113,24 @@ const App = props => {
     const loop = new Tone.Sequence(
       (time, step) => {
         // sample.start(time);
+
+        state.steps[step].forEach(pattern => {
+          pattern.forEach(sample => {
+            // id: '...', // sample id
+            // inherit from values defined for sound
+            // then adjusted via step context
+            // volume
+            // start
+            // end
+            // filter: {
+            //   cut
+            //   res
+            // }
+
+            samples[sample.id].sample.start(time);
+          });
+        });
+
         Tone.Draw.schedule(() => {
           dispatch({ type: 'active-step', step });
         });
@@ -73,14 +141,14 @@ const App = props => {
     );
 
     loop.start();
-  }, [state.bpm]);
+  }, [state.bpm, state.steps]);
 
   return (
     <Flex>
       <BorderBox mt={3} color="gray2" borderRight="1px solid">
         <SoundPool state={state} dispatch={dispatch} />
       </BorderBox>
-      <Flex ml={3} py={2} px={4} alignItems="center" flexDirection="column">
+      <Flex ml={3} py={2} px={4} flexDirection="column">
         <Box>
           <Transport state={state} dispatch={dispatch} />
         </Box>

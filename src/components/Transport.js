@@ -49,24 +49,24 @@ const Transport = props => {
           <Box>
             <Text color="silver">
               <input
-                id="pat"
-                type="radio"
-                checked={props.mode === 'pat'}
-                onChange={props.onChangeMode}
-              />{' '}
-              <label htmlFor="pat">PAT</label>
-            </Text>
-          </Box>
-          <Space mx={2} />
-          <Box>
-            <Text color="silver">
-              <input
                 id="seq"
                 type="radio"
                 checked={props.mode === 'seq'}
                 onChange={props.onChangeMode}
               />{' '}
               <label htmlFor="seq">SEQ</label>
+            </Text>
+          </Box>
+          <Space mx={2} />
+          <Box>
+            <Text color="silver">
+              <input
+                id="pat"
+                type="radio"
+                checked={props.mode === 'pat'}
+                onChange={props.onChangeMode}
+              />{' '}
+              <label htmlFor="pat">PAT</label>
             </Text>
           </Box>
         </Flex>

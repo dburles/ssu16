@@ -53,17 +53,27 @@ const chromaticMap = [
   0.259921, 0.334839, 0.414213, 0.498307
 ];
 
-const PadsContainer = ({ state }) => {
+const PadsContainer = ({ state, dispatch }) => {
   return (
     <Pads
+      litPads={state.steps
+        .map((step, n) => {
+          return step[state.activePattern].some(
+            sample => sample.id === state.activeSampleId,
+          )
+            ? n
+            : undefined;
+        })
+        .filter(value => value !== undefined)}
       litIndicators={[state.activeStep]}
       onPadPress={padId => {
         if (state.mode === 'prf') {
-          const { sample } = state.samples.find(
-            sample => sample.id === state.activeSampleId,
-          );
+          const { sample } = state.samples[state.activeSampleId];
           sample.playbackRate = chromaticMap[padId];
           sample.start();
+        }
+        if (state.mode === 'seq') {
+          dispatch({ type: 'toggle-step', padId });
         }
       }}
     />
