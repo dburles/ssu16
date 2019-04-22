@@ -19,7 +19,7 @@ const Pad = props => {
     <Flex flexDirection="column">
       <PadBox
         bg={props.litPad ? 'silver' : 'grey'}
-        p="3em"
+        p="2.5em"
         m={2}
         borderRadius={4}
         onClick={props.onPadPress}
