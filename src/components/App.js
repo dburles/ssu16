@@ -134,11 +134,13 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    Tone.Transport.swingSubdivision = '16n';
     Tone.Transport.swing = state.swing / 100;
-  }, [state.swing]);
+    Tone.Transport.bpm.value = state.bpm;
+  }, [state.bpm, state.swing]);
 
   useEffect(() => {
-    Tone.Transport.bpm.value = state.bpm;
+    console.log(Tone.gainToDb(1));
 
     // Tone.Transport.loop = true;
     // Tone.Transport.loopEnd = '4m';
@@ -174,7 +176,7 @@ const App = () => {
     );
 
     loop.start();
-  }, [state.bpm, state.steps]);
+  }, [state.steps]);
 
   return (
     <Flex>
