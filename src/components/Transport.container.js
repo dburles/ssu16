@@ -5,8 +5,7 @@ import Transport from './Transport';
 const TransportContainer = ({ state, dispatch }) => {
   return (
     <Transport
-      onChangeMode={event => {
-        const mode = event.target.id;
+      onChangeMode={mode => {
         dispatch({ type: 'mode', mode });
       }}
       mode={state.mode}

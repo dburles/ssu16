@@ -2,8 +2,8 @@ import React from 'react';
 import Play from 'react-feather/dist/icons/play';
 import Stop from 'react-feather/dist/icons/square';
 import { Button, Flex, Box, Text } from 'rebass';
-import styled from 'styled-components';
-import { themeGet, space, color } from 'styled-system';
+import styled, { css } from 'styled-components';
+import { themeGet, space, color, borders } from 'styled-system';
 import Input from './Input';
 import Space from './Space';
 import TransportSection from './TransportSection';
@@ -24,6 +24,17 @@ const PatternText = styled.span`
   color: ${themeGet('colors.olive')};
 `;
 
+const Mode = styled(Text)`
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 4px;
+  ${props =>
+    props.active &&
+    css`
+      border-bottom: 4px solid ${themeGet('colors.red')};
+    `}
+`;
+
 const Transport = props => {
   return (
     <Flex alignItems="center" justifyContent="center">
@@ -35,39 +46,33 @@ const Transport = props => {
       <TransportSection title="Mode">
         <Flex>
           <Box>
-            <Text color="silver">
-              <input
-                id="prf"
-                type="radio"
-                checked={props.mode === 'prf'}
-                onChange={props.onChangeMode}
-              />{' '}
-              <label htmlFor="prf">PRF</label>
-            </Text>
+            <Mode
+              color="silver"
+              onClick={() => props.onChangeMode('prf')}
+              active={props.mode === 'prf'}
+            >
+              PRF
+            </Mode>
           </Box>
           <Space mx={2} />
           <Box>
-            <Text color="silver">
-              <input
-                id="seq"
-                type="radio"
-                checked={props.mode === 'seq'}
-                onChange={props.onChangeMode}
-              />{' '}
-              <label htmlFor="seq">SEQ</label>
-            </Text>
+            <Mode
+              color="silver"
+              onClick={() => props.onChangeMode('seq')}
+              active={props.mode === 'seq'}
+            >
+              SEQ
+            </Mode>
           </Box>
           <Space mx={2} />
           <Box>
-            <Text color="silver">
-              <input
-                id="pat"
-                type="radio"
-                checked={props.mode === 'pat'}
-                onChange={props.onChangeMode}
-              />{' '}
-              <label htmlFor="pat">PAT</label>
-            </Text>
+            <Mode
+              color="silver"
+              onClick={() => props.onChangeMode('pat')}
+              active={props.mode === 'pat'}
+            >
+              PAT
+            </Mode>
           </Box>
         </Flex>
       </TransportSection>
