@@ -38,7 +38,7 @@ const Mode = styled(Text)`
 
 const Transport = props => {
   return (
-    <Container py={2} px={3} alignItems="center" justifyContent="center">
+    <Container py={2} px={3} alignItems="center">
       <Text color="silver" fontWeight="bold" fontSize={4}>
         <PatternText>P</PatternText>
         {String(props.pattern + 1).padStart(2, '0')}
