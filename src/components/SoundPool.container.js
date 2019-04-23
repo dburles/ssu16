@@ -34,6 +34,24 @@ const SoundPoolContainer = ({ dispatch, state }) => {
           dispatch({ type: 'active-sample', sampleId });
         }}
         samples={state.samples}
+        onAddSamples={event => {
+          Array.from(event.target.files).forEach(file => {
+            dispatch({
+              type: 'add-sample',
+              buffer: URL.createObjectURL(file),
+              name: file.name,
+            });
+            // This also works:
+            // const reader = new FileReader();
+            // reader.readAsArrayBuffer(file);
+            // reader.onload = onloadEvent => {
+            //   const context = new AudioContext();
+            //   context.decodeAudioData(onloadEvent.target.result, buffer => {
+            //     dispatch({ type: 'add-sample', buffer, name: file.name });
+            //   });
+            // };
+          });
+        }}
       />
     </>
   );

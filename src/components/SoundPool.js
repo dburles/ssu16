@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Plus from 'react-feather/dist/icons/plus';
 import { Flex, Text } from 'rebass';
 import styled from 'styled-components';
@@ -12,13 +12,23 @@ const StyledPlus = styled(Plus)`
 `;
 
 const SoundPool = props => {
+  const filesRef = useRef();
   return (
     <Container flexDirection="column" py={3}>
+      <input
+        ref={filesRef}
+        id="addFiles"
+        type="file"
+        multiple
+        hidden
+        onChange={props.onAddSamples}
+        accept="audio/*"
+      />
       <Flex
         style={{ cursor: 'pointer' }}
         justifyContent="center"
         alignItems="center"
-        onClick={props.onAddSamples}
+        onClick={() => filesRef.current.click()}
       >
         <StyledPlus />
         <Title>Add Samples</Title>

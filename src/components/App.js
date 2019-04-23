@@ -22,32 +22,34 @@ import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
-const samples = [
-  { sample: BassDrum1, name: 'BassDrum1.wav' },
-  { sample: CowBell, name: 'CowBell.wav' },
-  { sample: HandClap, name: 'HandClap.wav' },
-  { sample: HhO, name: 'HhO.wav' },
-  { sample: LowTom, name: 'LowTom.wav' },
-  { sample: Ride, name: 'Ride.wav' },
-  { sample: Snare1, name: 'Snare1.wav' },
-  { sample: Tamb, name: 'Tamb.wav' },
-  { sample: BassDrum2, name: 'BassDrum2.wav' },
-  { sample: Crash, name: 'Crash.wav' },
-  { sample: HhC, name: 'HhC.wav' },
-  { sample: HiTom, name: 'HiTom.wav' },
-  { sample: MedTom, name: 'MedTom.wav' },
-  { sample: RimShot, name: 'RimShot.wav' },
-  { sample: Snare2, name: 'Snare2.wav' },
-].map(({ sample, name }, id) => ({
-  id,
-  sample: new Tone.Player(sample).toMaster(),
-  buffer: sample,
-  name,
-  volume: 100,
-}));
+function createSample(buffer, name, id) {
+  return {
+    id,
+    sample: new Tone.Player(buffer).toMaster(),
+    buffer,
+    name,
+    volume: 100,
+  };
+}
 
 const initialState = {
-  samples, // remove later
+  samples: [
+    { sample: BassDrum1, name: 'BassDrum1.wav' },
+    { sample: CowBell, name: 'CowBell.wav' },
+    { sample: HandClap, name: 'HandClap.wav' },
+    { sample: HhO, name: 'HhO.wav' },
+    { sample: LowTom, name: 'LowTom.wav' },
+    { sample: Ride, name: 'Ride.wav' },
+    { sample: Snare1, name: 'Snare1.wav' },
+    { sample: Tamb, name: 'Tamb.wav' },
+    { sample: BassDrum2, name: 'BassDrum2.wav' },
+    { sample: Crash, name: 'Crash.wav' },
+    { sample: HhC, name: 'HhC.wav' },
+    { sample: HiTom, name: 'HiTom.wav' },
+    { sample: MedTom, name: 'MedTom.wav' },
+    { sample: RimShot, name: 'RimShot.wav' },
+    { sample: Snare2, name: 'Snare2.wav' },
+  ].map(({ sample, name }, id) => createSample(sample, name, id)),
   playing: false,
   activePattern: 0,
   activeSampleId: 0,
@@ -132,6 +134,14 @@ function reducer(state, action) {
       return {
         ...state,
         lastPlayedPlaybackRate: action.lastPlayedPlaybackRate,
+      };
+    case 'add-sample':
+      return {
+        ...state,
+        samples: [
+          ...state.samples,
+          createSample(action.buffer, action.name, state.samples.length),
+        ],
       };
     default:
       throw new Error('Unknown dispatch action');
