@@ -17,6 +17,12 @@ const Input = styled.input`
   ${border}
   ${borderColor}
   ${borderRadius}
+  &:not(:focus) {
+    border-left-color: transparent;
+    border-right-color: transparent;
+    border-top-color: transparent;
+  }
+  outline: none;
 `;
 
 Input.defaultProps = {
@@ -25,7 +31,7 @@ Input.defaultProps = {
   py: 2,
   width: 1,
   type: 'text',
-  border: '1px solid',
+  border: '2px solid',
   borderColor: 'gray',
   borderRadius: 4,
   bg: 'darkGray',
