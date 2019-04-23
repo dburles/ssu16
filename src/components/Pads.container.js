@@ -18,15 +18,29 @@ const keyMap = {
 };
 
 const PadsContainer = ({ state, dispatch }) => {
+  function perform(padId) {
+    const { sample } = state.samples[state.activeSampleId];
+    sample.playbackRate = chromaticMap[padId];
+    sample.start();
+  }
+  function sequence(padId) {
+    dispatch({ type: 'toggle-step', padId });
+  }
+  function press(padId) {
+    if (state.mode === 'prf') {
+      perform(padId);
+    }
+    if (state.mode === 'seq') {
+      sequence(padId);
+    }
+  }
   return (
     <>
       <KeyboardEventHandler
         handleKeys={Object.keys(keyMap)}
         onKeyEvent={(key, event) => {
           event.preventDefault();
-          if (state.mode === 'seq') {
-            dispatch({ type: 'toggle-step', padId: keyMap[key] });
-          }
+          press(keyMap[key]);
         }}
       />
       <Pads
@@ -44,16 +58,7 @@ const PadsContainer = ({ state, dispatch }) => {
             : []
         }
         litIndicators={[state.activeStep]}
-        onPadPress={padId => {
-          if (state.mode === 'prf') {
-            const { sample } = state.samples[state.activeSampleId];
-            sample.playbackRate = chromaticMap[padId];
-            sample.start();
-          }
-          if (state.mode === 'seq') {
-            dispatch({ type: 'toggle-step', padId });
-          }
-        }}
+        onPadPress={press}
       />
     </>
   );

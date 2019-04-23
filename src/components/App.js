@@ -43,6 +43,7 @@ const samples = [
   sample: new Tone.Player(sample).toMaster(),
   buffer: sample,
   name,
+  volume: 100,
 }));
 
 const initialState = {
@@ -109,12 +110,15 @@ function reducer(state, action) {
 
       // console.log(state.steps);
 
-      return {
-        ...state,
-        steps: state.steps,
-      };
+      return { ...state };
     case 'swing':
       return { ...state, swing: Number(action.swing) };
+    case 'sample-volume':
+      state.samples[state.activeSampleId].volume = action.volume;
+      state.samples[state.activeSampleId].sample.volume.value = Tone.gainToDb(
+        Number(action.volume) / 100,
+      );
+      return { ...state };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -146,8 +150,6 @@ const App = () => {
   }, [state.bpm, state.swing]);
 
   useEffect(() => {
-    console.log(Tone.gainToDb(1));
-
     // Tone.Transport.loop = true;
     // Tone.Transport.loopEnd = '4m';
 
@@ -195,7 +197,7 @@ const App = () => {
           />
         </Box>
         <Flex>
-          <SampleParameters />
+          <SampleParameters state={state} dispatch={dispatch} />
           <Pads state={state} dispatch={dispatch} />
         </Flex>
       </Flex>

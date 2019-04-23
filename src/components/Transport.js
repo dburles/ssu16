@@ -48,6 +48,7 @@ const Transport = props => {
         <Flex>
           <Box>
             <Mode
+              fontWeight="bold"
               color="silver"
               onClick={() => props.onChangeMode('prf')}
               active={props.mode === 'prf'}
@@ -58,6 +59,7 @@ const Transport = props => {
           <Space mx={2} />
           <Box>
             <Mode
+              fontWeight="bold"
               color="silver"
               onClick={() => props.onChangeMode('seq')}
               active={props.mode === 'seq'}
@@ -68,6 +70,7 @@ const Transport = props => {
           <Space mx={2} />
           <Box>
             <Mode
+              fontWeight="bold"
               color="silver"
               onClick={() => props.onChangeMode('pat')}
               active={props.mode === 'pat'}

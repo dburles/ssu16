@@ -9,7 +9,13 @@ const SampleParameters = props => {
     <Container p={3}>
       <Box width={1 / 2} p={3}>
         <Title>Volume</Title>
-        <Input type="number" min={0} max={100} value={props.volume} />
+        <Input
+          type="number"
+          min={0}
+          max={100}
+          value={props.volume}
+          onChange={props.onChangeVolume}
+        />
       </Box>
       <Box width={1 / 2} p={3}>
         <Title>Pitch</Title>
