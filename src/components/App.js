@@ -51,6 +51,7 @@ const initialState = {
   playing: false,
   activePattern: 0,
   activeSampleId: 0,
+  lastPlayedPlaybackRate: 1,
   steps: [
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
@@ -74,6 +75,10 @@ const initialState = {
   swing: 0,
   mode: 'prf',
 };
+
+function volumeToDb(volume) {
+  return Tone.gainToDb(Number(volume) / 100);
+}
 
 function reducer(state, action) {
   switch (action.type) {
@@ -102,9 +107,13 @@ function reducer(state, action) {
           sample => sample.id !== state.activeSampleId,
         );
       } else {
+        const { buffer, volume } = state.samples[state.activeSampleId];
+        const sample = new Tone.Player(buffer).toMaster();
+        sample.volume.value = volumeToDb(volume);
+        sample.playbackRate = state.lastPlayedPlaybackRate;
         state.steps[action.padId][state.activePattern].push({
           id: state.activeSampleId,
-          // ... etc
+          sample,
         });
       }
 
@@ -115,10 +124,15 @@ function reducer(state, action) {
       return { ...state, swing: Number(action.swing) };
     case 'sample-volume':
       state.samples[state.activeSampleId].volume = action.volume;
-      state.samples[state.activeSampleId].sample.volume.value = Tone.gainToDb(
-        Number(action.volume) / 100,
+      state.samples[state.activeSampleId].sample.volume.value = volumeToDb(
+        action.volume,
       );
       return { ...state };
+    case 'playback-rate':
+      return {
+        ...state,
+        lastPlayedPlaybackRate: action.lastPlayedPlaybackRate,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -158,8 +172,8 @@ const App = () => {
         // sample.start(time);
 
         state.steps[step].forEach(pattern => {
-          pattern.forEach(sample => {
-            samples[sample.id].sample.start(time);
+          pattern.forEach(({ sample }) => {
+            sample.start(time);
           });
         });
 

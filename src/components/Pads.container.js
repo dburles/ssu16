@@ -22,6 +22,10 @@ const PadsContainer = ({ state, dispatch }) => {
     const { sample } = state.samples[state.activeSampleId];
     sample.playbackRate = chromaticMap[padId];
     sample.start();
+    dispatch({
+      type: 'playback-rate',
+      lastPlayedPlaybackRate: chromaticMap[padId],
+    });
   }
   function sequence(padId) {
     dispatch({ type: 'toggle-step', padId });
