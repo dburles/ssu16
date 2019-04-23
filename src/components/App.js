@@ -41,6 +41,7 @@ const samples = [
 ].map(({ sample, name }, id) => ({
   id,
   sample: new Tone.Player(sample).toMaster(),
+  buffer: sample,
   name,
 }));
 
