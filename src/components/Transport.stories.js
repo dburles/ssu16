@@ -7,7 +7,8 @@ import Transport from './Transport';
 const TransportProps = {
   playing: boolean('Playing', false),
   pattern: number('Pattern', 0),
-  onChange: action('onChange'),
+  onChangeBpm: action('onChangeBpm'),
+  onChangeSwing: action('onChangeSwing'),
   onChangeMode: action('onChangeMode'),
   onTogglePlay: action('onTogglePlay'),
 };

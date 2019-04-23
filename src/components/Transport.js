@@ -81,11 +81,10 @@ const Transport = props => {
       <TransportSection title="BPM">
         <Flex>
           <Input
-            name="bpm"
             type="number"
             width="4em"
             value={props.bpm}
-            onChange={props.onChange}
+            onChange={props.onChangeBpm}
           />
           <Space mx={1} />
           <Button
@@ -104,13 +103,12 @@ const Transport = props => {
       <TransportSection title="Swing">
         {' '}
         <Input
-          name="swing"
           type="number"
           width="4em"
           min="0"
           max="100"
           value={props.swing}
-          onChange={props.onChange}
+          onChange={props.onChangeSwing}
         />
       </TransportSection>
       <Divider />
