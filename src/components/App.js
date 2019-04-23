@@ -18,6 +18,7 @@ import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
 import Tamb from '../samples/Roland_TR-707/Tamb.wav';
 import Pads from './Pads.container';
+import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
@@ -184,6 +185,7 @@ const App = () => {
       <Box>
         <SoundPool state={state} dispatch={dispatch} />
       </Box>
+
       <Flex flexDirection="column">
         <Box>
           <Transport
@@ -192,9 +194,10 @@ const App = () => {
             togglePlay={togglePlay}
           />
         </Box>
-        <Box>
+        <Flex>
+          <SampleParameters />
           <Pads state={state} dispatch={dispatch} />
-        </Box>
+        </Flex>
       </Flex>
       <Box>Pattern or Step Context</Box>
     </Flex>

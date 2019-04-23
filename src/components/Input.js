@@ -29,7 +29,6 @@ Input.defaultProps = {
   fontSize: 1,
   px: 2,
   py: 2,
-  width: 1,
   type: 'text',
   border: '2px solid',
   borderColor: 'gray',

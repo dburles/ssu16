@@ -13,7 +13,7 @@ const Pads = props => {
   }
 
   return (
-    <Container p={5} flexDirection="column" alignItems="center">
+    <Container p={3} flexDirection="column">
       <Flex>
         <Pad {...padProps(0)} />
         <Pad {...padProps(1)} />
