@@ -18,6 +18,7 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         }}
       />
       <Transport
+        pattern={state.activePattern}
         onChangeMode={mode => {
           dispatch({ type: 'mode', mode });
         }}
