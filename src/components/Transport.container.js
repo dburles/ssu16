@@ -2,7 +2,7 @@ import React from 'react';
 import Tone from 'tone';
 import Transport from './Transport';
 
-const TransportContainer = ({ state, dispatch }) => {
+const TransportContainer = ({ state, dispatch, togglePlay }) => {
   return (
     <Transport
       onChangeMode={mode => {
@@ -11,13 +11,7 @@ const TransportContainer = ({ state, dispatch }) => {
       mode={state.mode}
       bpm={state.bpm}
       onTogglePlay={() => {
-        if (Tone.Transport.state === 'started') {
-          dispatch({ type: 'play-stop' });
-          Tone.Transport.stop();
-        } else {
-          dispatch({ type: 'play-start' });
-          Tone.Transport.start();
-        }
+        togglePlay();
       }}
       onChangeSwing={event => {
         dispatch({ type: 'swing', swing: event.target.value });

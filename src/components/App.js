@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
+import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Flex, Box } from 'rebass';
 import Tone from 'tone';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
@@ -16,10 +17,8 @@ import RimShot from '../samples/Roland_TR-707/RimShot.wav';
 import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
 import Tamb from '../samples/Roland_TR-707/Tamb.wav';
-import BorderBox from './BorderBox';
 import Pads from './Pads.container';
 import SoundPool from './SoundPool.container';
-import Space from './Space';
 import Transport from './Transport.container';
 
 const samples = [
@@ -123,6 +122,16 @@ function reducer(state, action) {
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  function togglePlay() {
+    if (state.playing) {
+      dispatch({ type: 'play-stop' });
+      Tone.Transport.stop();
+    } else {
+      dispatch({ type: 'play-start' });
+      Tone.Transport.start();
+    }
+  }
+
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
     // Tone.context.latencyHint = state.playing ? 'interactive' : 'fastest';
@@ -165,12 +174,23 @@ const App = () => {
 
   return (
     <Flex>
-      <BorderBox>
+      <KeyboardEventHandler
+        handleKeys={['space']}
+        onKeyEvent={(key, event) => {
+          event.preventDefault();
+          togglePlay();
+        }}
+      />
+      <Box>
         <SoundPool state={state} dispatch={dispatch} />
-      </BorderBox>
+      </Box>
       <Flex flexDirection="column">
         <Box>
-          <Transport state={state} dispatch={dispatch} />
+          <Transport
+            state={state}
+            dispatch={dispatch}
+            togglePlay={togglePlay}
+          />
         </Box>
         <Box>
           <Pads state={state} dispatch={dispatch} />
