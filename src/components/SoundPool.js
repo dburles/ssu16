@@ -33,7 +33,7 @@ const SoundPool = props => {
         <StyledPlus />
         <Title>Add Samples</Title>
       </Flex>
-      <Space py={3} />
+      <Space py={2} />
       {props.samples.map(sample => (
         <Text
           style={{ cursor: 'pointer' }}
