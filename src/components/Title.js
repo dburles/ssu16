@@ -6,7 +6,7 @@ const Title = styled(Text)`
 `;
 
 Title.defaultProps = {
-  color: 'olive',
+  color: 'base',
   fontWeight: 'bold',
   fontSize: 1,
 };

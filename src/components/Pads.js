@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex } from 'rebass';
+import Container from './Container';
 import Pad from './Pad';
 
 const Pads = props => {
@@ -12,7 +13,7 @@ const Pads = props => {
   }
 
   return (
-    <Flex flexDirection="column">
+    <Container p={5} flexDirection="column" alignItems="center">
       <Flex>
         <Pad {...padProps(0)} />
         <Pad {...padProps(1)} />
@@ -37,7 +38,7 @@ const Pads = props => {
         <Pad {...padProps(14)} />
         <Pad {...padProps(15)} />
       </Flex>
-    </Flex>
+    </Container>
   );
 };
 

@@ -178,14 +178,13 @@ const App = () => {
 
   return (
     <Flex>
-      <BorderBox mt={3} color="gray2" borderRight="1px solid">
+      <BorderBox>
         <SoundPool state={state} dispatch={dispatch} />
       </BorderBox>
-      <Flex ml={3} py={2} px={4} flexDirection="column">
+      <Flex flexDirection="column">
         <Box>
           <Transport state={state} dispatch={dispatch} />
         </Box>
-        <Space my={3} />
         <Box>
           <Pads state={state} dispatch={dispatch} />
         </Box>

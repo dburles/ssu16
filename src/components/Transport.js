@@ -4,6 +4,7 @@ import Stop from 'react-feather/dist/icons/square';
 import { Button, Flex, Box, Text } from 'rebass';
 import styled, { css } from 'styled-components';
 import { themeGet, space, color, borders } from 'styled-system';
+import Container from './Container';
 import Input from './Input';
 import Space from './Space';
 import TransportSection from './TransportSection';
@@ -21,7 +22,7 @@ Divider.defaultProps = {
 };
 
 const PatternText = styled.span`
-  color: ${themeGet('colors.olive')};
+  color: ${themeGet('colors.base')};
 `;
 
 const Mode = styled(Text)`
@@ -37,7 +38,7 @@ const Mode = styled(Text)`
 
 const Transport = props => {
   return (
-    <Flex alignItems="center" justifyContent="center">
+    <Container py={2} px={3} alignItems="center" justifyContent="center">
       <Text color="silver" fontWeight="bold" fontSize={4}>
         <PatternText>P</PatternText>
         {String(props.pattern + 1).padStart(2, '0')}
@@ -88,7 +89,7 @@ const Transport = props => {
           />
           <Space mx={1} />
           <Button
-            bg="darkGray"
+            bg="transparent"
             border="1px solid"
             borderColor="gray"
             fontWeight="normal"
@@ -114,11 +115,11 @@ const Transport = props => {
       </TransportSection>
       <Divider />
       <TransportSection>
-        <Button bg="olive" py={1} px={2} onClick={props.onTogglePlay}>
+        <Button bg="base" py={1} px={2} onClick={props.onTogglePlay}>
           {props.playing ? <Stop /> : <Play />}
         </Button>
       </TransportSection>
-    </Flex>
+    </Container>
   );
 };
 

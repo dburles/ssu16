@@ -3,16 +3,17 @@ import Plus from 'react-feather/dist/icons/plus';
 import { Flex, Text } from 'rebass';
 import styled from 'styled-components';
 import { themeGet } from 'styled-system';
+import Container from './Container';
 import Space from './Space';
 import Title from './Title';
 
 const StyledPlus = styled(Plus)`
-  color: ${themeGet('colors.olive')};
+  color: ${themeGet('colors.base')};
 `;
 
 const SoundPool = props => {
   return (
-    <Flex flexDirection="column">
+    <Container flexDirection="column" py={3}>
       <Flex
         style={{ cursor: 'pointer' }}
         justifyContent="center"
@@ -33,13 +34,13 @@ const SoundPool = props => {
           key={sample.id}
           onClick={() => props.onSoundPress(sample.id)}
           {...(props.activeSampleId === sample.id
-            ? { bg: 'olive', color: 'white' }
+            ? { bg: 'base', color: 'white' }
             : {})}
         >
           {sample.name}
         </Text>
       ))}
-    </Flex>
+    </Container>
   );
 };
 
