@@ -74,11 +74,6 @@ const initialState = {
   mode: 'prf',
 };
 
-// hit step 0
-
-//       [step][pattern] => [{},{}]
-// steps[0][0]
-
 function reducer(state, action) {
   switch (action.type) {
     case 'play-start':
@@ -152,17 +147,6 @@ const App = () => {
 
         state.steps[step].forEach(pattern => {
           pattern.forEach(sample => {
-            // id: '...', // sample id
-            // inherit from values defined for sound
-            // then adjusted via step context
-            // volume
-            // start
-            // end
-            // filter: {
-            //   cut
-            //   res
-            // }
-
             samples[sample.id].sample.start(time);
           });
         });
@@ -170,7 +154,7 @@ const App = () => {
         Tone.Draw.schedule(() => {
           dispatch({ type: 'active-step', step });
         });
-        console.log(time, step);
+        // console.log(time, step);
       },
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       '16n',
