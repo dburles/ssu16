@@ -99,7 +99,11 @@ function reducer(state, action) {
     case 'mode':
       return { ...state, mode: action.mode, chaining: false };
     case 'active-sample':
-      return { ...state, activeSampleId: action.sampleId };
+      return {
+        ...state,
+        activeSampleId: action.sampleId,
+        lastPlayedPlaybackRate: 1,
+      };
     case 'toggle-step':
       // Already active?
       if (
