@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Flex, Box } from 'rebass';
+import styled from 'styled-components'
 import Tone from 'tone';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
@@ -165,6 +166,11 @@ function reducer(state, action) {
   }
 }
 
+const SoundPoolWrapper = styled(Box)`
+  height: 100vh;
+  overflow: auto;
+`;
+
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -217,7 +223,28 @@ const App = () => {
   }, [state.steps]);
 
   return (
-    <Flex>
+    <>
+      <Flex>
+        <SoundPoolWrapper>
+          <SoundPool state={state} dispatch={dispatch} />
+        </SoundPoolWrapper>
+
+        <Flex flexDirection="column">
+          <Box>
+            <Transport
+              state={state}
+              dispatch={dispatch}
+              togglePlay={togglePlay}
+            />
+          </Box>
+          <Flex>
+            <SampleParameters state={state} dispatch={dispatch} />
+            <Pads state={state} dispatch={dispatch} />
+            <ContextParameters mode={state.mode} />
+          </Flex>
+        </Flex>
+      </Flex>
+
       <KeyboardEventHandler
         handleKeys={['space']}
         onKeyEvent={(key, event) => {
@@ -225,25 +252,7 @@ const App = () => {
           togglePlay();
         }}
       />
-      <Box>
-        <SoundPool state={state} dispatch={dispatch} />
-      </Box>
-
-      <Flex flexDirection="column">
-        <Box>
-          <Transport
-            state={state}
-            dispatch={dispatch}
-            togglePlay={togglePlay}
-          />
-        </Box>
-        <Flex>
-          <SampleParameters state={state} dispatch={dispatch} />
-          <Pads state={state} dispatch={dispatch} />
-          <ContextParameters mode={state.mode} />
-        </Flex>
-      </Flex>
-    </Flex>
+    </>
   );
 };
 
