@@ -17,6 +17,7 @@ import RimShot from '../samples/Roland_TR-707/RimShot.wav';
 import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
 import Tamb from '../samples/Roland_TR-707/Tamb.wav';
+import ContextParameters from './ContextParameters.container';
 import Pads from './Pads.container';
 import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
@@ -76,6 +77,9 @@ const initialState = {
   bpm: 120,
   swing: 0,
   mode: 'prf',
+  // a chain of patterns
+  patterns: [0],
+  chaining: false,
 };
 
 function volumeToDb(volume) {
@@ -93,7 +97,7 @@ function reducer(state, action) {
     case 'bpm':
       return { ...state, bpm: action.bpm };
     case 'mode':
-      return { ...state, mode: action.mode };
+      return { ...state, mode: action.mode, chaining: false };
     case 'active-sample':
       return { ...state, activeSampleId: action.sampleId };
     case 'toggle-step':
@@ -134,6 +138,15 @@ function reducer(state, action) {
       return {
         ...state,
         lastPlayedPlaybackRate: action.lastPlayedPlaybackRate,
+      };
+    case 'pattern-select':
+      return {
+        ...state,
+        activePattern: action.padId,
+        chaining: true,
+        patterns: state.chaining
+          ? [...state.patterns, action.padId]
+          : [action.padId],
       };
     case 'add-sample':
       return {
@@ -223,6 +236,7 @@ const App = () => {
         <Flex>
           <SampleParameters state={state} dispatch={dispatch} />
           <Pads state={state} dispatch={dispatch} />
+          <ContextParameters mode={state.mode} />
         </Flex>
       </Flex>
     </Flex>

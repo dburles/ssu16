@@ -30,14 +30,37 @@ const PadsContainer = ({ state, dispatch }) => {
   function sequence(padId) {
     dispatch({ type: 'toggle-step', padId });
   }
-  function press(padId) {
-    if (state.mode === 'prf') {
-      perform(padId);
-    }
-    if (state.mode === 'seq') {
-      sequence(padId);
-    }
+  function pattern(padId) {
+    dispatch({ type: 'pattern-select', padId });
   }
+  const modeFuncMap = {
+    prf: perform,
+    seq: sequence,
+    pat: pattern,
+  };
+  function press(padId) {
+    modeFuncMap[state.mode](padId);
+  }
+
+  function litPads() {
+    if (state.mode === 'seq') {
+      return state.steps
+        .map((step, n) => {
+          return step[state.activePattern].some(
+            sample => sample.id === state.activeSampleId,
+          )
+            ? n
+            : undefined;
+        })
+        .filter(value => value !== undefined);
+    }
+    if (state.mode === 'pat') {
+      return state.patterns;
+    }
+
+    return [];
+  }
+
   return (
     <>
       <KeyboardEventHandler
@@ -48,19 +71,7 @@ const PadsContainer = ({ state, dispatch }) => {
         }}
       />
       <Pads
-        litPads={
-          state.mode === 'seq'
-            ? state.steps
-                .map((step, n) => {
-                  return step[state.activePattern].some(
-                    sample => sample.id === state.activeSampleId,
-                  )
-                    ? n
-                    : undefined;
-                })
-                .filter(value => value !== undefined)
-            : []
-        }
+        litPads={litPads()}
         litIndicators={[state.activeStep]}
         onPadPress={press}
       />
