@@ -199,7 +199,6 @@ const App = () => {
           <Pads state={state} dispatch={dispatch} />
         </Flex>
       </Flex>
-      <Box>Pattern or Step Context</Box>
     </Flex>
   );
 };
