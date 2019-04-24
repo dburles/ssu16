@@ -17,7 +17,7 @@ const keyMap = {
   'shift+z': 12, 'shift+x': 13, 'shift+c': 14, 'shift+v': 15,
 };
 
-const PadsContainer = ({ state, dispatch }) => {
+const PadsContainer = ({ state, dispatch, activeStep }) => {
   function perform(padId) {
     const { sample } = state.samples[state.activeSampleId];
     sample.playbackRate = chromaticMap[padId];
@@ -44,36 +44,34 @@ const PadsContainer = ({ state, dispatch }) => {
 
   function litPads() {
     if (state.mode === 'seq') {
-      return state.steps
+      return state.patterns[state.activePattern]
         .map((step, n) => {
-          return step[state.activePattern].some(
-            sample => sample.id === state.activeSampleId,
-          )
+          return step.some(sample => sample.id === state.activeSampleId)
             ? n
             : undefined;
         })
         .filter(value => value !== undefined);
     }
     if (state.mode === 'pat') {
-      return state.patterns;
+      return state.patternChain;
     }
 
     return [];
   }
 
   function litIndicators() {
-    if (state.mode === 'pat') {
-      const lit = [];
-
-      state.steps.forEach((step, n) => {
-        console.log(step[n], n);
-        if (step[n].length > 0) {
-          lit.push(n);
-        }
-      });
-      return lit;
-    }
-    return [state.activeStep];
+    // TODO
+    // if (state.mode === 'pat') {
+    //   const lit = [];
+    //   state.patterns.forEach((step, n) => {
+    //     // console.log(step[n], n);
+    //     if (step[n].length > 0) {
+    //       lit.push(n);
+    //     }
+    //   });
+    //   return lit;
+    // }
+    return [activeStep];
   }
 
   return (

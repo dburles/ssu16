@@ -19,6 +19,7 @@ import RimShot from '../samples/Roland_TR-707/RimShot.wav';
 import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
 import Tamb from '../samples/Roland_TR-707/Tamb.wav';
+import State from '../utils/tinystate';
 import ContextParameters from './ContextParameters.container';
 import Pads from './Pads.container';
 import SampleParameters from './SampleParameters.container';
@@ -38,26 +39,22 @@ function createSample(buffer, name, id) {
 const initialState = {
   samples: [
     { sample: BassDrum1, name: 'BassDrum1.wav' },
-    // { sample: CowBell, name: 'CowBell.wav' },
-    // { sample: HandClap, name: 'HandClap.wav' },
-    // { sample: HhO, name: 'HhO.wav' },
-    // { sample: LowTom, name: 'LowTom.wav' },
-    // { sample: Ride, name: 'Ride.wav' },
-    // { sample: Snare1, name: 'Snare1.wav' },
-    // { sample: Tamb, name: 'Tamb.wav' },
-    // { sample: BassDrum2, name: 'BassDrum2.wav' },
-    // { sample: Crash, name: 'Crash.wav' },
-    // { sample: HhC, name: 'HhC.wav' },
-    // { sample: HiTom, name: 'HiTom.wav' },
-    // { sample: MedTom, name: 'MedTom.wav' },
-    // { sample: RimShot, name: 'RimShot.wav' },
-    // { sample: Snare2, name: 'Snare2.wav' },
+    { sample: CowBell, name: 'CowBell.wav' },
+    { sample: HandClap, name: 'HandClap.wav' },
+    { sample: HhO, name: 'HhO.wav' },
+    { sample: LowTom, name: 'LowTom.wav' },
+    { sample: Ride, name: 'Ride.wav' },
+    { sample: Snare1, name: 'Snare1.wav' },
+    { sample: Tamb, name: 'Tamb.wav' },
+    { sample: BassDrum2, name: 'BassDrum2.wav' },
+    { sample: Crash, name: 'Crash.wav' },
+    { sample: HhC, name: 'HhC.wav' },
+    { sample: HiTom, name: 'HiTom.wav' },
+    { sample: MedTom, name: 'MedTom.wav' },
+    { sample: RimShot, name: 'RimShot.wav' },
+    { sample: Snare2, name: 'Snare2.wav' },
   ].map(({ sample, name }, id) => createSample(sample, name, id)),
-  playing: false,
-  activePattern: 0,
-  activeSampleId: 0,
-  lastPlayedPlaybackRate: 1,
-  steps: [
+  patterns: [
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
@@ -75,12 +72,14 @@ const initialState = {
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
   ],
-  activeStep: 0,
+  playing: false,
+  activePattern: 0,
+  activeSampleId: 0,
+  lastPlayedPlaybackRate: 1,
   bpm: 120,
   swing: 0,
   mode: 'prf',
-  // a chain of patterns
-  patterns: [0],
+  patternChain: [0],
   chaining: false,
 };
 
@@ -94,8 +93,6 @@ function reducer(state, action) {
       return { ...state, playing: true };
     case 'play-stop':
       return { ...state, playing: false };
-    case 'active-step':
-      return { ...state, activeStep: action.step };
     case 'bpm':
       return { ...state, bpm: action.bpm };
     case 'mode':
@@ -108,33 +105,28 @@ function reducer(state, action) {
       };
     case 'toggle-step':
       return produce(state, draftState => {
-        // Already active?
         if (
-          draftState.steps[action.padId][draftState.activePattern].some(
-            sample => sample.id === draftState.activeSampleId,
+          // Already active?
+          draftState.patterns[state.activePattern][action.padId].some(
+            sample => sample.id === state.activeSampleId,
           )
         ) {
-          draftState.steps[action.padId][
-            draftState.activePattern
-          ] = draftState.steps[action.padId][draftState.activePattern].filter(
-            sample => sample.id !== draftState.activeSampleId,
+          draftState.patterns[state.activePattern][
+            action.padId
+          ] = state.patterns[state.activePattern][action.padId].filter(
+            sample => sample.id !== state.activeSampleId,
           );
         } else {
-          const { buffer, volume } = draftState.samples[
-            draftState.activeSampleId
-          ];
+          const { buffer, volume } = state.samples[state.activeSampleId];
           const sample = new Tone.Player(buffer).toMaster();
           sample.volume.value = volumeToDb(volume);
-          sample.playbackRate = draftState.lastPlayedPlaybackRate;
-          draftState.steps[action.padId][draftState.activePattern].push({
-            id: draftState.activeSampleId,
+          sample.playbackRate = state.lastPlayedPlaybackRate;
+          draftState.patterns[state.activePattern][action.padId].push({
+            id: state.activeSampleId,
             sample,
           });
         }
-
-        // console.log(state.steps);
       });
-
     case 'swing':
       return { ...state, swing: Number(action.swing) };
     case 'sample-volume':
@@ -154,8 +146,8 @@ function reducer(state, action) {
         ...state,
         activePattern: action.padId,
         chaining: true,
-        patterns: state.chaining
-          ? [...state.patterns, action.padId]
+        patternChain: state.chaining
+          ? [...state.patternChain, action.padId]
           : [action.padId],
       };
     case 'add-sample':
@@ -175,6 +167,68 @@ const SoundPoolWrapper = styled(Box)`
   height: 100vh;
   overflow-y: auto;
 `;
+
+Tone.Transport.swingSubdivision = '16n';
+// Tone.Transport.loop = true;
+// Tone.Transport.loopEnd = '1';
+
+const mutableState = {
+  // patterns[pattern][padId][{sample}] => createSample(...)
+  // patterns [
+  //   pattern [
+  //     pad [
+  //       sound,
+  //       sound,
+  //     ],
+  //     pad [
+  //     ]
+  //     pad [
+  //       sound
+  //     ]
+  //   ],
+  //   pattern [
+  //   ]
+  // ]
+  patterns: [
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+  ],
+  activePattern: 0,
+};
+
+const activeStep = State(0);
+
+const loop = new Tone.Sequence(
+  (time, step) => {
+    mutableState.patterns[mutableState.activePattern][step].forEach(
+      ({ sample }) => {
+        sample.start(time);
+      },
+    );
+    Tone.Draw.schedule(() => {
+      activeStep.set(step);
+    });
+    // console.log(time, step);
+  },
+  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+  '16n',
+);
+
+loop.start();
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -196,36 +250,21 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    Tone.Transport.swingSubdivision = '16n';
     Tone.Transport.swing = state.swing / 100;
     Tone.Transport.bpm.value = state.bpm;
-  }, [state.bpm, state.swing]);
+    mutableState.activePattern = state.activePattern;
+  }, [state.bpm, state.swing, state.activePattern]);
 
   useEffect(() => {
-    // Tone.Transport.loop = true;
-    // Tone.Transport.loopEnd = '4m';
+    mutableState.patterns = state.patterns;
+  });
 
-    const loop = new Tone.Sequence(
-      (time, step) => {
-        // sample.start(time);
-
-        state.steps[step].forEach(pattern => {
-          pattern.forEach(({ sample }) => {
-            sample.start(time);
-          });
-        });
-
-        Tone.Draw.schedule(() => {
-          dispatch({ type: 'active-step', step });
-        });
-        // console.log(time, step);
-      },
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-      '16n',
-    );
-
-    loop.start();
-  }, [state.steps]);
+  // useEffect(() => {
+  //   Tone.Transport.scheduleOnce(time => {
+  //     console.log(time);
+  //     state.samples[0].sample.start();
+  //   }, 0);
+  // });
 
   return (
     <>
@@ -243,7 +282,11 @@ const App = () => {
             />
           </Box>
           <Flex>
-            <Pads state={state} dispatch={dispatch} />
+            <Pads
+              state={state}
+              dispatch={dispatch}
+              activeStep={activeStep.get()}
+            />
             <ContextParameters mode={state.mode} />
           </Flex>
           <SampleParameters state={state} dispatch={dispatch} />
@@ -261,4 +304,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default activeStep()(App);
