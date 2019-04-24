@@ -19,16 +19,14 @@ const Pad = props => {
     <Flex flexDirection="column">
       <PadBox
         bg={props.litPad ? 'silver' : 'grey'}
-        p="2.5em"
+        p="2em"
         m={2}
         borderRadius={4}
         onClick={props.onPadPress}
       />
       <Flex justifyContent="center">
         <Indicator
-          width={2}
-          px={2}
-          py={1}
+          p="3px"
           borderRadius={5}
           border="1px solid"
           {...(props.litIndicator
