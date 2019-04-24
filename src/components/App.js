@@ -253,11 +253,8 @@ const App = () => {
     Tone.Transport.swing = state.swing / 100;
     Tone.Transport.bpm.value = state.bpm;
     mutableState.activePattern = state.activePattern;
-  }, [state.bpm, state.swing, state.activePattern]);
-
-  useEffect(() => {
     mutableState.patterns = state.patterns;
-  });
+  }, [state.bpm, state.swing, state.activePattern, state.patterns]);
 
   // useEffect(() => {
   //   Tone.Transport.scheduleOnce(time => {
