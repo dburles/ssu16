@@ -61,6 +61,20 @@ const PadsContainer = ({ state, dispatch }) => {
     return [];
   }
 
+  function litIndicators() {
+    if (state.mode === 'pat') {
+      debugger;
+      const lit = [];
+      return state.steps.forEach((step, n) => {
+        if (step[n] !== undefined) {
+          lit.push(n);
+        }
+      });
+      return lit;
+    }
+    return [state.activeStep];
+  }
+
   return (
     <>
       <KeyboardEventHandler
@@ -72,7 +86,7 @@ const PadsContainer = ({ state, dispatch }) => {
       />
       <Pads
         litPads={litPads()}
-        litIndicators={[state.activeStep]}
+        litIndicators={litIndicators()}
         onPadPress={press}
       />
     </>
