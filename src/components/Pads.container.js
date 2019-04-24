@@ -63,10 +63,11 @@ const PadsContainer = ({ state, dispatch }) => {
 
   function litIndicators() {
     if (state.mode === 'pat') {
-      debugger;
       const lit = [];
-      return state.steps.forEach((step, n) => {
-        if (step[n] !== undefined) {
+
+      state.steps.forEach((step, n) => {
+        console.log(step[n], n);
+        if (step[n].length > 0) {
           lit.push(n);
         }
       });

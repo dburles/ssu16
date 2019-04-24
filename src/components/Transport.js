@@ -50,6 +50,17 @@ const Transport = props => {
             <Mode
               fontWeight="bold"
               color="silver"
+              onClick={() => props.onChangeMode('ass')}
+              active={props.mode === 'ass'}
+            >
+              ASS
+            </Mode>
+          </Box>
+          <Space mx={2} />
+          <Box>
+            <Mode
+              fontWeight="bold"
+              color="silver"
               onClick={() => props.onChangeMode('prf')}
               active={props.mode === 'prf'}
             >
@@ -78,6 +89,18 @@ const Transport = props => {
               PAT
             </Mode>
           </Box>
+          <Space mx={2} />
+          <Box>
+            <Mode
+              fontWeight="bold"
+              color="silver"
+              onClick={() => props.onChangeMode('rec')}
+              active={props.mode === 'rec'}
+            >
+              REC
+            </Mode>
+          </Box>
+          <Space mx={2} />
         </Flex>
       </TransportSection>
       <Divider />

@@ -1,3 +1,4 @@
+import produce from 'immer';
 import React, { useReducer, useEffect } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Flex, Box } from 'rebass';
@@ -57,22 +58,22 @@ const initialState = {
   activeSampleId: 0,
   lastPlayedPlaybackRate: 1,
   steps: [
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
-    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
   ],
   activeStep: 0,
   bpm: 120,
@@ -106,39 +107,43 @@ function reducer(state, action) {
         lastPlayedPlaybackRate: 1,
       };
     case 'toggle-step':
-      // Already active?
-      if (
-        state.steps[action.padId][state.activePattern].some(
-          sample => sample.id === state.activeSampleId,
-        )
-      ) {
-        state.steps[action.padId][state.activePattern] = state.steps[
-          action.padId
-        ][state.activePattern].filter(
-          sample => sample.id !== state.activeSampleId,
-        );
-      } else {
-        const { buffer, volume } = state.samples[state.activeSampleId];
-        const sample = new Tone.Player(buffer).toMaster();
-        sample.volume.value = volumeToDb(volume);
-        sample.playbackRate = state.lastPlayedPlaybackRate;
-        state.steps[action.padId][state.activePattern].push({
-          id: state.activeSampleId,
-          sample,
-        });
-      }
+      return produce(state, draftState => {
+        // Already active?
+        if (
+          draftState.steps[action.padId][draftState.activePattern].some(
+            sample => sample.id === draftState.activeSampleId,
+          )
+        ) {
+          draftState.steps[action.padId][
+            draftState.activePattern
+          ] = draftState.steps[action.padId][draftState.activePattern].filter(
+            sample => sample.id !== draftState.activeSampleId,
+          );
+        } else {
+          const { buffer, volume } = draftState.samples[
+            draftState.activeSampleId
+          ];
+          const sample = new Tone.Player(buffer).toMaster();
+          sample.volume.value = volumeToDb(volume);
+          sample.playbackRate = draftState.lastPlayedPlaybackRate;
+          draftState.steps[action.padId][draftState.activePattern].push({
+            id: draftState.activeSampleId,
+            sample,
+          });
+        }
 
-      // console.log(state.steps);
+        // console.log(state.steps);
+      });
 
-      return { ...state };
     case 'swing':
       return { ...state, swing: Number(action.swing) };
     case 'sample-volume':
-      state.samples[state.activeSampleId].volume = action.volume;
-      state.samples[state.activeSampleId].sample.volume.value = volumeToDb(
-        action.volume,
-      );
-      return { ...state };
+      return produce(state, draftState => {
+        draftState.samples[draftState.activeSampleId].volume = action.volume;
+        draftState.samples[
+          draftState.activeSampleId
+        ].sample.volume.value = volumeToDb(action.volume);
+      });
     case 'playback-rate':
       return {
         ...state,
