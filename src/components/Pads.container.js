@@ -26,6 +26,9 @@ const PadsContainer = ({ state, dispatch, activeStep }) => {
       type: 'playback-rate',
       lastPlayedPlaybackRate: chromaticMap[padId],
     });
+    if (state.recordingPerf) {
+      dispatch({ type: 'toggle-step', padId: activeStep });
+    }
   }
   function sequence(padId) {
     dispatch({ type: 'toggle-step', padId });

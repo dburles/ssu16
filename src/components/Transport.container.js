@@ -13,8 +13,21 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
     <>
       <KeyboardEventHandler
         handleKeys={['p', '[', ']']}
-        onKeyEvent={(key, event) => {
+        onKeyEvent={key => {
           dispatch({ type: 'mode', mode: modeKeyMap[key] });
+        }}
+      />
+      <KeyboardEventHandler
+        handleKeys={['space']}
+        onKeyEvent={(key, event) => {
+          event.preventDefault();
+          togglePlay();
+        }}
+      />
+      <KeyboardEventHandler
+        handleKeys={['r']}
+        onKeyEvent={() => {
+          dispatch({ type: 'record-perf-toggle' });
         }}
       />
       <Transport
@@ -24,8 +37,13 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         }}
         mode={state.mode}
         bpm={state.bpm}
+        playing={state.playing}
+        recordingPerf={state.recordingPerf}
         onTogglePlay={() => {
           togglePlay();
+        }}
+        onToggleRecord={() => {
+          dispatch({ type: 'record-perf-toggle' });
         }}
         onChangeSwing={event => {
           dispatch({ type: 'swing', swing: event.target.value });

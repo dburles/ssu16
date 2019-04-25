@@ -1,6 +1,5 @@
 import produce from 'immer';
 import React, { useReducer, useEffect } from 'react';
-import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { Flex, Box } from 'rebass';
 import styled from 'styled-components';
 import Tone from 'tone';
@@ -97,6 +96,7 @@ const initialState = {
   mode: 'prf',
   patternChain: [0],
   chaining: false,
+  recordingPerf: false,
 };
 
 function volumeToDb(volume) {
@@ -104,6 +104,7 @@ function volumeToDb(volume) {
 }
 
 function reducer(state, action) {
+  console.log(action);
   switch (action.type) {
     case 'play-start':
       return { ...state, playing: true };
@@ -173,6 +174,11 @@ function reducer(state, action) {
           ...state.samples,
           createSample(action.buffer, action.name, state.samples.length),
         ],
+      };
+    case 'record-perf-toggle':
+      return {
+        ...state,
+        recordingPerf: !state.recordingPerf,
       };
     default:
       throw new Error('Unknown dispatch action');
@@ -247,40 +253,30 @@ const App = () => {
   // });
 
   return (
-    <>
-      <Flex>
-        <SoundPoolWrapper>
-          <SoundPool state={state} dispatch={dispatch} />
-        </SoundPoolWrapper>
+    <Flex>
+      <SoundPoolWrapper>
+        <SoundPool state={state} dispatch={dispatch} />
+      </SoundPoolWrapper>
 
-        <Flex flexDirection="column">
-          <Box>
-            <Transport
-              state={state}
-              dispatch={dispatch}
-              togglePlay={togglePlay}
-            />
-          </Box>
-          <Flex>
-            <Pads
-              state={state}
-              dispatch={dispatch}
-              activeStep={activeStep.get()}
-            />
-            <ContextParameters mode={state.mode} />
-          </Flex>
-          <SampleParameters state={state} dispatch={dispatch} />
+      <Flex flexDirection="column">
+        <Box>
+          <Transport
+            state={state}
+            dispatch={dispatch}
+            togglePlay={togglePlay}
+          />
+        </Box>
+        <Flex>
+          <Pads
+            state={state}
+            dispatch={dispatch}
+            activeStep={activeStep.get()}
+          />
+          <ContextParameters mode={state.mode} />
         </Flex>
+        <SampleParameters state={state} dispatch={dispatch} />
       </Flex>
-
-      <KeyboardEventHandler
-        handleKeys={['space']}
-        onKeyEvent={(key, event) => {
-          event.preventDefault();
-          togglePlay();
-        }}
-      />
-    </>
+    </Flex>
   );
 };
 

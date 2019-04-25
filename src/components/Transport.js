@@ -1,9 +1,10 @@
 import React from 'react';
+import Circle from 'react-feather/dist/icons/circle';
 import Play from 'react-feather/dist/icons/play';
 import Stop from 'react-feather/dist/icons/square';
 import { Button, Flex, Box, Text } from 'rebass';
 import styled, { css } from 'styled-components';
-import { themeGet, space, color, borders } from 'styled-system';
+import { themeGet, space, color } from 'styled-system';
 import Container from './Container';
 import Input from './Input';
 import Space from './Space';
@@ -139,8 +140,24 @@ const Transport = props => {
       </TransportSection>
       <Divider />
       <TransportSection>
-        <Button bg="base" py={1} px={2} onClick={props.onTogglePlay}>
+        <Button
+          bg={props.playing ? 'base' : 'gray'}
+          py={1}
+          px={2}
+          onClick={props.onTogglePlay}
+        >
           {props.playing ? <Stop /> : <Play />}
+        </Button>
+      </TransportSection>
+      <Space mx={1} />
+      <TransportSection>
+        <Button
+          bg={props.recordingPerf ? 'red' : 'gray'}
+          py={1}
+          px={2}
+          onClick={props.onToggleRecord}
+        >
+          {props.recordingPerf ? <Stop /> : <Circle />}
         </Button>
       </TransportSection>
     </Container>
