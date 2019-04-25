@@ -26,7 +26,7 @@ const PadsContainer = ({ state, dispatch, activeStep }) => {
       type: 'playback-rate',
       lastPlayedPlaybackRate: chromaticMap[padId],
     });
-    if (state.recordingPerf) {
+    if (state.recordingPrf) {
       dispatch({ type: 'toggle-step', padId: activeStep });
     }
   }
@@ -46,7 +46,7 @@ const PadsContainer = ({ state, dispatch, activeStep }) => {
   }
 
   function litPads() {
-    if (state.mode === 'seq') {
+    if (state.mode === 'seq' || state.mode === 'prf') {
       return state.patterns[state.activePattern]
         .map((step, n) => {
           return step.some(sample => sample.id === state.activeSampleId)

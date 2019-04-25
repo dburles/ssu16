@@ -38,7 +38,7 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         mode={state.mode}
         bpm={state.bpm}
         playing={state.playing}
-        recordingPerf={state.recordingPerf}
+        recordingPrf={state.recordingPrf}
         onTogglePlay={() => {
           togglePlay();
         }}

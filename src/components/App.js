@@ -96,7 +96,7 @@ const initialState = {
   mode: 'prf',
   patternChain: [0],
   chaining: false,
-  recordingPerf: false,
+  recordingPrf: false,
 };
 
 function volumeToDb(volume) {
@@ -178,7 +178,7 @@ function reducer(state, action) {
     case 'record-perf-toggle':
       return {
         ...state,
-        recordingPerf: !state.recordingPerf,
+        recordingPrf: !state.recordingPrf,
       };
     default:
       throw new Error('Unknown dispatch action');

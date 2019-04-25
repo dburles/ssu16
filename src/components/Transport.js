@@ -152,12 +152,12 @@ const Transport = props => {
       <Space mx={1} />
       <TransportSection>
         <Button
-          bg={props.recordingPerf ? 'red' : 'gray'}
+          bg={props.recordingPrf ? 'red' : 'gray'}
           py={1}
           px={2}
           onClick={props.onToggleRecord}
         >
-          {props.recordingPerf ? <Stop /> : <Circle />}
+          {props.recordingPrf ? <Stop /> : <Circle />}
         </Button>
       </TransportSection>
     </Container>
