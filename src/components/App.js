@@ -32,6 +32,7 @@ function createSample(buffer, name, id) {
     buffer,
     name,
     volume: 80,
+    start: 0,
   };
 }
 
@@ -93,7 +94,7 @@ const initialState = {
   lastPlayedPlaybackRate: 1,
   bpm: 120,
   swing: 0,
-  mode: 'prf',
+  mode: 'seq',
   patternChain: [0],
   chaining: false,
   recordingPrf: false,
@@ -135,13 +136,14 @@ function reducer(state, action) {
             sample => sample.id !== state.activeSampleId,
           );
         } else {
-          const { buffer, volume } = state.samples[state.activeSampleId];
+          const { buffer, volume, start } = state.samples[state.activeSampleId];
           const sample = new Tone.Player(buffer).toMaster();
           sample.volume.value = volumeToDb(volume);
           sample.playbackRate = state.lastPlayedPlaybackRate;
           draftState.patterns[state.activePattern][action.padId].push({
             id: state.activeSampleId,
             sample,
+            start,
           });
         }
       });
@@ -186,6 +188,12 @@ function reducer(state, action) {
         ...state,
         recordingAudio: !state.recordingAudio,
       };
+    case 'sample-start-point':
+      return produce(state, draftState => {
+        draftState.samples[state.activeSampleId].start = Number(
+          action.position,
+        );
+      });
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -194,6 +202,7 @@ function reducer(state, action) {
 const SoundPoolWrapper = styled(Box)`
   height: 100vh;
   overflow-y: auto;
+  min-width: 200px;
 `;
 
 Tone.Transport.swingSubdivision = '16n';
@@ -210,8 +219,8 @@ const activeStep = State(0);
 const loop = new Tone.Sequence(
   (time, step) => {
     mutableState.patterns[mutableState.activePattern][step].forEach(
-      ({ sample }) => {
-        sample.start(time);
+      ({ sample, start }) => {
+        sample.start(time, start / 1000);
       },
     );
     Tone.Draw.schedule(() => {
@@ -273,6 +282,7 @@ const App = () => {
           />
         </Box>
         <Flex>
+          <SampleParameters state={state} dispatch={dispatch} />
           <Pads
             state={state}
             dispatch={dispatch}
@@ -280,7 +290,6 @@ const App = () => {
           />
           <ContextParameters mode={state.mode} />
         </Flex>
-        <SampleParameters state={state} dispatch={dispatch} />
       </Flex>
     </Flex>
   );

@@ -2,12 +2,17 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch }) => {
+  const { volume, start } = state.samples[state.activeSampleId];
   return (
     <SampleParameters
-      volume={state.samples[state.activeSampleId].volume}
+      volume={volume}
       onChangeVolume={event => {
         dispatch({ type: 'sample-volume', volume: event.target.value });
       }}
+      onChangeStartPoint={event => {
+        dispatch({ type: 'sample-start-point', position: event.target.value });
+      }}
+      startPoint={start}
     />
   );
 };

@@ -26,9 +26,10 @@ const keyMapPrf = {
 
 const PadsContainer = ({ state, dispatch, activeStep }) => {
   function perform(padId) {
-    const { sample } = state.samples[state.activeSampleId];
+    const { sample, start } = state.samples[state.activeSampleId];
+    console.log(state.samples[state.activeSampleId]);
     sample.playbackRate = chromaticMap[padId];
-    sample.start();
+    sample.start(undefined, start / 1000);
     dispatch({
       type: 'playback-rate',
       lastPlayedPlaybackRate: chromaticMap[padId],

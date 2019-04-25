@@ -15,6 +15,7 @@ const SoundPoolContainer = ({ dispatch, state }) => {
               type: 'active-sample',
               sampleId: state.activeSampleId - 1,
             });
+            state.samples[state.activeSampleId - 1].sample.start();
           }
 
           if (
@@ -25,6 +26,7 @@ const SoundPoolContainer = ({ dispatch, state }) => {
               type: 'active-sample',
               sampleId: state.activeSampleId + 1,
             });
+            state.samples[state.activeSampleId + 1].sample.start();
           }
         }}
       />
