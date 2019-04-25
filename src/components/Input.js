@@ -33,7 +33,7 @@ Input.defaultProps = {
   border: '2px solid',
   borderColor: 'gray',
   borderRadius: 4,
-  bg: 'transparent',
+  bg: '#2222',
   color: 'silver',
 };
 
