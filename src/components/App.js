@@ -248,7 +248,7 @@ function reducer(state, action) {
         samples: updateActiveSound(() => ({ start: Number(action.position) })),
         ...(!parameterLocked() && {
           patterns: updateActiveSoundInActivePattern(() => ({
-            start: action.position,
+            start: Number(action.position),
           })),
         }),
       };
