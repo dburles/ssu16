@@ -33,6 +33,7 @@ function createSample(buffer, name, id) {
     name,
     volume: 80,
     start: 0,
+    offset: 0,
     // Patterns the sample paramaters are locked on.
     locked: [],
   };
@@ -148,7 +149,9 @@ function reducer(state, action) {
             sample => sample.id !== state.activeSampleId,
           );
         } else {
-          const { buffer, volume, start } = state.samples[state.activeSampleId];
+          const { buffer, volume, start, offset } = state.samples[
+            state.activeSampleId
+          ];
           const sample = new Tone.Player(buffer).toMaster();
           sample.volume.value = volumeToDb(volume);
           sample.playbackRate = state.lastPlayedPlaybackRate;
@@ -156,6 +159,7 @@ function reducer(state, action) {
             id: state.activeSampleId,
             sample,
             start,
+            offset,
           });
         }
       });
@@ -247,6 +251,21 @@ function reducer(state, action) {
           );
         }
       });
+    case 'sample-offset':
+      return produce(state, draftState => {
+        draftState.samples[state.activeSampleId].offset = Number(action.offset);
+
+        // If we're not parameter locked, adjust offset for all pads.
+        if (!parameterLocked()) {
+          draftState.patterns[state.activePattern].forEach(pad => {
+            pad.forEach(sound => {
+              if (sound.id === state.activeSampleId) {
+                sound.offset = action.offset;
+              }
+            });
+          });
+        }
+      });
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -272,14 +291,13 @@ const activeStep = State(0);
 const loop = new Tone.Sequence(
   (time, step) => {
     mutableState.patterns[mutableState.activePattern][step].forEach(
-      ({ sample, start }) => {
-        sample.start(time, start / 1000);
+      ({ sample, start, offset }) => {
+        sample.start(time + offset / 1000, start / 1000);
       },
     );
     Tone.Draw.schedule(() => {
       activeStep.set(step);
     });
-    // console.log(time, step);
   },
   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
   '16n',

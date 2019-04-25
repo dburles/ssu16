@@ -53,6 +53,17 @@ const SampleParameters = props => {
         <Input type="number" min={0} width={1} />
       </Control>
       <Control>
+        <Title>Offset</Title>
+        <Input
+          type="range"
+          min={-100}
+          max={100}
+          value={props.offset}
+          onChange={props.onChangeOffset}
+          width={1}
+        />
+      </Control>
+      <Control>
         <Button
           bg="transparent"
           border="1px solid"
