@@ -10,11 +10,14 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         onKeyEvent={(key, event) => {
           event.preventDefault();
 
+          state.samples[state.activeSampleId].sample.stop();
+
           if (key === 'up' && state.activeSampleId !== 0) {
             dispatch({
               type: 'active-sample',
               sampleId: state.activeSampleId - 1,
             });
+
             state.samples[state.activeSampleId - 1].sample.start();
           }
 
