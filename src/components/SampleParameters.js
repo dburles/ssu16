@@ -35,8 +35,15 @@ const SampleParameters = props => {
         />
       </Control>
       <Control>
-        <Title>Pitch</Title>
-        <Input type="number" min={0} max={100} width={1} />
+        <Title>Offset</Title>
+        <Input
+          type="range"
+          min={0}
+          max={100}
+          value={props.offset}
+          onChange={props.onChangeOffset}
+          width={1}
+        />
       </Control>
       <Control>
         <Title>Start</Title>
@@ -48,21 +55,10 @@ const SampleParameters = props => {
           width={1}
         />
       </Control>
-      <Control>
-        <Title>End</Title>
-        <Input type="number" min={0} width={1} />
-      </Control>
-      <Control>
-        <Title>Offset</Title>
-        <Input
-          type="range"
-          min={0}
-          max={100}
-          value={props.offset}
-          onChange={props.onChangeOffset}
-          width={1}
-        />
-      </Control>
+      {/* TODO <Control>
+        <Title>Length</Title>
+        <Input type="range" min={0} max={15} width={1} />
+      </Control> */}
       <Control>
         <Button
           bg="transparent"
