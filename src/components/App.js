@@ -112,6 +112,13 @@ function volumeToDb(volume) {
 
 function reducer(state, action) {
   console.log(action);
+
+  function parameterLocked() {
+    return state.samples[state.activeSampleId].locked.includes(
+      state.activePattern,
+    );
+  }
+
   switch (action.type) {
     case 'play-start':
       return { ...state, playing: true };
@@ -163,14 +170,12 @@ function reducer(state, action) {
         ].sample.volume.value = volumeToDb(action.volume);
 
         // If we're not parameter locked, adjust volume for all pads.
-        if (
-          !state.samples[state.activeSampleId].locked.includes(
-            state.activePattern,
-          )
-        ) {
-          state.patterns[state.activePattern].forEach(pad => {
-            pad.forEach(({ sample }) => {
-              sample.volume.value = volumeToDb(action.volume);
+        if (!parameterLocked()) {
+          draftState.patterns[state.activePattern].forEach(pad => {
+            pad.forEach(sound => {
+              if (sound.id === state.activeSampleId) {
+                sound.sample.volume.value = volumeToDb(action.volume);
+              }
             });
           });
         }
@@ -212,6 +217,17 @@ function reducer(state, action) {
         draftState.samples[state.activeSampleId].start = Number(
           action.position,
         );
+
+        // If we're not parameter locked, adjust start point for all pads.
+        if (!parameterLocked()) {
+          draftState.patterns[state.activePattern].forEach(pad => {
+            pad.forEach(sound => {
+              if (sound.id === state.activeSampleId) {
+                sound.start = action.position;
+              }
+            });
+          });
+        }
       });
     case 'audio-record-mode':
       return {
