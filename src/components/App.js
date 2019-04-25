@@ -200,7 +200,10 @@ function reducer(state, action) {
     case 'sample-volume':
       return {
         ...state,
-        samples: updateActiveSound(() => ({ volume: action.volume })),
+        samples: updateActiveSound(sound => {
+          sound.sample.volume.value = volumeToDb(action.volume);
+          return { volume: action.volume };
+        }),
         ...(!parameterLocked() && {
           patterns: updateActiveSoundInActivePattern(sound => {
             sound.sample.volume.value = volumeToDb(action.volume);
