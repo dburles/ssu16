@@ -31,7 +31,7 @@ function createSample(buffer, name, id) {
     sample: new Tone.Player(buffer).toMaster(),
     buffer,
     name,
-    volume: 80,
+    volume: 60,
     start: 0,
     offset: 0,
     // Patterns the sample paramaters are locked on.
