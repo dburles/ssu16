@@ -44,7 +44,7 @@ const SoundPool = props => {
           key={sample.id}
           onClick={() => props.onSoundPress(sample.id)}
           {...(props.activeSampleId === sample.id
-            ? { bg: 'base', color: 'white' }
+            ? { bg: 'maroon', color: 'white' }
             : {})}
         >
           {sample.name}
