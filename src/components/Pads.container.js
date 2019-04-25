@@ -10,11 +10,18 @@ const chromaticMap = [
   0.259921, 0.334839, 0.414213, 0.498307
 ];
 // prettier-ignore
-const keyMap = {
+const keyMapSeq = {
   'shift+1': 0 , 'shift+2': 1 , 'shift+3': 2 , 'shift+4': 3,
   'shift+q': 4 , 'shift+w': 5 , 'shift+e': 6 , 'shift+r': 7,
   'shift+a': 8 , 'shift+s': 9 , 'shift+d': 10, 'shift+f': 11,
   'shift+z': 12, 'shift+x': 13, 'shift+c': 14, 'shift+v': 15,
+};
+// prettier-ignore
+const keyMapPrf = {
+  '1': 0 , '2': 1 , '3': 2 , '4': 3,
+  'q': 4 , 'w': 5 , 'e': 6 , 'r': 7,
+  'a': 8 , 's': 9 , 'd': 10, 'f': 11,
+  'z': 12, 'x': 13, 'c': 14, 'v': 15,
 };
 
 const PadsContainer = ({ state, dispatch, activeStep }) => {
@@ -80,10 +87,17 @@ const PadsContainer = ({ state, dispatch, activeStep }) => {
   return (
     <>
       <KeyboardEventHandler
-        handleKeys={Object.keys(keyMap)}
+        handleKeys={Object.keys(keyMapPrf)}
         onKeyEvent={(key, event) => {
           event.preventDefault();
-          press(keyMap[key]);
+          perform(keyMapPrf[key]);
+        }}
+      />
+      <KeyboardEventHandler
+        handleKeys={Object.keys(keyMapSeq)}
+        onKeyEvent={(key, event) => {
+          event.preventDefault();
+          sequence(keyMapSeq[key]);
         }}
       />
       <Pads
