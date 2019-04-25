@@ -21,8 +21,8 @@ export default function State(initialState, setterHandler = value => value) {
         });
         return React.createElement(WrappedComponent, props);
       },
-      function shouldComponentUpdate(nextProps) {
-        return nextProps !== this.props || shouldUpdate;
+      function shouldComponentUpdate(props, nextProps) {
+        return nextProps !== props || shouldUpdate;
       },
     );
   };
