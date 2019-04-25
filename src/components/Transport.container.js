@@ -85,10 +85,7 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         onTogglePerformanceRecord={() => {
           dispatch({ type: 'record-perf-toggle' });
         }}
-        onStartAudioRecord={() => {
-          dispatch({ type: 'record-audio-toggle' });
-        }}
-        onStopAudioRecord={() => {
+        onToggleAudioRecord={() => {
           dispatch({ type: 'record-audio-toggle' });
         }}
         onChangeSwing={event => {
@@ -97,6 +94,10 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         onChangeBpm={event => {
           dispatch({ type: 'bpm', bpm: event.target.value });
         }}
+        onToggleAudioRecordMode={() => {
+          dispatch({ type: 'audio-record-mode' });
+        }}
+        recordAudioWhileHeld={state.recordAudioWhileHeld}
         swing={state.swing}
       />
     </>

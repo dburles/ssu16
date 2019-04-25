@@ -99,6 +99,9 @@ const initialState = {
   chaining: false,
   recordingPrf: false,
   recordingAudio: false,
+  // Hold the record button down and release to stop
+  // or start/stop.
+  recordAudioWhileHeld: true,
 };
 
 function volumeToDb(volume) {
@@ -194,6 +197,11 @@ function reducer(state, action) {
           action.position,
         );
       });
+    case 'audio-record-mode':
+      return {
+        ...state,
+        recordAudioWhileHeld: !state.recordAudioWhileHeld,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }

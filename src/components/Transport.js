@@ -161,17 +161,31 @@ const Transport = props => {
           {props.recordingPrf ? <Stop /> : <Circle />}
         </Button>
       </TransportSection>
-      <Space mx={1} />
+      <Divider />
       <TransportSection>
         <Button
           bg={props.recordingAudio ? 'red' : 'gray'}
           py={1}
           px={2}
-          onMouseDown={props.onStartAudioRecord}
-          onMouseUp={props.onStopAudioRecord}
+          {...(props.recordAudioWhileHeld
+            ? {
+                onMouseDown: props.onToggleAudioRecord,
+                onMouseUp: props.onToggleAudioRecord,
+              }
+            : {
+                onClick: props.onToggleAudioRecord,
+              })}
         >
           {props.recordingAudio ? <Stop /> : <Mic />}
         </Button>
+      </TransportSection>
+      <Space mx={1} />
+      <TransportSection title="Hold?">
+        <Input
+          type="checkbox"
+          checked={props.recordAudioWhileHeld}
+          onClick={props.onToggleAudioRecordMode}
+        />
       </TransportSection>
     </Container>
   );
