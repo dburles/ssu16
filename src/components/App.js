@@ -31,7 +31,7 @@ function createSample(buffer, name, id) {
     sample: new Tone.Player(buffer).toMaster(),
     buffer,
     name,
-    volume: 100,
+    volume: 80,
   };
 }
 
