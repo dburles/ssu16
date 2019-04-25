@@ -288,11 +288,20 @@ const mutableState = {
 
 const activeStep = State(0);
 
+// Since each step will have a unique instance of 'sample', we can't call 'sample.restart'.
+// Instead, on each iteration we'll retain a record of the previous play, by the id.
+const prevSamples = {};
+
 const loop = new Tone.Sequence(
   (time, step) => {
     mutableState.patterns[mutableState.activePattern][step].forEach(
-      ({ sample, start, offset }) => {
+      ({ id, sample, start, offset }) => {
+        // stop previous instance of this sample *in any step prior to this one*
+        if (prevSamples[id]) {
+          prevSamples[id].stop();
+        }
         sample.start(time + offset / 1000, start / 1000);
+        prevSamples[id] = sample;
       },
     );
     Tone.Draw.schedule(() => {
