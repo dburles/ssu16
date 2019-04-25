@@ -1,5 +1,6 @@
 import React from 'react';
 import Circle from 'react-feather/dist/icons/circle';
+import Mic from 'react-feather/dist/icons/mic';
 import Play from 'react-feather/dist/icons/play';
 import Stop from 'react-feather/dist/icons/square';
 import { Button, Flex, Box, Text } from 'rebass';
@@ -155,9 +156,21 @@ const Transport = props => {
           bg={props.recordingPrf ? 'red' : 'gray'}
           py={1}
           px={2}
-          onClick={props.onToggleRecord}
+          onClick={props.onTogglePerformanceRecord}
         >
           {props.recordingPrf ? <Stop /> : <Circle />}
+        </Button>
+      </TransportSection>
+      <Space mx={1} />
+      <TransportSection>
+        <Button
+          bg={props.recordingAudio ? 'red' : 'gray'}
+          py={1}
+          px={2}
+          onMouseDown={props.onStartAudioRecord}
+          onMouseUp={props.onStopAudioRecord}
+        >
+          {props.recordingAudio ? <Stop /> : <Mic />}
         </Button>
       </TransportSection>
     </Container>

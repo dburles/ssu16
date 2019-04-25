@@ -97,6 +97,7 @@ const initialState = {
   patternChain: [0],
   chaining: false,
   recordingPrf: false,
+  recordingAudio: false,
 };
 
 function volumeToDb(volume) {
@@ -179,6 +180,11 @@ function reducer(state, action) {
       return {
         ...state,
         recordingPrf: !state.recordingPrf,
+      };
+    case 'record-audio-toggle':
+      return {
+        ...state,
+        recordingAudio: !state.recordingAudio,
       };
     default:
       throw new Error('Unknown dispatch action');
