@@ -3,9 +3,29 @@ import { Flex } from 'rebass';
 import Container from './Container';
 import Pad from './Pad';
 
+const padNames = [
+  1,
+  2,
+  3,
+  4,
+  'q',
+  'w',
+  'e',
+  'r',
+  'a',
+  's',
+  'd',
+  'f',
+  'z',
+  'x',
+  'c',
+  'v',
+];
+
 const Pads = props => {
   function padProps(pos) {
     return {
+      name: padNames[pos],
       litPad: props.litPads.includes(pos),
       litIndicator: props.litIndicators.includes(pos),
       onPadPress: () => props.onPadPress(pos),

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Box } from 'rebass';
 import styled from 'styled-components';
-import { color, space, width, borders } from 'styled-system';
+import { color, space, width, borders, themeGet } from 'styled-system';
 
 const Indicator = styled.div`
   ${color}
@@ -12,6 +12,16 @@ const Indicator = styled.div`
 
 const PadBox = styled(Box)`
   ${borders}
+  position: relative;
+`;
+
+const PadName = styled.div`
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+
+  color: ${props =>
+    themeGet(props.litPad ? 'colors.grayDark' : 'colors.grayDark')};
 `;
 
 const Pad = props => {
@@ -23,7 +33,9 @@ const Pad = props => {
         m={2}
         borderRadius={4}
         onClick={props.onPadPress}
-      />
+      >
+        <PadName litPad={props.litPad}>{props.name}</PadName>
+      </PadBox>
       <Flex justifyContent="center">
         <Indicator
           p="3px"
