@@ -83,40 +83,6 @@ const Transport = props => {
         </Flex>
       </TransportSection>
       <Divider />
-      <TransportSection title="BPM">
-        <Flex>
-          <Input
-            type="number"
-            width="4em"
-            value={props.bpm}
-            onChange={props.onChangeBpm}
-          />
-          <Space mx={1} />
-          <Button
-            bg="transparent"
-            border="1px solid"
-            borderColor="gray"
-            fontWeight="normal"
-            fontSize="0.7em"
-            onClick={props.onTap}
-          >
-            TAP
-          </Button>
-        </Flex>
-      </TransportSection>
-      <Divider />
-      <TransportSection title="Swing">
-        {' '}
-        <Input
-          type="number"
-          width="4em"
-          min="0"
-          max="100"
-          value={props.swing}
-          onChange={props.onChangeSwing}
-        />
-      </TransportSection>
-      <Divider />
       <TransportSection>
         <Button
           bg={props.playing ? 'base' : 'gray'}
@@ -162,6 +128,40 @@ const Transport = props => {
           type="checkbox"
           checked={props.recordAudioWhileHeld}
           onChange={props.onToggleAudioRecordMode}
+        />
+      </TransportSection>
+      <Divider />
+      <TransportSection title="BPM">
+        <Flex>
+          <Input
+            type="number"
+            width="4em"
+            value={props.bpm}
+            onChange={props.onChangeBpm}
+          />
+          <Space mx={1} />
+          <Button
+            bg="transparent"
+            border="1px solid"
+            borderColor="gray"
+            fontWeight="normal"
+            fontSize="0.7em"
+            onClick={props.onTap}
+          >
+            TAP
+          </Button>
+        </Flex>
+      </TransportSection>
+      <Divider />
+      <TransportSection title="Swing">
+        {' '}
+        <Input
+          type="number"
+          width="4em"
+          min="0"
+          max="100"
+          value={props.swing}
+          onChange={props.onChangeSwing}
         />
       </TransportSection>
     </Container>
