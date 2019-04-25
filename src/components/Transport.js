@@ -48,7 +48,8 @@ const Transport = props => {
       <Divider />
       <TransportSection title="Mode">
         <Flex>
-          <Box>
+          {/* TODO, not really needed with keyboard
+            <Box>
             <Mode
               fontWeight="bold"
               color="silver"
@@ -58,7 +59,7 @@ const Transport = props => {
               PRF
             </Mode>
           </Box>
-          <Space mx={2} />
+          <Space mx={2} /> */}
           <Box>
             <Mode
               fontWeight="bold"
