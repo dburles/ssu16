@@ -156,13 +156,14 @@ function reducer(state, action) {
       return { ...state, swing: Number(action.swing) };
     case 'sample-volume':
       return produce(state, draftState => {
+        // Set the volume for the sample.
         draftState.samples[draftState.activeSampleId].volume = action.volume;
         draftState.samples[
           draftState.activeSampleId
         ].sample.volume.value = volumeToDb(action.volume);
 
+        // If we're not parameter locked, adjust volume for all pads.
         if (
-          // If we're not locked
           !state.samples[state.activeSampleId].locked.includes(
             state.activePattern,
           )
