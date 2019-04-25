@@ -56,7 +56,7 @@ const SampleParameters = props => {
         <Title>Offset</Title>
         <Input
           type="range"
-          min={-100}
+          min={0}
           max={100}
           value={props.offset}
           onChange={props.onChangeOffset}
