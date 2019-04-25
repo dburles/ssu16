@@ -161,7 +161,7 @@ const Transport = props => {
         <Input
           type="checkbox"
           checked={props.recordAudioWhileHeld}
-          onClick={props.onToggleAudioRecordMode}
+          onChange={props.onToggleAudioRecordMode}
         />
       </TransportSection>
     </Container>
