@@ -3,7 +3,7 @@ import React, { useReducer, useEffect } from 'react';
 import { Flex, Box } from 'rebass';
 import styled from 'styled-components';
 import Tone from 'tone';
-// import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
+import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 // import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
 // import CowBell from '../samples/Roland_TR-707/CowBell.wav';
 // import Crash from '../samples/Roland_TR-707/Crash.wav';
@@ -33,12 +33,14 @@ function createSample(buffer, name, id) {
     name,
     volume: 80,
     start: 0,
+    // Patterns the sample paramaters are locked on.
+    locked: [],
   };
 }
 
 const initialState = {
   samples: [
-    // { sample: BassDrum1, name: 'BassDrum1.wav' },
+    { sample: BassDrum1, name: 'BassDrum1.wav' },
     // { sample: CowBell, name: 'CowBell.wav' },
     // { sample: HandClap, name: 'HandClap.wav' },
     // { sample: HhO, name: 'HhO.wav' },
@@ -158,6 +160,19 @@ function reducer(state, action) {
         draftState.samples[
           draftState.activeSampleId
         ].sample.volume.value = volumeToDb(action.volume);
+
+        if (
+          // If we're not locked
+          !state.samples[state.activeSampleId].locked.includes(
+            state.activePattern,
+          )
+        ) {
+          state.patterns[state.activePattern].forEach(pad => {
+            pad.forEach(({ sample }) => {
+              sample.volume.value = volumeToDb(action.volume);
+            });
+          });
+        }
       });
     case 'playback-rate':
       return {
@@ -202,6 +217,19 @@ function reducer(state, action) {
         ...state,
         recordAudioWhileHeld: !state.recordAudioWhileHeld,
       };
+    case 'lock-sample-toggle':
+      return produce(state, draftState => {
+        const { locked } = draftState.samples[state.activeSampleId];
+        if (locked.includes(state.activePattern)) {
+          draftState.samples[state.activeSampleId].locked = locked.filter(
+            pattern => pattern !== state.activePattern,
+          );
+        } else {
+          draftState.samples[state.activeSampleId].locked.push(
+            state.activePattern,
+          );
+        }
+      });
     default:
       throw new Error('Unknown dispatch action');
   }

@@ -8,6 +8,9 @@ const GlobalStyle = createGlobalStyle`
     background-size: cover;
     font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
   }
+  button {
+    outline: none;
+  }
 `;
 
 export default GlobalStyle;

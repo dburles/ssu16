@@ -2,7 +2,7 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch }) => {
-  const { volume, start } = state.samples[state.activeSampleId];
+  const { volume, start, locked } = state.samples[state.activeSampleId];
   return (
     <SampleParameters
       volume={volume}
@@ -13,6 +13,10 @@ const SampleParametersContainer = ({ state, dispatch }) => {
         dispatch({ type: 'sample-start-point', position: event.target.value });
       }}
       startPoint={start}
+      onToggleSampleLock={() => {
+        dispatch({ type: 'lock-sample-toggle' });
+      }}
+      locked={locked.includes(state.activePattern)}
     />
   );
 };
