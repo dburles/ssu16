@@ -2,7 +2,9 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch }) => {
-  const { volume, start, locked, offset } = state.samples[state.activeSampleId];
+  const { volume, start, locked, offset } = state.samples.find(
+    sound => sound.id === state.activeSampleId,
+  );
   return (
     <SampleParameters
       volume={volume}
@@ -21,6 +23,11 @@ const SampleParametersContainer = ({ state, dispatch }) => {
         dispatch({ type: 'lock-sample-toggle' });
       }}
       locked={locked.includes(state.activePattern)}
+      onDelete={() => {
+        if (confirm('Are you sure?')) {
+          dispatch({ type: 'delete-active-sound' });
+        }
+      }}
     />
   );
 };

@@ -10,26 +10,29 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         onKeyEvent={(key, event) => {
           event.preventDefault();
 
-          state.samples[state.activeSampleId].sample.stop();
+          const activeSoundIndex = state.samples.findIndex(
+            sample => sample.id === state.activeSampleId,
+          );
+          const activeSound = state.samples.find(
+            sample => sample.id === state.activeSampleId,
+          );
+          activeSound.sample.stop();
 
-          if (key === 'up' && state.activeSampleId !== 0) {
+          if (key === 'up' && activeSoundIndex !== 0) {
             dispatch({
               type: 'active-sample',
-              sampleId: state.activeSampleId - 1,
+              sampleId: state.samples[activeSoundIndex - 1].id,
             });
 
-            state.samples[state.activeSampleId - 1].sample.start();
+            state.samples[activeSoundIndex - 1].sample.start();
           }
 
-          if (
-            key === 'down' &&
-            state.activeSampleId + 1 < state.samples.length
-          ) {
+          if (key === 'down' && activeSoundIndex + 1 < state.samples.length) {
             dispatch({
               type: 'active-sample',
-              sampleId: state.activeSampleId + 1,
+              sampleId: state.samples[activeSoundIndex + 1].id,
             });
-            state.samples[state.activeSampleId + 1].sample.start();
+            state.samples[activeSoundIndex + 1].sample.start();
           }
         }}
       />

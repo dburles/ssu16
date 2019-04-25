@@ -115,9 +115,41 @@ function reducer(state, action) {
   console.log(action);
 
   function parameterLocked() {
-    return state.samples[state.activeSampleId].locked.includes(
-      state.activePattern,
-    );
+    return state.samples
+      .find(sample => sample.id === state.activeSampleId)
+      .locked.includes(state.activePattern);
+  }
+
+  // Updates all Tone.Player instances.for the active sound and pattern.
+  function updateActiveSoundInActivePattern(updateFn) {
+    return state.patterns.map((pattern, patternIndex) => {
+      if (patternIndex === state.activePattern) {
+        return pattern.map(step => {
+          return step.map(sound => {
+            if (sound.id === state.activeSampleId) {
+              return {
+                ...sound,
+                ...updateFn(sound),
+              };
+            }
+            return sound;
+          });
+        });
+      }
+      return pattern;
+    });
+  }
+
+  function updateActiveSound(updateFn) {
+    return state.samples.map(sound => {
+      if (sound.id === state.activeSampleId) {
+        return {
+          ...sound,
+          ...updateFn(sound),
+        };
+      }
+      return sound;
+    });
   }
 
   switch (action.type) {
@@ -127,6 +159,8 @@ function reducer(state, action) {
       return { ...state, playing: false };
     case 'bpm':
       return { ...state, bpm: action.bpm };
+    case 'swing':
+      return { ...state, swing: Number(action.swing) };
     case 'mode':
       return { ...state, mode: action.mode, chaining: false };
     case 'active-sample':
@@ -149,9 +183,9 @@ function reducer(state, action) {
             sample => sample.id !== state.activeSampleId,
           );
         } else {
-          const { buffer, volume, start, offset } = state.samples[
-            state.activeSampleId
-          ];
+          const { buffer, volume, start, offset } = state.samples.find(
+            sound => sound.id === state.activeSampleId,
+          );
           const sample = new Tone.Player(buffer).toMaster();
           sample.volume.value = volumeToDb(volume);
           sample.playbackRate = state.lastPlayedPlaybackRate;
@@ -163,27 +197,19 @@ function reducer(state, action) {
           });
         }
       });
-    case 'swing':
-      return { ...state, swing: Number(action.swing) };
     case 'sample-volume':
-      return produce(state, draftState => {
-        // Set the volume for the sample.
-        draftState.samples[draftState.activeSampleId].volume = action.volume;
-        draftState.samples[
-          draftState.activeSampleId
-        ].sample.volume.value = volumeToDb(action.volume);
-
-        // If we're not parameter locked, adjust volume for all pads.
-        if (!parameterLocked()) {
-          draftState.patterns[state.activePattern].forEach(pad => {
-            pad.forEach(sound => {
-              if (sound.id === state.activeSampleId) {
-                sound.sample.volume.value = volumeToDb(action.volume);
-              }
-            });
-          });
-        }
-      });
+      return {
+        ...state,
+        samples: updateActiveSound(() => ({ volume: action.volume })),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(sound => {
+            sound.sample.volume.value = volumeToDb(action.volume);
+            return {
+              sample: sound.sample,
+            };
+          }),
+        }),
+      };
     case 'playback-rate':
       return {
         ...state,
@@ -217,55 +243,47 @@ function reducer(state, action) {
         recordingAudio: !state.recordingAudio,
       };
     case 'sample-start-point':
-      return produce(state, draftState => {
-        draftState.samples[state.activeSampleId].start = Number(
-          action.position,
-        );
-
-        // If we're not parameter locked, adjust start point for all pads.
-        if (!parameterLocked()) {
-          draftState.patterns[state.activePattern].forEach(pad => {
-            pad.forEach(sound => {
-              if (sound.id === state.activeSampleId) {
-                sound.start = action.position;
-              }
-            });
-          });
-        }
-      });
+      return {
+        ...state,
+        samples: updateActiveSound(() => ({ start: Number(action.position) })),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(() => ({
+            start: action.position,
+          })),
+        }),
+      };
     case 'audio-record-mode':
       return {
         ...state,
         recordAudioWhileHeld: !state.recordAudioWhileHeld,
       };
     case 'lock-sample-toggle':
-      return produce(state, draftState => {
-        const { locked } = draftState.samples[state.activeSampleId];
-        if (locked.includes(state.activePattern)) {
-          draftState.samples[state.activeSampleId].locked = locked.filter(
-            pattern => pattern !== state.activePattern,
-          );
-        } else {
-          draftState.samples[state.activeSampleId].locked.push(
-            state.activePattern,
-          );
-        }
-      });
+      return {
+        ...state,
+        samples: updateActiveSound(sound => ({
+          locked: sound.locked.includes(state.activePattern)
+            ? sound.locked.filter(pattern => pattern !== state.activePattern)
+            : [...sound.locked, state.activePattern],
+        })),
+      };
     case 'sample-offset':
-      return produce(state, draftState => {
-        draftState.samples[state.activeSampleId].offset = Number(action.offset);
-
-        // If we're not parameter locked, adjust offset for all pads.
-        if (!parameterLocked()) {
-          draftState.patterns[state.activePattern].forEach(pad => {
-            pad.forEach(sound => {
-              if (sound.id === state.activeSampleId) {
-                sound.offset = action.offset;
-              }
-            });
-          });
-        }
-      });
+      return {
+        ...state,
+        samples: updateActiveSound(() => ({ offset: Number(action.offset) })),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(() => ({
+            offset: action.offset,
+          })),
+        }),
+      };
+    case 'delete-active-sound':
+      return {
+        ...state,
+        activeSampleId: 0,
+        samples: state.samples.filter(
+          sound => sound.id !== state.activeSampleId,
+        ),
+      };
     default:
       throw new Error('Unknown dispatch action');
   }

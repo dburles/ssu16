@@ -69,6 +69,7 @@ const SampleParameters = props => {
           border="1px solid"
           fontSize="11px"
           color="gray"
+          onClick={props.onDelete}
         >
           Delete
         </Button>
