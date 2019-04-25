@@ -97,7 +97,7 @@ const Transport = props => {
             border="1px solid"
             borderColor="gray"
             fontWeight="normal"
-            fontSize={1}
+            fontSize="0.7em"
             onClick={props.onTap}
           >
             TAP
