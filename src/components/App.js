@@ -5,19 +5,19 @@ import styled from 'styled-components';
 import Tone from 'tone';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 // import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
-// import CowBell from '../samples/Roland_TR-707/CowBell.wav';
+import CowBell from '../samples/Roland_TR-707/CowBell.wav';
 // import Crash from '../samples/Roland_TR-707/Crash.wav';
-// import HandClap from '../samples/Roland_TR-707/HandClap.wav';
-// import HhC from '../samples/Roland_TR-707/HhC.wav';
+import HandClap from '../samples/Roland_TR-707/HandClap.wav';
+import HhC from '../samples/Roland_TR-707/HhC.wav';
 // import HhO from '../samples/Roland_TR-707/HhO.wav';
 // import HiTom from '../samples/Roland_TR-707/HiTom.wav';
 // import LowTom from '../samples/Roland_TR-707/LowTom.wav';
 // import MedTom from '../samples/Roland_TR-707/MedTom.wav';
 // import Ride from '../samples/Roland_TR-707/Ride.wav';
-// import RimShot from '../samples/Roland_TR-707/RimShot.wav';
-// import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
+import RimShot from '../samples/Roland_TR-707/RimShot.wav';
+import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 // import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
-// import Tamb from '../samples/Roland_TR-707/Tamb.wav';
+import Tamb from '../samples/Roland_TR-707/Tamb.wav';
 import State from '../utils/tinystate';
 import ContextParameters from './ContextParameters.container';
 import Pads from './Pads.container';
@@ -42,19 +42,19 @@ function createSample(buffer, name, id) {
 const initialState = {
   samples: [
     { sample: BassDrum1, name: 'BassDrum1.wav' },
-    // { sample: CowBell, name: 'CowBell.wav' },
-    // { sample: HandClap, name: 'HandClap.wav' },
+    { sample: CowBell, name: 'CowBell.wav' },
+    { sample: HandClap, name: 'HandClap.wav' },
     // { sample: HhO, name: 'HhO.wav' },
     // { sample: LowTom, name: 'LowTom.wav' },
     // { sample: Ride, name: 'Ride.wav' },
-    // { sample: Snare1, name: 'Snare1.wav' },
-    // { sample: Tamb, name: 'Tamb.wav' },
+    { sample: Snare1, name: 'Snare1.wav' },
+    { sample: Tamb, name: 'Tamb.wav' },
     // { sample: BassDrum2, name: 'BassDrum2.wav' },
     // { sample: Crash, name: 'Crash.wav' },
-    // { sample: HhC, name: 'HhC.wav' },
+    { sample: HhC, name: 'HhC.wav' },
     // { sample: HiTom, name: 'HiTom.wav' },
     // { sample: MedTom, name: 'MedTom.wav' },
-    // { sample: RimShot, name: 'RimShot.wav' },
+    { sample: RimShot, name: 'RimShot.wav' },
     // { sample: Snare2, name: 'Snare2.wav' },
   ].map(({ sample, name }, id) => createSample(sample, name, id)),
   // patterns[pattern][padId][{sample}] => createSample(...)
