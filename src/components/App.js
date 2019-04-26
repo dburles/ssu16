@@ -399,13 +399,6 @@ const App = () => {
     mutableState.patterns = state.patterns;
   }, [state.bpm, state.swing, state.activePattern, state.patterns]);
 
-  // useEffect(() => {
-  //   Tone.Transport.scheduleOnce(time => {
-  //     console.log(time);
-  //     state.samples[0].sample.start();
-  //   }, 0);
-  // });
-
   return (
     <Flex>
       <SoundPoolWrapper>
