@@ -22,7 +22,7 @@ const SampleParametersContainer = ({ state, dispatch }) => {
       onToggleSampleLock={() => {
         dispatch({ type: 'lock-sample-toggle' });
       }}
-      locked={locked.includes(state.activePattern)}
+      locked={locked}
       onDelete={() => {
         if (confirm('Are you sure?')) {
           dispatch({ type: 'delete-active-sound' });

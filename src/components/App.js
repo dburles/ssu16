@@ -35,8 +35,8 @@ function createSample(buffer, name, id) {
     volume: 60,
     start: 0,
     offset: 0,
-    // Patterns the sample paramaters are locked on.
-    locked: [],
+    // Are the sample parameters locked?
+    locked: false,
   };
 }
 
@@ -128,15 +128,14 @@ function reducer(state, action) {
   console.log(action, state);
 
   function parameterLocked() {
-    return state.samples
-      .find(sample => sample.id === state.activeSampleId)
-      .locked.includes(state.activePattern);
+    return state.samples.find(sample => sample.id === state.activeSampleId)
+      .locked;
   }
 
   // Updates all Tone.Player instances.for the active sound and pattern.
   function updateActiveSoundInActivePattern(updateFn) {
     return state.patterns.map((pattern, patternIndex) => {
-      if (patternIndex === state.activePattern) {
+      if (state.patternChain.includes(patternIndex)) {
         return pattern.map(step => {
           return step.map(sound => {
             if (sound.id === state.activeSampleId) {
@@ -282,9 +281,7 @@ function reducer(state, action) {
       return {
         ...state,
         samples: updateActiveSound(sound => ({
-          locked: sound.locked.includes(state.activePattern)
-            ? sound.locked.filter(pattern => pattern !== state.activePattern)
-            : [...sound.locked, state.activePattern],
+          locked: !sound.locked,
         })),
       };
     case 'sample-offset':
