@@ -24,7 +24,7 @@ const keyMapPrf = {
   'z': 12, 'x': 13, 'c': 14, 'v': 15,
 };
 
-const PadsContainer = ({ state, dispatch, activeStep }) => {
+const PadsContainer = ({ state, dispatch, activeStep, onLiveRecord }) => {
   function perform(padId) {
     const { sample, start } = state.samples.find(
       sound => sound.id === state.activeSampleId,
@@ -36,7 +36,7 @@ const PadsContainer = ({ state, dispatch, activeStep }) => {
       lastPlayedPlaybackRate: chromaticMap[padId],
     });
     if (state.recordingPrf) {
-      dispatch({ type: 'toggle-step', padId: activeStep });
+      onLiveRecord();
     }
   }
   function sequence(padId) {

@@ -107,6 +107,13 @@ const initialState = {
   recordAudioWhileHeld: true,
 };
 
+const mutableState = {
+  patterns: [],
+  activePattern: 0,
+  active32Step: 0,
+  liveRecordTime: undefined,
+};
+
 function volumeToDb(volume) {
   return Tone.gainToDb(Number(volume) / 100);
 }
@@ -302,19 +309,38 @@ Tone.Transport.swingSubdivision = '16n';
 // Tone.Transport.loop = true;
 // Tone.Transport.loopEnd = '1';
 
-const mutableState = {
-  patterns: [],
-  activePattern: 0,
-};
-
 const activeStep = State(0);
 
 // Since each step will have a unique instance of 'sample', we can't call 'sample.restart'.
 // Instead, on each iteration we'll retain a record of the previous play, by the id.
 const prevSamples = {};
 
+let prevStep = 0;
+let prevTime = 0;
+let currentTick = 0;
+
+const liveRecordCaptureLoop = new Tone.Loop(time => {
+  currentTick = time;
+}, '1i');
+
+liveRecordCaptureLoop.start();
+
 const loop = new Tone.Sequence(
   (time, step) => {
+    if (mutableState.liveRecordTime !== undefined) {
+      // console.log(mutableState.liveRecordTime, prevTime, time);
+      const closestStep =
+        Math.abs(mutableState.liveRecordTime - prevTime) <
+        Math.abs(mutableState.liveRecordTime - time)
+          ? //  Closer to previous step
+            prevStep
+          : // Closer to this step
+            step;
+
+      dispatchEvent({ type: 'toggle-step', padId: closestStep });
+
+      mutableState.liveRecordTime = undefined;
+    }
     mutableState.patterns[mutableState.activePattern][step].forEach(
       ({ id, sample, start, offset }) => {
         // stop previous instance of this sample *in any step prior to this one*
@@ -328,15 +354,22 @@ const loop = new Tone.Sequence(
     Tone.Draw.schedule(() => {
       activeStep.set(step);
     });
+    prevTime = time;
+    prevStep = step;
+
+    // console.log(step, time);
   },
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+  [...Array(16).keys()],
   '16n',
 );
 
 loop.start();
 
+let dispatchEvent;
+
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  dispatchEvent = dispatch;
 
   const hasSamples = state.samples.length > 0;
 
@@ -393,6 +426,9 @@ const App = () => {
             state={state}
             dispatch={dispatch}
             activeStep={activeStep.get()}
+            onLiveRecord={() => {
+              mutableState.liveRecordTime = currentTick;
+            }}
           />
           <ContextParameters mode={state.mode} />
         </Flex>
