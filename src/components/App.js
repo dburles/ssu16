@@ -340,12 +340,6 @@ function reducer(state, action) {
   }
 }
 
-const SoundPoolWrapper = styled(Box)`
-  height: 100vh;
-  overflow-y: auto;
-  min-width: 200px;
-`;
-
 Tone.Transport.swingSubdivision = '16n';
 // Tone.Transport.loop = true;
 // Tone.Transport.loopEnd = '1';
@@ -484,10 +478,8 @@ const App = () => {
   ]);
 
   return (
-    <Flex m={1}>
-      <SoundPoolWrapper>
-        <SoundPool state={state} dispatch={dispatch} />
-      </SoundPoolWrapper>
+    <Flex p={1}>
+      <SoundPool state={state} dispatch={dispatch} />
 
       <Flex flexDirection="column">
         <Box>

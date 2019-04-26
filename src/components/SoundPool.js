@@ -11,10 +11,15 @@ const StyledPlus = styled(Plus)`
   color: ${themeGet('colors.base')};
 `;
 
+const SoundPoolContainer = styled(Container)`
+  max-height: 700px;
+  overflow-y: auto;
+`;
+
 const SoundPool = props => {
   const filesRef = useRef();
   return (
-    <Container flexDirection="column" py={3}>
+    <SoundPoolContainer flexDirection="column" py={3}>
       <input
         ref={filesRef}
         id="addFiles"
@@ -39,7 +44,7 @@ const SoundPool = props => {
           style={{ cursor: 'pointer' }}
           fontSize={1}
           py={2}
-          px={5}
+          px={4}
           color="silver"
           key={sample.id}
           onClick={() => props.onSoundPress(sample.id)}
@@ -50,7 +55,7 @@ const SoundPool = props => {
           {sample.name}
         </Text>
       ))}
-    </Container>
+    </SoundPoolContainer>
   );
 };
 
