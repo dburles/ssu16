@@ -3,6 +3,7 @@ import React, { useReducer, useEffect } from 'react';
 import { Flex, Box } from 'rebass';
 import styled from 'styled-components';
 import Tone from 'tone';
+import Metronome from '../samples/Metronome.flac';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 // import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
 import CowBell from '../samples/Roland_TR-707/CowBell.wav';
@@ -105,14 +106,18 @@ const initialState = {
   // Hold the record button down and release to stop
   // or start/stop.
   recordAudioWhileHeld: true,
+  metronome: true,
 };
 
+// Values shared with React state, but are referenced by
+// tonejs callbacks through closure.
 const mutableState = {
   patterns: [],
   patternChain: [0],
   activePattern: 0,
   active32Step: 0,
   liveRecordTime: undefined,
+  metronome: true,
 };
 
 function volumeToDb(volume) {
@@ -300,6 +305,11 @@ function reducer(state, action) {
           sound => sound.id !== state.activeSampleId,
         ),
       };
+    case 'metronome-toggle':
+      return {
+        ...state,
+        metronome: !state.metronome,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -330,7 +340,17 @@ const liveRecordCaptureLoop = new Tone.Loop(time => {
   currentTick = time;
 }, '1i');
 
+const metronomeLoop = new Tone.Loop(time => {
+  if (mutableState.metronome) {
+    metronome.start(time);
+  }
+}, '4n');
+
+metronomeLoop.start();
 liveRecordCaptureLoop.start();
+
+const metronome = new Tone.Player(Metronome).toMaster();
+metronome.volume.value = volumeToDb(60);
 
 const loop = new Tone.Sequence(
   (time, step) => {
@@ -374,6 +394,7 @@ const loop = new Tone.Sequence(
         prevSamples[id] = sample;
       },
     );
+
     Tone.Draw.schedule(() => {
       activeStep.set(step);
     });
@@ -425,10 +446,17 @@ const App = () => {
   }, [state.bpm, state.swing]);
 
   useEffect(() => {
+    // Sync with mutableState.
     mutableState.activePattern = state.activePattern;
     mutableState.patterns = state.patterns;
     mutableState.patternChain = state.patternChain;
-  }, [state.activePattern, state.patternChain, state.patterns]);
+    mutableState.metronome = state.metronome;
+  }, [
+    state.activePattern,
+    state.metronome,
+    state.patternChain,
+    state.patterns,
+  ]);
 
   return (
     <Flex>

@@ -99,6 +99,10 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         }}
         recordAudioWhileHeld={state.recordAudioWhileHeld}
         swing={state.swing}
+        metronome={state.metronome}
+        onToggleMetronome={() => {
+          dispatch({ type: 'metronome-toggle' });
+        }}
       />
     </>
   );

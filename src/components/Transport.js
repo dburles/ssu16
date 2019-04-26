@@ -1,4 +1,6 @@
 import React from 'react';
+import Bell from 'react-feather/dist/icons/bell';
+import BellOff from 'react-feather/dist/icons/bell-off';
 import Circle from 'react-feather/dist/icons/circle';
 import Mic from 'react-feather/dist/icons/mic';
 import Play from 'react-feather/dist/icons/play';
@@ -103,6 +105,17 @@ const Transport = props => {
           onClick={props.onTogglePerformanceRecord}
         >
           {props.recordingPrf ? <Stop /> : <Circle />}
+        </Button>
+      </TransportSection>
+      <Space mx={1} />
+      <TransportSection>
+        <Button
+          bg={props.metronome ? 'base' : 'gray'}
+          py={1}
+          px={2}
+          onClick={props.onToggleMetronome}
+        >
+          {props.metronome ? <Bell /> : <BellOff />}
         </Button>
       </TransportSection>
       <Divider />
