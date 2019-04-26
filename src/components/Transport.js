@@ -43,11 +43,10 @@ const Mode = styled(Text)`
 const Transport = props => {
   return (
     <Container py={2} px={3} alignItems="center">
-      <Text color="silver" fontWeight="bold" fontSize={4}>
+      <Text color="silver" fontWeight="bold" fontSize={4} width="3em">
         <PatternText>P</PatternText>
         {String(props.pattern + 1).padStart(2, '0')}
       </Text>
-      <Divider />
       <TransportSection title="Mode">
         <Flex>
           {/* TODO, not really needed with keyboard
