@@ -3,7 +3,6 @@ import KeyboardEventHandler from 'react-keyboard-event-handler';
 import Transport from './Transport';
 
 const modeKeyMap = {
-  p: 'prf',
   '[': 'seq',
   ']': 'pat',
 };
@@ -57,7 +56,7 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
   return (
     <>
       <KeyboardEventHandler
-        handleKeys={['p', '[', ']']}
+        handleKeys={['[', ']']}
         onKeyEvent={key => {
           dispatch({ type: 'mode', mode: modeKeyMap[key] });
         }}
@@ -67,6 +66,20 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         onKeyEvent={(key, event) => {
           event.preventDefault();
           togglePlay();
+        }}
+      />
+      <KeyboardEventHandler
+        handleKeys={['m']}
+        onKeyEvent={(key, event) => {
+          event.preventDefault();
+          dispatch({ type: 'metronome-toggle' });
+        }}
+      />
+      <KeyboardEventHandler
+        handleKeys={['l']}
+        onKeyEvent={(key, event) => {
+          event.preventDefault();
+          dispatch({ type: 'record-perf-toggle' });
         }}
       />
       <Transport
