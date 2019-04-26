@@ -24,7 +24,9 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         audio: true,
       })
       .then(stream => {
-        mediaRecorderRef.current = new MediaRecorder(stream);
+        mediaRecorderRef.current = new MediaRecorder(stream, {
+          mimeType: 'audio/webm',
+        });
 
         mediaRecorderRef.current.ondataavailable = event => {
           chunksRef.current.push(event.data);
@@ -33,7 +35,7 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         mediaRecorderRef.current.onstop = () => {
           const name = Date.now();
           const blob = new Blob(chunksRef.current, {
-            type: 'audio/ogg; codecs=opus',
+            type: 'audio/webm; codecs=opus',
           });
 
           dispatch({
