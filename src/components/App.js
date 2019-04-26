@@ -1,5 +1,5 @@
 import produce from 'immer';
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import { Flex, Box } from 'rebass';
 import styled from 'styled-components';
 import Tone from 'tone';
@@ -167,10 +167,8 @@ function reducer(state, action) {
   }
 
   switch (action.type) {
-    case 'play-start':
-      return { ...state, playing: true };
-    case 'play-stop':
-      return { ...state, playing: false };
+    case 'play-toggle':
+      return { ...state, playing: !state.playing };
     case 'bpm':
       return { ...state, bpm: action.bpm };
     case 'swing':
@@ -310,11 +308,18 @@ function reducer(state, action) {
         metronome: !state.metronome,
       };
     case 'copy-pattern-toggle':
-      return {
-        ...state,
-        copyingPattern: !state.copyingPattern,
-        copiedPatterns: state.copyingPattern ? state.copiedPatterns : [],
-      };
+      return state.copyingPattern
+        ? {
+            ...state,
+            copyingPattern: false,
+            copiedPatterns: [],
+          }
+        : {
+            ...state,
+            playing: false,
+            patternChain: [state.activePattern],
+            copyingPattern: true,
+          };
     case 'copy-pattern-to':
       return state.copyingPattern
         ? {
@@ -433,26 +438,26 @@ let dispatchEvent;
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const initialMountRef = useRef(true);
   dispatchEvent = dispatch;
 
   const hasSamples = state.samples.length > 0;
 
-  function togglePlay() {
-    if (!hasSamples) {
-      return;
+  useEffect(() => {
+    if (!initialMountRef.current && hasSamples) {
+      if (state.playing) {
+        Tone.Transport.start();
+      } else {
+        Tone.Transport.stop();
+        prevStep = 0;
+        prevTime = 0;
+        currentTick = 0;
+        patternChainPlaybackPos = 0;
+      }
     }
-    if (state.playing) {
-      dispatch({ type: 'play-stop' });
-      Tone.Transport.stop();
-      prevStep = 0;
-      prevTime = 0;
-      currentTick = 0;
-      patternChainPlaybackPos = 0;
-    } else {
-      dispatch({ type: 'play-start' });
-      Tone.Transport.start();
-    }
-  }
+
+    initialMountRef.current = false;
+  });
 
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
@@ -489,7 +494,9 @@ const App = () => {
           <Transport
             state={state}
             dispatch={dispatch}
-            togglePlay={togglePlay}
+            togglePlay={() => {
+              dispatch({ type: 'play-toggle' });
+            }}
           />
         </Box>
         <Flex>

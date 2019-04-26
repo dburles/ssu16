@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Box } from 'rebass';
 import Container from './Container';
-import Title from './Title';
 
 const PatternParameters = props => {
   return (
