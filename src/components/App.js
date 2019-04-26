@@ -109,6 +109,7 @@ const initialState = {
 
 const mutableState = {
   patterns: [],
+  patternChain: [0],
   activePattern: 0,
   active32Step: 0,
   liveRecordTime: undefined,
@@ -119,7 +120,7 @@ function volumeToDb(volume) {
 }
 
 function reducer(state, action) {
-  console.log(action);
+  console.log(action, state);
 
   function parameterLocked() {
     return state.samples
@@ -225,6 +226,11 @@ function reducer(state, action) {
         ...state,
         lastPlayedPlaybackRate: action.lastPlayedPlaybackRate,
       };
+    case 'set-active-pattern':
+      return {
+        ...state,
+        activePattern: action.padId,
+      };
     case 'pattern-select':
       return {
         ...state,
@@ -318,6 +324,7 @@ const prevSamples = {};
 let prevStep = 0;
 let prevTime = 0;
 let currentTick = 0;
+let patternChainPlaybackPos = 0;
 
 const liveRecordCaptureLoop = new Tone.Loop(time => {
   currentTick = time;
@@ -338,10 +345,26 @@ const loop = new Tone.Sequence(
             step;
 
       dispatchEvent({ type: 'toggle-step', padId: closestStep });
-
       mutableState.liveRecordTime = undefined;
     }
-    mutableState.patterns[mutableState.activePattern][step].forEach(
+
+    const currentPattern = mutableState.patternChain[patternChainPlaybackPos];
+
+    if (step === 0) {
+      dispatchEvent({ type: 'set-active-pattern', padId: currentPattern });
+    }
+
+    if (step === 15) {
+      if (patternChainPlaybackPos === mutableState.patternChain.length - 1) {
+        // We have reached the end of the pattern
+        patternChainPlaybackPos = 0;
+      } else {
+        // move onto the next pattern
+        patternChainPlaybackPos += 1;
+      }
+    }
+
+    mutableState.patterns[currentPattern][step].forEach(
       ({ id, sample, start, offset }) => {
         // stop previous instance of this sample *in any step prior to this one*
         if (prevSamples[id]) {
@@ -380,6 +403,10 @@ const App = () => {
     if (state.playing) {
       dispatch({ type: 'play-stop' });
       Tone.Transport.stop();
+      prevStep = 0;
+      prevTime = 0;
+      currentTick = 0;
+      patternChainPlaybackPos = 0;
     } else {
       dispatch({ type: 'play-start' });
       Tone.Transport.start();
@@ -395,9 +422,13 @@ const App = () => {
   useEffect(() => {
     Tone.Transport.swing = state.swing / 100;
     Tone.Transport.bpm.value = state.bpm;
+  }, [state.bpm, state.swing]);
+
+  useEffect(() => {
     mutableState.activePattern = state.activePattern;
     mutableState.patterns = state.patterns;
-  }, [state.bpm, state.swing, state.activePattern, state.patterns]);
+    mutableState.patternChain = state.patternChain;
+  }, [state.activePattern, state.patternChain, state.patterns]);
 
   return (
     <Flex>
