@@ -1,5 +1,6 @@
 import React from 'react';
 import Lock from 'react-feather/dist/icons/lock';
+import Trash2 from 'react-feather/dist/icons/trash-2';
 import Unlock from 'react-feather/dist/icons/unlock';
 import { Button, Box } from 'rebass';
 import Container from './Container';
@@ -7,7 +8,11 @@ import Input from './Input';
 import Title from './Title';
 
 const Control = props => {
-  return <Box p={3}>{props.children}</Box>;
+  return (
+    <Box p={3} {...props}>
+      {props.children}
+    </Box>
+  );
 };
 
 const SampleParameters = props => {
@@ -45,7 +50,7 @@ const SampleParameters = props => {
           width={1}
         />
       </Control>
-      <Control>
+      <Control flex={1}>
         <Title>Start</Title>
         <Input
           type="number"
@@ -63,11 +68,12 @@ const SampleParameters = props => {
         <Button
           bg="transparent"
           border="1px solid"
-          fontSize="11px"
           color="gray"
           onClick={props.onDelete}
+          py={1}
+          px={2}
         >
-          Delete
+          <Trash2 />
         </Button>
       </Control>
     </Container>

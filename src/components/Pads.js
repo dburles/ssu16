@@ -28,6 +28,7 @@ const Pads = props => {
       name: padNames[pos],
       litPad: props.litPads.includes(pos),
       litIndicator: props.litIndicators.includes(pos),
+      flashingIndicator: props.flashingIndicators.includes(pos),
       onPadPress: () => props.onPadPress(pos),
     };
   }

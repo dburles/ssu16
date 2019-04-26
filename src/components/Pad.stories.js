@@ -10,4 +10,5 @@ const PadProps = {
 storiesOf('Components/Pad', module)
   .add('Default', () => <Pad {...PadProps} />)
   .add('Lit Indicator', () => <Pad {...PadProps} litIndicator />)
+  .add('Flashing Indicator', () => <Pad {...PadProps} flashingIndicator />)
   .add('Lit Pad', () => <Pad {...PadProps} litPad />);

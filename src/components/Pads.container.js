@@ -43,7 +43,10 @@ const PadsContainer = ({ state, dispatch, activeStep, onLiveRecord }) => {
     dispatch({ type: 'toggle-step', padId });
   }
   function pattern(padId) {
-    dispatch({ type: 'pattern-select', padId });
+    if (state.copyingPattern) {
+      return dispatch({ type: 'copy-pattern-to', padId });
+    }
+    return dispatch({ type: 'pattern-select', padId });
   }
   const modeFuncMap = {
     prf: perform,
@@ -65,25 +68,35 @@ const PadsContainer = ({ state, dispatch, activeStep, onLiveRecord }) => {
         .filter(value => value !== undefined);
     }
     if (state.mode === 'pat') {
+      if (state.copyingPattern) {
+        return [state.activePattern, ...state.copiedPatterns];
+      }
       return state.patternChain;
     }
-
     return [];
   }
 
   function litIndicators() {
-    // TODO
-    // if (state.mode === 'pat') {
-    //   const lit = [];
-    //   state.patterns.forEach((step, n) => {
-    //     // console.log(step[n], n);
-    //     if (step[n].length > 0) {
-    //       lit.push(n);
-    //     }
-    //   });
-    //   return lit;
-    // }
+    if (state.mode === 'pat') {
+      // Displays lit indicators that contain any active steps
+      return state.patterns
+        .map((pattern, patternIndex) => {
+          return pattern.reduce((acc, step) => {
+            return acc + step.length;
+          }, 0) > 0
+            ? patternIndex
+            : undefined;
+        })
+        .filter(active => active !== undefined);
+    }
     return [activeStep];
+  }
+
+  function flashingIndicators() {
+    if (state.mode === 'pat' && state.copyingPattern) {
+      return [state.activePattern];
+    }
+    return [];
   }
 
   return (
@@ -105,6 +118,7 @@ const PadsContainer = ({ state, dispatch, activeStep, onLiveRecord }) => {
       <Pads
         litPads={litPads()}
         litIndicators={litIndicators()}
+        flashingIndicators={flashingIndicators()}
         onPadPress={press}
       />
     </>

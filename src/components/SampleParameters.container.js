@@ -24,7 +24,9 @@ const SampleParametersContainer = ({ state, dispatch }) => {
       }}
       locked={locked}
       onDelete={() => {
-        if (confirm('Are you sure?')) {
+        if (
+          confirm('Are you sure you wish to remove this sound from the pool?')
+        ) {
           dispatch({ type: 'delete-active-sound' });
         }
       }}

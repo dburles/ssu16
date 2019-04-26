@@ -107,6 +107,8 @@ const initialState = {
   // or start/stop.
   recordAudioWhileHeld: true,
   metronome: true,
+  copyingPattern: false,
+  copiedPatterns: [],
 };
 
 // Values shared with React state, but are referenced by
@@ -125,7 +127,7 @@ function volumeToDb(volume) {
 }
 
 function reducer(state, action) {
-  console.log(action, state);
+  console.log(action);
 
   function parameterLocked() {
     return state.samples.find(sample => sample.id === state.activeSampleId)
@@ -307,6 +309,27 @@ function reducer(state, action) {
         ...state,
         metronome: !state.metronome,
       };
+    case 'copy-pattern-toggle':
+      return {
+        ...state,
+        copyingPattern: !state.copyingPattern,
+        copiedPatterns: state.copyingPattern ? state.copiedPatterns : [],
+      };
+    case 'copy-pattern-to':
+      return state.copyingPattern
+        ? {
+            ...state,
+            copiedPatterns: [
+              ...new Set([...state.copiedPatterns, action.padId]),
+            ],
+            patterns: state.patterns.map((pattern, patternIndex) => {
+              if (patternIndex === action.padId) {
+                return [...state.patterns[state.activePattern]];
+              }
+              return pattern;
+            }),
+          }
+        : state;
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -456,7 +479,7 @@ const App = () => {
   ]);
 
   return (
-    <Flex>
+    <Flex m={1}>
       <SoundPoolWrapper>
         <SoundPool state={state} dispatch={dispatch} />
       </SoundPoolWrapper>
@@ -479,7 +502,7 @@ const App = () => {
               mutableState.liveRecordTime = currentTick;
             }}
           />
-          <ContextParameters mode={state.mode} />
+          <ContextParameters state={state} dispatch={dispatch} />
         </Flex>
       </Flex>
     </Flex>

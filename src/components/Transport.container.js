@@ -14,9 +14,7 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
   useEffect(() => {
     if (mediaRecorderRef.current) {
       const method = state.recordingAudio ? 'start' : 'stop';
-      console.log(method);
       mediaRecorderRef.current[method]();
-      console.log(state.recordingAudio, mediaRecorderRef.current.state);
     }
   }, [state.recordingAudio]);
 
@@ -29,7 +27,6 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
         mediaRecorderRef.current = new MediaRecorder(stream);
 
         mediaRecorderRef.current.ondataavailable = event => {
-          console.log('x');
           chunksRef.current.push(event.data);
         };
 

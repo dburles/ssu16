@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flex, Box } from 'rebass';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { color, space, width, borders, themeGet } from 'styled-system';
 
 const Indicator = styled.div`
@@ -8,6 +8,22 @@ const Indicator = styled.div`
   ${width}
   ${space}
   ${borders}
+
+  ${props =>
+    props.flashing &&
+    css`
+      @keyframes flash {
+        0% {
+          background-color: transparent;
+          border: 1px solid ${themeGet('colors.gray')};
+        }
+        50% {
+          background-color: ${themeGet('colors.red')};
+          border-color: ${themeGet('colors.red')};
+        }
+      }
+      animation: flash 0.3s step-end infinite;
+    `};
 `;
 
 const PadBox = styled(Box)`
@@ -38,16 +54,17 @@ const Pad = props => {
       </PadBox>
       <Flex justifyContent="center">
         <Indicator
-          p="3px"
+          p="4px"
           borderRadius={5}
           border="1px solid"
+          flashing={props.flashingIndicator}
           {...(props.litIndicator
             ? {
                 bg: 'red',
                 borderColor: 'red',
               }
             : {
-                borderColor: 'grey',
+                borderColor: 'gray',
               })}
         />
       </Flex>
