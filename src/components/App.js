@@ -359,9 +359,9 @@ const loop = new Tone.Sequence(
       const closestStep =
         Math.abs(mutableState.liveRecordTime - prevTime) <
         Math.abs(mutableState.liveRecordTime - time)
-          ? //  Closer to previous step
+          ? // Closer to previous step.
             prevStep
-          : // Closer to this step
+          : // Closer to this step.
             step;
 
       dispatchEvent({ type: 'toggle-step', padId: closestStep });
@@ -376,17 +376,17 @@ const loop = new Tone.Sequence(
 
     if (step === 15) {
       if (patternChainPlaybackPos === mutableState.patternChain.length - 1) {
-        // We have reached the end of the pattern
+        // We have reached the end of the pattern.
         patternChainPlaybackPos = 0;
       } else {
-        // move onto the next pattern
+        // Move onto the next pattern.
         patternChainPlaybackPos += 1;
       }
     }
 
     mutableState.patterns[currentPattern][step].forEach(
       ({ id, sample, start, offset }) => {
-        // stop previous instance of this sample *in any step prior to this one*
+        // Stop previous instance of this sample *in any step prior to this one*.
         if (prevSamples[id]) {
           prevSamples[id].stop();
         }
