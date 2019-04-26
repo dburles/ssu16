@@ -3,6 +3,7 @@ import Lock from 'react-feather/dist/icons/lock';
 import Trash2 from 'react-feather/dist/icons/trash-2';
 import Unlock from 'react-feather/dist/icons/unlock';
 import { Button, Box } from 'rebass';
+import styled from 'styled-components';
 import Container from './Container';
 import Input from './Input';
 import Title from './Title';
@@ -14,6 +15,86 @@ const Control = props => {
     </Box>
   );
 };
+
+const Range = styled.input`
+  -webkit-appearance: none;
+  width: 100%;
+  margin: 5.9px 0;
+
+  &:focus {
+    outline: none;
+  }
+  &::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 10.2px;
+    cursor: pointer;
+    background: #484d4d;
+    border-radius: 0px;
+    border: 0px solid #010101;
+  }
+  &::-webkit-slider-thumb {
+    border: 0px solid #ff1e00;
+    height: 22px;
+    width: 13px;
+    border-radius: 6px;
+    background: #ffffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -5.9px;
+  }
+  &:focus::-webkit-slider-runnable-track {
+    background: #545a5a;
+  }
+  &::-moz-range-track {
+    width: 100%;
+    height: 10.2px;
+    cursor: pointer;
+    background: #484d4d;
+    border-radius: 0px;
+    border: 0px solid #010101;
+  }
+  &::-moz-range-thumb {
+    border: 0px solid #ff1e00;
+    height: 22px;
+    width: 13px;
+    border-radius: 6px;
+    background: #ffffff;
+    cursor: pointer;
+  }
+  &::-ms-track {
+    width: 100%;
+    height: 10.2px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+  &::-ms-fill-lower {
+    background: #3c4040;
+    border: 0px solid #010101;
+    border-radius: 0px;
+  }
+  &::-ms-fill-upper {
+    background: #484d4d;
+    border: 0px solid #010101;
+    border-radius: 0px;
+  }
+  &::-ms-thumb {
+    border: 0px solid #ff1e00;
+    height: 22px;
+    width: 13px;
+    border-radius: 0px;
+    background: #ffffff;
+    cursor: pointer;
+    height: 10.2px;
+  }
+  &:focus::-ms-fill-lower {
+    background: #484d4d;
+  }
+  &:focus::-ms-fill-upper {
+    background: #545a5a;
+  }
+`;
 
 const SampleParameters = props => {
   return (
@@ -30,7 +111,7 @@ const SampleParameters = props => {
       </Control>
       <Control>
         <Title>Volume</Title>
-        <Input
+        <Range
           type="range"
           min={0}
           max={100}
@@ -41,7 +122,7 @@ const SampleParameters = props => {
       </Control>
       <Control>
         <Title>Offset</Title>
-        <Input
+        <Range
           type="range"
           min={0}
           max={100}
