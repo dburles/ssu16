@@ -132,7 +132,7 @@ const initialState = {
   // Hold the record button down and release to stop
   // or start/stop.
   recordAudioWhileHeld: true,
-  metronome: true,
+  metronome: false,
   copyingPattern: false,
   copiedPatterns: [],
   activeStep: 0,
