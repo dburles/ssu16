@@ -18,7 +18,7 @@ export default function State(initialState, setterHandler = value => value) {
         const [, setState] = useState();
         useEffect(() => {
           return subscribe(() => setState({}));
-        });
+        }, []);
         return React.createElement(WrappedComponent, props);
       },
       function shouldComponentUpdate(props, nextProps) {
