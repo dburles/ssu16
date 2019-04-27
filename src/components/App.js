@@ -135,6 +135,7 @@ const initialState = {
   activeStep: 0,
   help: true,
   soundPoolMuted: false,
+  patternChainPlaybackPos: 0,
 };
 
 // Values shared with React state, but are referenced by
@@ -146,6 +147,7 @@ const mutableState = {
   active32Step: 0,
   liveRecordTime: undefined,
   metronome: true,
+  patternChainPlaybackPos: 0,
 };
 
 function volumeToDb(volume) {
@@ -306,6 +308,7 @@ function reducer(state, action) {
       return {
         ...state,
         activePattern: action.padId,
+        patternChainPlaybackPos: 0,
         chaining: true,
         patternChain: state.chaining
           ? [...state.patternChain, action.padId]
@@ -454,7 +457,6 @@ const prevSamples = {};
 let prevStep = 0;
 let prevTime = 0;
 let currentTick = 0;
-let patternChainPlaybackPos = 0;
 
 const liveRecordCaptureLoop = new Tone.Loop(time => {
   currentTick = time;
@@ -495,7 +497,8 @@ const loop = new Tone.Sequence(
       mutableState.liveRecordTime = undefined;
     }
 
-    const currentPattern = mutableState.patternChain[patternChainPlaybackPos];
+    const currentPattern =
+      mutableState.patternChain[mutableState.patternChainPlaybackPos];
 
     if (step === 0) {
       Tone.Draw.schedule(() => {
@@ -504,12 +507,15 @@ const loop = new Tone.Sequence(
     }
 
     if (step === 15) {
-      if (patternChainPlaybackPos === mutableState.patternChain.length - 1) {
+      if (
+        mutableState.patternChainPlaybackPos ===
+        mutableState.patternChain.length - 1
+      ) {
         // We have reached the end of the pattern.
-        patternChainPlaybackPos = 0;
+        mutableState.patternChainPlaybackPos = 0;
       } else {
         // Move onto the next pattern.
-        patternChainPlaybackPos += 1;
+        mutableState.patternChainPlaybackPos += 1;
       }
     }
 
@@ -560,7 +566,7 @@ const App = () => {
         prevStep = 0;
         prevTime = 0;
         currentTick = 0;
-        patternChainPlaybackPos = 0;
+        mutableState.patternChainPlaybackPos = 0;
       }
     }
 
@@ -584,7 +590,13 @@ const App = () => {
     mutableState.patterns = state.patterns;
     mutableState.patternChain = state.patternChain;
     mutableState.metronome = state.metronome;
-  }, [state.metronome, state.patternChain, state.patterns]);
+    mutableState.patternChainPlaybackPos = state.patternChainPlaybackPos;
+  }, [
+    state.metronome,
+    state.patternChain,
+    state.patternChainPlaybackPos,
+    state.patterns,
+  ]);
 
   useEffect(() => {
     mutableState.activePattern = state.activePattern;
