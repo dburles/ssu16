@@ -403,7 +403,7 @@ metronomeLoop.start();
 liveRecordCaptureLoop.start();
 
 const metronome = new Tone.Player(Metronome).toMaster();
-metronome.volume.value = volumeToDb(60);
+metronome.volume.value = volumeToDb(40);
 
 const loop = new Tone.Sequence(
   (time, step) => {
