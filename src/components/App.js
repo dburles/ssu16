@@ -367,6 +367,12 @@ function reducer(state, action) {
         samples: state.samples.filter(
           sound => sound.id !== state.activeSampleId,
         ),
+        // Remove all instances of this sound.
+        patterns: state.patterns.map(pattern => {
+          return pattern.map(step => {
+            return step.filter(sound => sound.id !== state.activeSampleId);
+          });
+        }),
       };
     case 'metronome-toggle':
       return {
@@ -414,6 +420,8 @@ function reducer(state, action) {
     case 'delete-all-sound':
       return {
         ...state,
+        patterns: [],
+        activePattern: 0,
         samples: [],
         activeSampleId: 0,
       };

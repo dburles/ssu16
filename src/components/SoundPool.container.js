@@ -74,7 +74,11 @@ const SoundPoolContainer = ({ dispatch, state }) => {
           });
         }}
         onDelete={() => {
-          if (confirm('Are you sure you wish to clear the sound pool?')) {
+          if (
+            confirm(
+              'Are you sure you wish to clear the sound pool and erase all patterns?',
+            )
+          ) {
             dispatch({ type: 'delete-all-sound' });
           }
         }}
