@@ -193,7 +193,7 @@ function reducer(state, action) {
               return pattern.map((step, stepIndex) => {
                 if (stepIndex === action.padId) {
                   return step.filter(
-                    sound => sound.id === state.activeSampleId,
+                    sound => sound.id !== state.activeSampleId,
                   );
                 }
                 return step;
