@@ -17,7 +17,7 @@ const keyMapSeq = {
   'shift+z': 12, 'shift+x': 13, 'shift+c': 14, 'shift+v': 15,
 };
 // prettier-ignore
-const keyMapPrf = {
+const keyMap = {
   '1': 0 , '2': 1 , '3': 2 , '4': 3,
   'q': 4 , 'w': 5 , 'e': 6 , 'r': 7,
   'a': 8 , 's': 9 , 'd': 10, 'f': 11,
@@ -55,6 +55,14 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
   };
   function press(padId) {
     modeFuncMap[state.mode](padId);
+  }
+  const modeFuncMapKeys = {
+    prf: perform,
+    seq: perform,
+    pat: pattern,
+  };
+  function keyPress(padId) {
+    modeFuncMapKeys[state.mode](padId);
   }
 
   function litPads() {
@@ -102,10 +110,10 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
   return (
     <>
       <KeyboardEventHandler
-        handleKeys={Object.keys(keyMapPrf)}
+        handleKeys={Object.keys(keyMap)}
         onKeyEvent={(key, event) => {
           event.preventDefault();
-          perform(keyMapPrf[key]);
+          keyPress(keyMap[key]);
         }}
       />
       <KeyboardEventHandler
