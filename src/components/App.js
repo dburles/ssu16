@@ -440,7 +440,7 @@ const loop = new Tone.Sequence(
 
     Tone.Draw.schedule(() => {
       activeStep.set(step);
-    });
+    }, time);
     prevTime = time;
     prevStep = step;
 
