@@ -563,9 +563,7 @@ const App = () => {
   }, [state.activePattern]);
 
   return (
-    <Flex m={1}>
-      <SoundPool state={state} dispatch={dispatch} />
-
+    <Flex m={1} justifyContent="center">
       <Flex flexDirection="column">
         <Box>
           <Transport
@@ -576,8 +574,9 @@ const App = () => {
             }}
           />
         </Box>
-        {state.help && <Help />}
-        <Flex>
+
+        <Flex style={{ maxHeight: '500px' }}>
+          <SoundPool state={state} dispatch={dispatch} />
           {hasSamples && <SampleParameters state={state} dispatch={dispatch} />}
           <Pads
             state={state}
@@ -588,6 +587,8 @@ const App = () => {
           />
           <ContextParameters state={state} dispatch={dispatch} />
         </Flex>
+
+        {state.help && <Help />}
       </Flex>
     </Flex>
   );

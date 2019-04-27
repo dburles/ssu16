@@ -1,11 +1,13 @@
 import React from 'react';
 import { Button, Box } from 'rebass';
 import Container from './Container';
+import Header from './Header';
 
 const PatternParameters = props => {
   return (
-    <Container p={3}>
-      <Box>
+    <Container flex={1} flexDirection="column">
+      <Header>Patterns</Header>
+      <Box p={3} pt={0}>
         <Button
           as="div"
           onClick={props.toggleCopy}

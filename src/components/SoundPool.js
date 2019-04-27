@@ -15,15 +15,14 @@ const StyledPlus = styled(Plus)`
   color: ${themeGet('colors.base')};
 `;
 
-const SoundPoolContainer = styled(Container)`
-  max-height: 700px;
+const SoundsContainer = styled(Box)`
   overflow-y: auto;
 `;
 
 const SoundPool = props => {
   const filesRef = useRef();
   return (
-    <SoundPoolContainer flexDirection="column" py={3}>
+    <Container flexDirection="column" py={3}>
       <input
         ref={filesRef}
         id="addFiles"
@@ -46,23 +45,25 @@ const SoundPool = props => {
 
       <Space py={2} />
 
-      {props.samples.map(sample => (
-        <Text
-          flex={1}
-          style={{ cursor: 'pointer' }}
-          fontSize="12px"
-          py={1}
-          px={4}
-          color="silver"
-          key={sample.id}
-          onClick={() => props.onSoundPress(sample.id)}
-          {...(props.activeSampleId === sample.id
-            ? { bg: 'maroon', color: 'white' }
-            : {})}
-        >
-          {sample.name}
-        </Text>
-      ))}
+      <SoundsContainer>
+        {props.samples.map(sample => (
+          <Text
+            flex={1}
+            style={{ cursor: 'pointer' }}
+            fontSize="13px"
+            py={1}
+            px={4}
+            color="silver"
+            key={sample.id}
+            onClick={() => props.onSoundPress(sample.id)}
+            {...(props.activeSampleId === sample.id
+              ? { bg: 'maroon', color: 'white' }
+              : {})}
+          >
+            {sample.name}
+          </Text>
+        ))}
+      </SoundsContainer>
 
       <Flex px={3} pt={3}>
         <Box flex={1}>
@@ -75,7 +76,7 @@ const SoundPool = props => {
           />
         </Box>
       </Flex>
-    </SoundPoolContainer>
+    </Container>
   );
 };
 

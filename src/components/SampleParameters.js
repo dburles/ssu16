@@ -2,9 +2,10 @@ import React, { useRef } from 'react';
 import Lock from 'react-feather/dist/icons/lock';
 import Trash2 from 'react-feather/dist/icons/trash-2';
 import Unlock from 'react-feather/dist/icons/unlock';
-import { Button, Box } from 'rebass';
+import { Button, Box, Flex } from 'rebass';
 import styled from 'styled-components';
 import Container from './Container';
+import Header from './Header';
 import IconButton from './IconButton';
 import Input from './Input';
 import Title from './Title';
@@ -27,7 +28,10 @@ const SampleParameters = props => {
 
   return (
     <Container flexDirection="column">
-      <Control>
+      <Header>Sound</Header>
+
+      <Flex pt={0} p={3} alignItems="center">
+        <Title flex={1}>Lock</Title>
         <Button
           as="div"
           onClick={props.onToggleSampleLock}
@@ -37,7 +41,8 @@ const SampleParameters = props => {
         >
           {props.locked ? <Lock /> : <Unlock />}
         </Button>
-      </Control>
+      </Flex>
+
       <Control>
         <Title>Volume</Title>
         <Range
@@ -51,6 +56,7 @@ const SampleParameters = props => {
           onMouseUp={() => volumeRef.current.blur()}
         />
       </Control>
+
       <Control>
         <Title>Offset</Title>
         <Range
@@ -64,6 +70,7 @@ const SampleParameters = props => {
           onMouseUp={() => offsetRef.current.blur()}
         />
       </Control>
+
       <Control flex={1}>
         <Title>Start</Title>
         <Input
@@ -74,10 +81,12 @@ const SampleParameters = props => {
           width={1}
         />
       </Control>
+
       {/* TODO <Control>
         <Title>Length</Title>
         <Input type="range" min={0} max={15} width={1} />
       </Control> */}
+
       <Control>
         <IconButton onClick={props.onDelete} icon={<Trash2 />} />
       </Control>
