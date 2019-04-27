@@ -11,6 +11,7 @@ const TransportProps = {
   onChangeSwing: action('onChangeSwing'),
   onChangeMode: action('onChangeMode'),
   onTogglePlay: action('onTogglePlay'),
+  mode: 'seq',
 };
 
 storiesOf('Components/Transport', module)

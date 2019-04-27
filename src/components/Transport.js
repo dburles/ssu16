@@ -166,6 +166,10 @@ const Transport = props => {
             fontWeight="normal"
             fontSize="0.7em"
             onClick={props.onTap}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
           >
             TAP
           </Button>
