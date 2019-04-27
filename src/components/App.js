@@ -190,6 +190,37 @@ function reducer(state, action) {
     });
   }
 
+  function addSoundToStep() {
+    const { buffer, volume, start, offset } = state.samples.find(
+      sound => sound.id === state.activeSampleId,
+    );
+    const sample = new Tone.Player(buffer).toMaster();
+    sample.volume.value = volumeToDb(volume);
+    sample.playbackRate = state.lastPlayedPlaybackRate;
+
+    const sound = {
+      id: state.activeSampleId,
+      sample,
+      start,
+      offset,
+    };
+
+    return {
+      ...state,
+      patterns: state.patterns.map((pattern, patternIndex) => {
+        if (patternIndex === state.activePattern) {
+          return pattern.map((step, stepIndex) => {
+            if (stepIndex === action.padId) {
+              return [...step, sound];
+            }
+            return step;
+          });
+        }
+        return pattern;
+      }),
+    };
+  }
+
   switch (action.type) {
     case 'play-toggle':
       return { ...state, playing: !state.playing };
@@ -205,6 +236,18 @@ function reducer(state, action) {
         activeSampleId: action.sampleId,
         lastPlayedPlaybackRate: 1,
       };
+    case 'record-step':
+      if (
+        state.playing &&
+        state.recordingPrf &&
+        !// Already active?
+        state.patterns[state.activePattern][action.padId].some(
+          sound => sound.id === state.activeSampleId,
+        )
+      ) {
+        return addSoundToStep();
+      }
+      return state;
     case 'toggle-step':
       if (
         // Already active?
@@ -212,9 +255,6 @@ function reducer(state, action) {
           sound => sound.id === state.activeSampleId,
         )
       ) {
-        if (state.playing && state.recordingPrf) {
-          return state;
-        }
         return {
           ...state,
           patterns: state.patterns.map((pattern, patternIndex) => {
@@ -231,37 +271,9 @@ function reducer(state, action) {
             return pattern;
           }),
         };
-      } else {
-        // Otherwise, add a new instance.
-        const { buffer, volume, start, offset } = state.samples.find(
-          sound => sound.id === state.activeSampleId,
-        );
-        const sample = new Tone.Player(buffer).toMaster();
-        sample.volume.value = volumeToDb(volume);
-        sample.playbackRate = state.lastPlayedPlaybackRate;
-
-        const sound = {
-          id: state.activeSampleId,
-          sample,
-          start,
-          offset,
-        };
-
-        return {
-          ...state,
-          patterns: state.patterns.map((pattern, patternIndex) => {
-            if (patternIndex === state.activePattern) {
-              return pattern.map((step, stepIndex) => {
-                if (stepIndex === action.padId) {
-                  return [...step, sound];
-                }
-                return step;
-              });
-            }
-            return pattern;
-          }),
-        };
       }
+      // Otherwise, add a new instance.
+      return addSoundToStep();
     case 'sample-volume':
       return {
         ...state,
@@ -450,7 +462,7 @@ const loop = new Tone.Sequence(
           : // Closer to this step.
             step;
 
-      dispatchEvent({ type: 'toggle-step', padId: closestStep });
+      dispatchEvent({ type: 'record-step', padId: closestStep });
       mutableState.liveRecordTime = undefined;
     }
 
