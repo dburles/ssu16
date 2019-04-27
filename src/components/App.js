@@ -472,14 +472,19 @@ const loop = new Tone.Sequence(
           : // Closer to this step.
             step;
 
-      dispatchEvent({ type: 'record-step', padId: closestStep });
+      Tone.Draw.schedule(() => {
+        dispatchEvent({ type: 'record-step', padId: closestStep });
+      }, time);
+
       mutableState.liveRecordTime = undefined;
     }
 
     const currentPattern = mutableState.patternChain[patternChainPlaybackPos];
 
     if (step === 0) {
-      dispatchEvent({ type: 'set-active-pattern', padId: currentPattern });
+      Tone.Draw.schedule(() => {
+        dispatchEvent({ type: 'set-active-pattern', padId: currentPattern });
+      }, time);
     }
 
     if (step === 15) {
@@ -506,6 +511,7 @@ const loop = new Tone.Sequence(
     Tone.Draw.schedule(() => {
       dispatchEvent({ type: 'set-active-step', step });
     }, time);
+
     prevTime = time;
     prevStep = step;
 
