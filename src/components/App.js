@@ -1,7 +1,5 @@
-import produce from 'immer';
 import React, { useReducer, useEffect, useRef } from 'react';
 import { Flex, Box } from 'rebass';
-import styled from 'styled-components';
 import Tone from 'tone';
 import Metronome from '../samples/Metronome.flac';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
@@ -182,33 +180,59 @@ function reducer(state, action) {
         lastPlayedPlaybackRate: 1,
       };
     case 'toggle-step':
-      return produce(state, draftState => {
-        if (
-          // Already active?
-          draftState.patterns[state.activePattern][action.padId].some(
-            sample => sample.id === state.activeSampleId,
-          )
-        ) {
-          draftState.patterns[state.activePattern][
-            action.padId
-          ] = state.patterns[state.activePattern][action.padId].filter(
-            sample => sample.id !== state.activeSampleId,
-          );
-        } else {
-          const { buffer, volume, start, offset } = state.samples.find(
-            sound => sound.id === state.activeSampleId,
-          );
-          const sample = new Tone.Player(buffer).toMaster();
-          sample.volume.value = volumeToDb(volume);
-          sample.playbackRate = state.lastPlayedPlaybackRate;
-          draftState.patterns[state.activePattern][action.padId].push({
-            id: state.activeSampleId,
-            sample,
-            start,
-            offset,
-          });
-        }
-      });
+      if (
+        // Already active?
+        state.patterns[state.activePattern][action.padId].some(
+          sound => sound.id === state.activeSampleId,
+        )
+      ) {
+        return {
+          ...state,
+          patterns: state.patterns.map((pattern, patternIndex) => {
+            if (patternIndex === state.activePattern) {
+              return pattern.map((step, stepIndex) => {
+                if (stepIndex === action.padId) {
+                  return step.filter(
+                    sound => sound.id === state.activeSampleId,
+                  );
+                }
+                return step;
+              });
+            }
+            return pattern;
+          }),
+        };
+      } else {
+        // Otherwise, add a new instance.
+        const { buffer, volume, start, offset } = state.samples.find(
+          sound => sound.id === state.activeSampleId,
+        );
+        const sample = new Tone.Player(buffer).toMaster();
+        sample.volume.value = volumeToDb(volume);
+        sample.playbackRate = state.lastPlayedPlaybackRate;
+
+        const sound = {
+          id: state.activeSampleId,
+          sample,
+          start,
+          offset,
+        };
+
+        return {
+          ...state,
+          patterns: state.patterns.map((pattern, patternIndex) => {
+            if (patternIndex === state.activePattern) {
+              return pattern.map((step, stepIndex) => {
+                if (stepIndex === action.padId) {
+                  return [...step, sound];
+                }
+                return step;
+              });
+            }
+            return pattern;
+          }),
+        };
+      }
     case 'sample-volume':
       return {
         ...state,
