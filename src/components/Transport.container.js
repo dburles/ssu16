@@ -119,6 +119,9 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
           dispatch({ type: 'help-toggle' });
         }}
         help={state.help}
+        onTap={() => {
+          dispatch({ type: 'bpm-tap' });
+        }}
       />
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect, useRef } from 'react';
 import { Flex, Box } from 'rebass';
 import Tone from 'tone';
+import bpmTap from '../lib/bpm';
 import Metronome from '../samples/Metronome.flac';
 import BDHEAVY from '../samples/RX11/BD HEAVY.wav';
 import BDMD1 from '../samples/RX11/BD MD 1.wav';
@@ -430,6 +431,13 @@ function reducer(state, action) {
         ...state,
         soundPoolMuted: !state.soundPoolMuted,
       };
+    case 'bpm-tap': {
+      const { avg } = bpmTap.tap();
+      return {
+        ...state,
+        bpm: avg ? Math.round(avg) : state.bpm,
+      };
+    }
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -546,6 +554,7 @@ const App = () => {
     if (!initialMountRef.current && hasSamples) {
       if (state.playing) {
         Tone.Transport.start();
+        bpmTap.reset();
       } else {
         Tone.Transport.stop();
         prevStep = 0;
@@ -567,6 +576,7 @@ const App = () => {
   useEffect(() => {
     Tone.Transport.swing = state.swing / 100;
     Tone.Transport.bpm.value = state.bpm;
+    bpmTap.reset();
   }, [state.bpm, state.swing]);
 
   // Sync with mutableState.
