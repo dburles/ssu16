@@ -457,7 +457,9 @@ let dispatchEvent;
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialMountRef = useRef(true);
-  dispatchEvent = dispatch;
+  if (!dispatchEvent) {
+    dispatchEvent = dispatch;
+  }
 
   const hasSamples = state.samples.length > 0;
 
@@ -475,7 +477,7 @@ const App = () => {
     }
 
     initialMountRef.current = false;
-  });
+  }, [hasSamples, state.playing]);
 
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
