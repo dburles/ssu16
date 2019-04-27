@@ -17,7 +17,6 @@ import RimShot from '../samples/Roland_TR-707/RimShot.wav';
 import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 // import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
 import Tamb from '../samples/Roland_TR-707/Tamb.wav';
-import State from '../utils/tinystate';
 import ContextParameters from './ContextParameters.container';
 import Pads from './Pads.container';
 import SampleParameters from './SampleParameters.container';
@@ -107,6 +106,7 @@ const initialState = {
   metronome: true,
   copyingPattern: false,
   copiedPatterns: [],
+  activeStep: 0,
 };
 
 // Values shared with React state, but are referenced by
@@ -359,6 +359,11 @@ function reducer(state, action) {
             }),
           }
         : state;
+    case 'set-active-step':
+      return {
+        ...state,
+        activeStep: action.step,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -367,8 +372,6 @@ function reducer(state, action) {
 Tone.Transport.swingSubdivision = '16n';
 // Tone.Transport.loop = true;
 // Tone.Transport.loopEnd = '1';
-
-const activeStep = State(0);
 
 // Since each step will have a unique instance of 'sample', we can't call 'sample.restart'.
 // Instead, on each iteration we'll retain a record of the previous play, by the id.
@@ -439,7 +442,7 @@ const loop = new Tone.Sequence(
     );
 
     Tone.Draw.schedule(() => {
-      activeStep.set(step);
+      dispatchEvent({ type: 'set-active-step', step });
     }, time);
     prevTime = time;
     prevStep = step;
@@ -520,7 +523,6 @@ const App = () => {
           <Pads
             state={state}
             dispatch={dispatch}
-            activeStep={activeStep.get()}
             onLiveRecord={() => {
               mutableState.liveRecordTime = currentTick;
             }}
@@ -532,4 +534,4 @@ const App = () => {
   );
 };
 
-export default activeStep()(App);
+export default App;

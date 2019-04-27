@@ -24,7 +24,7 @@ const keyMapPrf = {
   'z': 12, 'x': 13, 'c': 14, 'v': 15,
 };
 
-const PadsContainer = ({ state, dispatch, activeStep, onLiveRecord }) => {
+const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
   function perform(padId) {
     const { sample, start } = state.samples.find(
       sound => sound.id === state.activeSampleId,
@@ -89,7 +89,7 @@ const PadsContainer = ({ state, dispatch, activeStep, onLiveRecord }) => {
         })
         .filter(active => active !== undefined);
     }
-    return [activeStep];
+    return [state.activeStep];
   }
 
   function flashingIndicators() {
