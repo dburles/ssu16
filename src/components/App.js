@@ -241,11 +241,11 @@ function reducer(state, action) {
       if (
         state.playing &&
         state.recordingPrf &&
-        !// Already active?
-        state.patterns[state.activePattern][action.padId].some(
+        !state.patterns[state.activePattern][action.padId].some(
           sound => sound.id === state.activeSampleId,
         )
       ) {
+        // Not already active?
         return addSoundToStep();
       }
       return state;
@@ -444,13 +444,13 @@ const liveRecordCaptureLoop = new Tone.Loop(time => {
   currentTick = time;
 }, '1i');
 
-const metronomeLoop = new Tone.Loop(time => {
-  if (mutableState.metronome) {
-    metronome.start(time);
-  }
-}, '4n');
+// const metronomeLoop = new Tone.Loop(time => {
+//   if (mutableState.metronome) {
+//     metronome.start(time);
+//   }
+// }, '4n');
 
-metronomeLoop.start();
+// metronomeLoop.start();
 liveRecordCaptureLoop.start();
 
 const metronome = new Tone.Player(Metronome).toMaster();
@@ -458,6 +458,10 @@ metronome.volume.value = volumeToDb(40);
 
 const loop = new Tone.Sequence(
   (time, step) => {
+    if (mutableState.metronome && step % 4 === 0) {
+      metronome.start(time);
+    }
+
     if (mutableState.liveRecordTime !== undefined) {
       // console.log(mutableState.liveRecordTime, prevTime, time);
       const closestStep =
