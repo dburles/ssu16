@@ -132,7 +132,7 @@ const initialState = {
   copyingPattern: false,
   copiedPatterns: [],
   activeStep: 0,
-  help: false,
+  help: true,
   soundPoolMuted: false,
 };
 
