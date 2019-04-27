@@ -371,6 +371,12 @@ function reducer(state, action) {
         ...state,
         help: !state.help,
       };
+    case 'delete-all-sound':
+      return {
+        ...state,
+        samples: [],
+        activeSampleId: 0,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }

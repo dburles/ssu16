@@ -60,6 +60,11 @@ const SoundPoolContainer = ({ dispatch, state }) => {
             // };
           });
         }}
+        onDelete={() => {
+          if (confirm('Are you sure you wish to clear the sound pool?')) {
+            dispatch({ type: 'delete-all-sound' });
+          }
+        }}
       />
     </>
   );
