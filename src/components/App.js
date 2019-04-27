@@ -2,21 +2,33 @@ import React, { useReducer, useEffect, useRef } from 'react';
 import { Flex, Box } from 'rebass';
 import Tone from 'tone';
 import Metronome from '../samples/Metronome.flac';
-import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
-// import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
-import CowBell from '../samples/Roland_TR-707/CowBell.wav';
-// import Crash from '../samples/Roland_TR-707/Crash.wav';
-import HandClap from '../samples/Roland_TR-707/HandClap.wav';
-import HhC from '../samples/Roland_TR-707/HhC.wav';
-// import HhO from '../samples/Roland_TR-707/HhO.wav';
-// import HiTom from '../samples/Roland_TR-707/HiTom.wav';
-// import LowTom from '../samples/Roland_TR-707/LowTom.wav';
-// import MedTom from '../samples/Roland_TR-707/MedTom.wav';
-// import Ride from '../samples/Roland_TR-707/Ride.wav';
-import RimShot from '../samples/Roland_TR-707/RimShot.wav';
-import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
-// import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
-import Tamb from '../samples/Roland_TR-707/Tamb.wav';
+import BDHEAVY from '../samples/RX11/BD HEAVY.wav';
+import BDMD1 from '../samples/RX11/BD MD 1.wav';
+import BDMD2 from '../samples/RX11/BD MD 2.wav';
+import CLAPS1 from '../samples/RX11/CLAPS 1.wav';
+import CLAPS2 from '../samples/RX11/CLAPS 2.wav';
+import COWBELL1 from '../samples/RX11/COWBELL 1.wav';
+import COWBELL2 from '../samples/RX11/COWBELL 2.wav';
+import HHCLOSED1 from '../samples/RX11/HH CLOSED 1.wav';
+import HHCLOSED2 from '../samples/RX11/HH CLOSED 2.wav';
+import HHCLOSEDPEDAL from '../samples/RX11/HH CLOSED PEDAL.wav';
+import HHOPEN1 from '../samples/RX11/HH OPEN 1.wav';
+import HHOPEN2 from '../samples/RX11/HH OPEN 2.wav';
+import RIMSHOT1 from '../samples/RX11/RIMSHOT 1.wav';
+import RIMSHOT2 from '../samples/RX11/RIMSHOT 2.wav';
+import SDHEAVY from '../samples/RX11/SD HEAVY.wav';
+import SDHITUNE1 from '../samples/RX11/SD HI TUNE 1.wav';
+import SDHITUNE2 from '../samples/RX11/SD HI TUNE 2.wav';
+import SDHITUNE3 from '../samples/RX11/SD HI TUNE 3.wav';
+import SDHITUNE4 from '../samples/RX11/SD HI TUNE 4.wav';
+import SDHITUNE5 from '../samples/RX11/SD HI TUNE 5.wav';
+import SDLIGHT from '../samples/RX11/SD LIGHT.wav';
+import SDMEDIUM from '../samples/RX11/SD MEDIUM.wav';
+import SHAKER from '../samples/RX11/SHAKER.wav';
+import TOM1 from '../samples/RX11/TOM 1.wav';
+import TOM2 from '../samples/RX11/TOM 2.wav';
+import TOM3 from '../samples/RX11/TOM 3.wav';
+import TOM4 from '../samples/RX11/TOM 4.wav';
 import ContextParameters from './ContextParameters.container';
 import Help from './Help';
 import Pads from './Pads.container';
@@ -40,21 +52,33 @@ function createSample(buffer, name, id) {
 
 const initialState = {
   samples: [
-    { sample: BassDrum1, name: 'BassDrum1.wav' },
-    { sample: CowBell, name: 'CowBell.wav' },
-    { sample: HandClap, name: 'HandClap.wav' },
-    // { sample: HhO, name: 'HhO.wav' },
-    // { sample: LowTom, name: 'LowTom.wav' },
-    // { sample: Ride, name: 'Ride.wav' },
-    { sample: Snare1, name: 'Snare1.wav' },
-    { sample: Tamb, name: 'Tamb.wav' },
-    // { sample: BassDrum2, name: 'BassDrum2.wav' },
-    // { sample: Crash, name: 'Crash.wav' },
-    { sample: HhC, name: 'HhC.wav' },
-    // { sample: HiTom, name: 'HiTom.wav' },
-    // { sample: MedTom, name: 'MedTom.wav' },
-    { sample: RimShot, name: 'RimShot.wav' },
-    // { sample: Snare2, name: 'Snare2.wav' },
+    { sample: BDHEAVY, name: 'BD HEAVY.wav' },
+    { sample: BDMD1, name: 'BD MD 1.wav' },
+    { sample: BDMD2, name: 'BD MD 2.wav' },
+    { sample: CLAPS1, name: 'CLAPS 1.wav' },
+    { sample: CLAPS2, name: 'CLAPS 2.wav' },
+    { sample: COWBELL1, name: 'COWBELL 1.wav' },
+    { sample: COWBELL2, name: 'COWBELL 2.wav' },
+    { sample: HHCLOSED1, name: 'HH CLOSED 1.wav' },
+    { sample: HHCLOSED2, name: 'HH CLOSED 2.wav' },
+    { sample: HHCLOSEDPEDAL, name: 'HH CLOSED PEDAL.wav' },
+    { sample: HHOPEN1, name: 'HH OPEN 1.wav' },
+    { sample: HHOPEN2, name: 'HH OPEN 2.wav' },
+    { sample: RIMSHOT1, name: 'RIMSHOT 1.wav' },
+    { sample: RIMSHOT2, name: 'RIMSHOT 2.wav' },
+    { sample: SDHEAVY, name: 'SD HEAVY.wav' },
+    { sample: SDHITUNE1, name: 'SD HI TUNE 1.wav' },
+    { sample: SDHITUNE2, name: 'SD HI TUNE 2.wav' },
+    { sample: SDHITUNE3, name: 'SD HI TUNE 3.wav' },
+    { sample: SDHITUNE4, name: 'SD HI TUNE 4.wav' },
+    { sample: SDHITUNE5, name: 'SD HI TUNE 5.wav' },
+    { sample: SDLIGHT, name: 'SD LIGHT.wav' },
+    { sample: SDMEDIUM, name: 'SD MEDIUM.wav' },
+    { sample: SHAKER, name: 'SHAKER.wav' },
+    { sample: TOM1, name: 'TOM 1.wav' },
+    { sample: TOM2, name: 'TOM 2.wav' },
+    { sample: TOM3, name: 'TOM 3.wav' },
+    { sample: TOM4, name: 'TOM 4.wav' },
   ].map(({ sample, name }, id) => createSample(sample, name, id)),
   // patterns[pattern][padId][{sample}] => createSample(...)
   // patterns [
