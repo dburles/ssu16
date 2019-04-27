@@ -2,6 +2,7 @@ import React from 'react';
 import Bell from 'react-feather/dist/icons/bell';
 import BellOff from 'react-feather/dist/icons/bell-off';
 import Circle from 'react-feather/dist/icons/circle';
+import HelpCircle from 'react-feather/dist/icons/help-circle';
 import Mic from 'react-feather/dist/icons/mic';
 import Play from 'react-feather/dist/icons/play';
 import Stop from 'react-feather/dist/icons/square';
@@ -87,29 +88,29 @@ const Transport = props => {
       <Divider />
       <TransportSection>
         <Button
-          bg={props.playing ? 'base' : 'gray'}
+          bg={props.playing ? 'green' : 'gray'}
           py={1}
           px={2}
           onClick={props.onTogglePlay}
         >
-          {props.playing ? <Stop /> : <Play />}
+          <Play />
         </Button>
       </TransportSection>
       <Space mx={1} />
       <TransportSection>
         <Button
-          bg={props.recordingPrf ? 'red' : 'gray'}
+          bg={props.recordingPrf ? 'red' : 'gray2'}
           py={1}
           px={2}
           onClick={props.onTogglePerformanceRecord}
         >
-          {props.recordingPrf ? <Stop /> : <Circle />}
+          <Circle />
         </Button>
       </TransportSection>
       <Space mx={1} />
       <TransportSection>
         <Button
-          bg={props.metronome ? 'base' : 'gray'}
+          bg={props.metronome ? 'base' : 'gray2'}
           py={1}
           px={2}
           onClick={props.onToggleMetronome}
@@ -120,7 +121,7 @@ const Transport = props => {
       <Divider />
       <TransportSection>
         <Button
-          bg={props.recordingAudio ? 'red' : 'gray'}
+          bg={props.recordingAudio ? 'red' : 'gray2'}
           py={1}
           px={2}
           {...(props.recordAudioWhileHeld
@@ -167,7 +168,6 @@ const Transport = props => {
       </TransportSection>
       <Divider />
       <TransportSection title="Swing">
-        {' '}
         <Input
           type="number"
           width="4em"
@@ -176,6 +176,17 @@ const Transport = props => {
           value={props.swing}
           onChange={props.onChangeSwing}
         />
+      </TransportSection>
+      <Divider />
+      <TransportSection>
+        <Button
+          bg={props.help ? 'base' : 'gray2'}
+          py={1}
+          px={2}
+          onClick={props.onToggleHelp}
+        >
+          <HelpCircle />
+        </Button>
       </TransportSection>
     </Container>
   );

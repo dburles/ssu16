@@ -18,6 +18,7 @@ import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
 // import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
 import Tamb from '../samples/Roland_TR-707/Tamb.wav';
 import ContextParameters from './ContextParameters.container';
+import Help from './Help';
 import Pads from './Pads.container';
 import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
@@ -107,6 +108,7 @@ const initialState = {
   copyingPattern: false,
   copiedPatterns: [],
   activeStep: 0,
+  help: false,
 };
 
 // Values shared with React state, but are referenced by
@@ -364,6 +366,11 @@ function reducer(state, action) {
         ...state,
         activeStep: action.step,
       };
+    case 'help-toggle':
+      return {
+        ...state,
+        help: !state.help,
+      };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -518,6 +525,7 @@ const App = () => {
             }}
           />
         </Box>
+        {state.help && <Help />}
         <Flex>
           {hasSamples && <SampleParameters state={state} dispatch={dispatch} />}
           <Pads
