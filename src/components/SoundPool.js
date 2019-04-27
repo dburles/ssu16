@@ -48,8 +48,8 @@ const SoundPool = props => {
         {props.samples.map(sample => (
           <Text
             style={{ cursor: 'pointer' }}
-            fontSize={1}
-            py={2}
+            fontSize="12px"
+            py={1}
             px={4}
             color="silver"
             key={sample.id}

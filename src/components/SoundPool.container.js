@@ -40,6 +40,11 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         activeSampleId={state.activeSampleId}
         onSoundPress={sampleId => {
           dispatch({ type: 'active-sample', sampleId });
+          const activeSound = state.samples.find(
+            sample => sample.id === state.activeSampleId,
+          );
+          activeSound.sample.stop();
+          activeSound.sample.start();
         }}
         samples={state.samples}
         onAddSamples={event => {
