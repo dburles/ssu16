@@ -22,7 +22,7 @@ const padNames = [
   'v',
 ];
 
-const Pads = props => {
+const Pads = React.memo(function Pads(props) {
   function padProps(pos) {
     return {
       name: padNames[pos],
@@ -61,7 +61,7 @@ const Pads = props => {
       </Flex>
     </Container>
   );
-};
+});
 
 Pads.defaultProps = {
   litPads: [],

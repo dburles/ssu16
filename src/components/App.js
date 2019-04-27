@@ -464,18 +464,16 @@ const App = () => {
     Tone.Transport.bpm.value = state.bpm;
   }, [state.bpm, state.swing]);
 
+  // Sync with mutableState.
   useEffect(() => {
-    // Sync with mutableState.
-    mutableState.activePattern = state.activePattern;
     mutableState.patterns = state.patterns;
     mutableState.patternChain = state.patternChain;
     mutableState.metronome = state.metronome;
-  }, [
-    state.activePattern,
-    state.metronome,
-    state.patternChain,
-    state.patterns,
-  ]);
+  }, [state.metronome, state.patternChain, state.patterns]);
+
+  useEffect(() => {
+    mutableState.activePattern = state.activePattern;
+  }, [state.activePattern]);
 
   return (
     <Flex p={1}>

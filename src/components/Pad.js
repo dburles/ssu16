@@ -40,7 +40,7 @@ const PadName = styled.div`
     themeGet(props.litPad ? 'colors.grayDark' : 'colors.grayDark')};
 `;
 
-const Pad = props => {
+const Pad = React.memo(function Pad(props) {
   return (
     <Flex flexDirection="column">
       <PadBox
@@ -70,6 +70,6 @@ const Pad = props => {
       </Flex>
     </Flex>
   );
-};
+});
 
 export default Pad;
