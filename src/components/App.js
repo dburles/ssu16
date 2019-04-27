@@ -38,12 +38,15 @@ import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
 function createSample(buffer, name, id) {
+  const volume = 60;
+  const sample = new Tone.Player(buffer).toMaster();
+  sample.volume.value = volumeToDb(volume);
   return {
     id,
-    sample: new Tone.Player(buffer).toMaster(),
+    sample,
     buffer,
     name,
-    volume: 60,
+    volume,
     start: 0,
     offset: 0,
     // Are the sample parameters locked?
