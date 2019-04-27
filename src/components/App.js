@@ -212,6 +212,9 @@ function reducer(state, action) {
           sound => sound.id === state.activeSampleId,
         )
       ) {
+        if (state.playing && state.recordingPrf) {
+          return state;
+        }
         return {
           ...state,
           patterns: state.patterns.map((pattern, patternIndex) => {
