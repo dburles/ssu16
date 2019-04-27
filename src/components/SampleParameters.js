@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Lock from 'react-feather/dist/icons/lock';
 import Trash2 from 'react-feather/dist/icons/trash-2';
 import Unlock from 'react-feather/dist/icons/unlock';
 import { Button, Box } from 'rebass';
 import styled from 'styled-components';
 import Container from './Container';
+import IconButton from './IconButton';
 import Input from './Input';
 import Title from './Title';
 
@@ -21,10 +22,14 @@ const Range = styled.input`
 `;
 
 const SampleParameters = props => {
+  const volumeRef = useRef();
+  const offsetRef = useRef();
+
   return (
     <Container flexDirection="column">
       <Control>
         <Button
+          as="div"
           onClick={props.onToggleSampleLock}
           bg={props.locked ? 'base' : 'gray'}
           py={1}
@@ -36,23 +41,27 @@ const SampleParameters = props => {
       <Control>
         <Title>Volume</Title>
         <Range
+          ref={volumeRef}
           type="range"
           min={0}
           max={100}
           value={props.volume}
           onChange={props.onChangeVolume}
           width={1}
+          onMouseUp={() => volumeRef.current.blur()}
         />
       </Control>
       <Control>
         <Title>Offset</Title>
         <Range
+          ref={offsetRef}
           type="range"
           min={0}
           max={100}
           value={props.offset}
           onChange={props.onChangeOffset}
           width={1}
+          onMouseUp={() => offsetRef.current.blur()}
         />
       </Control>
       <Control flex={1}>
@@ -70,16 +79,7 @@ const SampleParameters = props => {
         <Input type="range" min={0} max={15} width={1} />
       </Control> */}
       <Control>
-        <Button
-          bg="transparent"
-          border="1px solid"
-          color="gray"
-          onClick={props.onDelete}
-          py={1}
-          px={2}
-        >
-          <Trash2 />
-        </Button>
+        <IconButton onClick={props.onDelete} icon={<Trash2 />} />
       </Control>
     </Container>
   );

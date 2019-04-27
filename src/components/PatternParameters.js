@@ -7,6 +7,7 @@ const PatternParameters = props => {
     <Container p={3}>
       <Box>
         <Button
+          as="div"
           onClick={props.toggleCopy}
           fontSize={1}
           bg="transparent"

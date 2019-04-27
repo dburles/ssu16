@@ -45,7 +45,7 @@ const Pad = React.memo(function Pad(props) {
     <Flex flexDirection="column">
       <PadBox
         bg={props.litPad ? 'base' : 'silver'}
-        p="3em"
+        p="2.8em"
         m={2}
         borderRadius={4}
         onClick={props.onPadPress}

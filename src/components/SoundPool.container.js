@@ -13,40 +13,45 @@ const SoundPoolContainer = ({ dispatch, state }) => {
           const activeSoundIndex = state.samples.findIndex(
             sample => sample.id === state.activeSampleId,
           );
-          const activeSound = state.samples.find(
-            sample => sample.id === state.activeSampleId,
-          );
-          activeSound.sample.stop();
 
-          if (key === 'up' && activeSoundIndex !== 0) {
-            dispatch({
-              type: 'active-sample',
-              sampleId: state.samples[activeSoundIndex - 1].id,
-            });
-
-            state.samples[activeSoundIndex - 1].sample.start();
+          if (
+            (key === 'up' && activeSoundIndex === 0) ||
+            (key === 'down' && activeSoundIndex + 1 === state.samples.length)
+          ) {
+            return;
           }
 
-          if (key === 'down' && activeSoundIndex + 1 < state.samples.length) {
-            dispatch({
-              type: 'active-sample',
-              sampleId: state.samples[activeSoundIndex + 1].id,
-            });
-            state.samples[activeSoundIndex + 1].sample.start();
+          const index =
+            key === 'up' ? activeSoundIndex - 1 : activeSoundIndex + 1;
+
+          if (!state.soundPoolMuted) {
+            const activeSound = state.samples.find(
+              sample => sample.id === state.activeSampleId,
+            );
+            activeSound.sample.stop();
+            state.samples[index].sample.start();
           }
+
+          dispatch({
+            type: 'active-sample',
+            sampleId: state.samples[index].id,
+          });
         }}
       />
       <SoundPool
         activeSampleId={state.activeSampleId}
         onSoundPress={sampleId => {
-          const activeSound = state.samples.find(
-            sample => sample.id === state.activeSampleId,
-          );
-          const pressedSound = state.samples.find(
-            sample => sample.id === sampleId,
-          );
-          activeSound.sample.stop();
-          pressedSound.sample.start();
+          if (!state.soundPoolMuted) {
+            const activeSound = state.samples.find(
+              sample => sample.id === state.activeSampleId,
+            );
+            const pressedSound = state.samples.find(
+              sample => sample.id === sampleId,
+            );
+
+            activeSound.sample.stop();
+            pressedSound.sample.start();
+          }
           dispatch({ type: 'active-sample', sampleId });
         }}
         samples={state.samples}
@@ -73,6 +78,10 @@ const SoundPoolContainer = ({ dispatch, state }) => {
             dispatch({ type: 'delete-all-sound' });
           }
         }}
+        onMute={() => {
+          dispatch({ type: 'soundpool-mute-toggle' });
+        }}
+        muted={state.soundPoolMuted}
       />
     </>
   );

@@ -133,6 +133,7 @@ const initialState = {
   copiedPatterns: [],
   activeStep: 0,
   help: false,
+  soundPoolMuted: false,
 };
 
 // Values shared with React state, but are referenced by
@@ -415,6 +416,11 @@ function reducer(state, action) {
         ...state,
         samples: [],
         activeSampleId: 0,
+      };
+    case 'soundpool-mute-toggle':
+      return {
+        ...state,
+        soundPoolMuted: !state.soundPoolMuted,
       };
     default:
       throw new Error('Unknown dispatch action');

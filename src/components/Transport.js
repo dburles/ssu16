@@ -88,6 +88,7 @@ const Transport = props => {
       <Divider />
       <TransportSection>
         <Button
+          as="div"
           bg={props.playing ? 'green' : 'gray'}
           py={1}
           px={2}
@@ -99,6 +100,7 @@ const Transport = props => {
       <Space mx={1} />
       <TransportSection>
         <Button
+          as="div"
           bg={props.recordingPrf ? 'red' : 'gray2'}
           py={1}
           px={2}
@@ -110,6 +112,7 @@ const Transport = props => {
       <Space mx={1} />
       <TransportSection>
         <Button
+          as="div"
           bg={props.metronome ? 'base' : 'gray2'}
           py={1}
           px={2}
@@ -121,6 +124,7 @@ const Transport = props => {
       <Divider />
       <TransportSection>
         <Button
+          as="div"
           bg={props.recordingAudio ? 'red' : 'gray2'}
           py={1}
           px={2}
@@ -155,6 +159,7 @@ const Transport = props => {
           />
           <Space mx={1} />
           <Button
+            as="div"
             bg="transparent"
             border="1px solid"
             borderColor="gray"
@@ -180,6 +185,7 @@ const Transport = props => {
       <Divider />
       <TransportSection>
         <Button
+          as="div"
           bg={props.help ? 'base' : 'gray2'}
           py={1}
           px={2}
