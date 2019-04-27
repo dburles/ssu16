@@ -500,7 +500,7 @@ const App = () => {
   }, [state.activePattern]);
 
   return (
-    <Flex p={1}>
+    <Flex m={1}>
       <SoundPool state={state} dispatch={dispatch} />
 
       <Flex flexDirection="column">
