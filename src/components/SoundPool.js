@@ -45,7 +45,7 @@ const SoundPool = props => {
 
       <Space py={2} />
 
-      <SoundsContainer>
+      <SoundsContainer flex={1}>
         {props.samples.map(sample => (
           <Text
             flex={1}
