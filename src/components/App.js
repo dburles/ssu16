@@ -593,7 +593,8 @@ const App = () => {
   useEffect(() => {
     if (!initialMountRef.current && hasSamples) {
       if (state.playing) {
-        Tone.Transport.start();
+        // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+        Tone.Transport.start('+0.1');
         bpmTap.reset();
       } else {
         Tone.Transport.stop();
