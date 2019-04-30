@@ -581,6 +581,29 @@ loop.start();
 
 let dispatchEvent;
 
+function start(state) {
+  // Stop the audiopool preview if it's playing
+  state.samples[state.activeSampleId].sample.stop();
+  // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
+  Tone.Transport.start('+0.1');
+  bpmTap.reset();
+}
+
+function stop(state) {
+  Tone.Transport.stop();
+  stopAllSounds(state);
+  prevStep = 0;
+  prevTime = 0;
+  currentTick = 0;
+  mutableState.patternChainPlaybackPos = 0;
+}
+
+function stopAllSounds(state) {
+  state.patterns.forEach(pattern =>
+    pattern.forEach(step => step.forEach(sound => sound.sample.stop())),
+  );
+}
+
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialMountRef = useRef(true);
@@ -593,20 +616,14 @@ const App = () => {
   useEffect(() => {
     if (!initialMountRef.current && hasSamples) {
       if (state.playing) {
-        // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
-        Tone.Transport.start('+0.1');
-        bpmTap.reset();
+        start(state);
       } else {
-        Tone.Transport.stop();
-        prevStep = 0;
-        prevTime = 0;
-        currentTick = 0;
-        mutableState.patternChainPlaybackPos = 0;
+        stop(state);
       }
     }
 
     initialMountRef.current = false;
-  }, [hasSamples, state.playing]);
+  }, [hasSamples, state, state.playing]);
 
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
