@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import Tone from 'tone';
 import Transport from './Transport';
 
 const modeKeyMap = {
@@ -32,15 +33,18 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
           chunksRef.current.push(event.data);
         };
 
-        mediaRecorderRef.current.onstop = () => {
+        mediaRecorderRef.current.onstop = async () => {
           const name = Date.now();
           const blob = new Blob(chunksRef.current, {
             type: 'audio/webm; codecs=opus',
           });
 
+          const sample = new Tone.Player().toMaster();
+          await sample.load(URL.createObjectURL(blob));
+
           dispatch({
             type: 'add-sample',
-            buffer: URL.createObjectURL(blob),
+            sample,
             name,
           });
 

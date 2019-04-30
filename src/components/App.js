@@ -52,10 +52,65 @@ import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
-function createSample(buffer, name, id) {
+let dispatchEvent;
+
+function loadInitialSamples() {
+  return [
+    { buffer: BassDrum1, name: 'BassDrum1.wav' },
+    { buffer: BassDrum2, name: 'BassDrum2.wav' },
+    { buffer: CowBell, name: 'CowBell.wav' },
+    { buffer: Crash, name: 'Crash.wav' },
+    { buffer: HandClap, name: 'HandClap.wav' },
+    { buffer: HhC, name: 'HhC.wav' },
+    { buffer: HhO, name: 'HhO.wav' },
+    { buffer: HiTom, name: 'HiTom.wav' },
+    { buffer: LowTom, name: 'LowTom.wav' },
+    { buffer: MedTom, name: 'MedTom.wav' },
+    { buffer: Ride, name: 'Ride.wav' },
+    { buffer: RimShot, name: 'RimShot.wav' },
+    { buffer: Snare1, name: 'Snare1.wav' },
+    { buffer: Snare2, name: 'Snare2.wav' },
+    { buffer: Tamb, name: 'Tamb.wav' },
+    // { buffer: Snare2, name: 'Snare2.wav' },
+    // { buffer: BDHEAVY, name: 'BD HEAVY.wav' },
+    // { buffer: BDMD1, name: 'BD MD 1.wav' },
+    // { buffer: BDMD2, name: 'BD MD 2.wav' },
+    // { buffer: CLAPS1, name: 'CLAPS 1.wav' },
+    // { buffer: CLAPS2, name: 'CLAPS 2.wav' },
+    // { buffer: COWBELL1, name: 'COWBELL 1.wav' },
+    // { buffer: COWBELL2, name: 'COWBELL 2.wav' },
+    // { buffer: HHCLOSED1, name: 'HH CLOSED 1.wav' },
+    // { buffer: HHCLOSED2, name: 'HH CLOSED 2.wav' },
+    // { buffer: HHCLOSEDPEDAL, name: 'HH CLOSED PEDAL.wav' },
+    // { buffer: HHOPEN1, name: 'HH OPEN 1.wav' },
+    // { buffer: HHOPEN2, name: 'HH OPEN 2.wav' },
+    // { buffer: RIMSHOT1, name: 'RIMSHOT 1.wav' },
+    // { buffer: RIMSHOT2, name: 'RIMSHOT 2.wav' },
+    // { buffer: SDHEAVY, name: 'SD HEAVY.wav' },
+    // { buffer: SDHITUNE1, name: 'SD HI TUNE 1.wav' },
+    // { buffer: SDHITUNE2, name: 'SD HI TUNE 2.wav' },
+    // { buffer: SDHITUNE3, name: 'SD HI TUNE 3.wav' },
+    // { buffer: SDHITUNE4, name: 'SD HI TUNE 4.wav' },
+    // { buffer: SDHITUNE5, name: 'SD HI TUNE 5.wav' },
+    // { buffer: SDLIGHT, name: 'SD LIGHT.wav' },
+    // { buffer: SDMEDIUM, name: 'SD MEDIUM.wav' },
+    // { buffer: SHAKER, name: 'SHAKER.wav' },
+    // { buffer: TOM1, name: 'TOM 1.wav' },
+    // { buffer: TOM2, name: 'TOM 2.wav' },
+    // { buffer: TOM3, name: 'TOM 3.wav' },
+    // { buffer: TOM4, name: 'TOM 4.wav' },
+  ].forEach(async ({ buffer, name }) => {
+    const sample = new Tone.Player().toMaster();
+    await sample.load(buffer);
+    dispatchEvent({ type: 'add-sample', sample, name });
+  });
+}
+
+function createSample(sample, name, id) {
   const volume = 60;
-  const sample = new Tone.Player(buffer).toMaster();
+  const { buffer } = sample;
   sample.volume.value = volumeToDb(volume);
+
   return {
     id,
     sample,
@@ -70,51 +125,7 @@ function createSample(buffer, name, id) {
 }
 
 const initialState = {
-  samples: [
-    { sample: BassDrum1, name: 'BassDrum1.wav' },
-    { sample: BassDrum2, name: 'BassDrum2.wav' },
-    { sample: CowBell, name: 'CowBell.wav' },
-    { sample: Crash, name: 'Crash.wav' },
-    { sample: HandClap, name: 'HandClap.wav' },
-    { sample: HhC, name: 'HhC.wav' },
-    { sample: HhO, name: 'HhO.wav' },
-    { sample: HiTom, name: 'HiTom.wav' },
-    { sample: LowTom, name: 'LowTom.wav' },
-    { sample: MedTom, name: 'MedTom.wav' },
-    { sample: Ride, name: 'Ride.wav' },
-    { sample: RimShot, name: 'RimShot.wav' },
-    { sample: Snare1, name: 'Snare1.wav' },
-    { sample: Snare2, name: 'Snare2.wav' },
-    { sample: Tamb, name: 'Tamb.wav' },
-    // { sample: Snare2, name: 'Snare2.wav' },
-    // { sample: BDHEAVY, name: 'BD HEAVY.wav' },
-    // { sample: BDMD1, name: 'BD MD 1.wav' },
-    // { sample: BDMD2, name: 'BD MD 2.wav' },
-    // { sample: CLAPS1, name: 'CLAPS 1.wav' },
-    // { sample: CLAPS2, name: 'CLAPS 2.wav' },
-    // { sample: COWBELL1, name: 'COWBELL 1.wav' },
-    // { sample: COWBELL2, name: 'COWBELL 2.wav' },
-    // { sample: HHCLOSED1, name: 'HH CLOSED 1.wav' },
-    // { sample: HHCLOSED2, name: 'HH CLOSED 2.wav' },
-    // { sample: HHCLOSEDPEDAL, name: 'HH CLOSED PEDAL.wav' },
-    // { sample: HHOPEN1, name: 'HH OPEN 1.wav' },
-    // { sample: HHOPEN2, name: 'HH OPEN 2.wav' },
-    // { sample: RIMSHOT1, name: 'RIMSHOT 1.wav' },
-    // { sample: RIMSHOT2, name: 'RIMSHOT 2.wav' },
-    // { sample: SDHEAVY, name: 'SD HEAVY.wav' },
-    // { sample: SDHITUNE1, name: 'SD HI TUNE 1.wav' },
-    // { sample: SDHITUNE2, name: 'SD HI TUNE 2.wav' },
-    // { sample: SDHITUNE3, name: 'SD HI TUNE 3.wav' },
-    // { sample: SDHITUNE4, name: 'SD HI TUNE 4.wav' },
-    // { sample: SDHITUNE5, name: 'SD HI TUNE 5.wav' },
-    // { sample: SDLIGHT, name: 'SD LIGHT.wav' },
-    // { sample: SDMEDIUM, name: 'SD MEDIUM.wav' },
-    // { sample: SHAKER, name: 'SHAKER.wav' },
-    // { sample: TOM1, name: 'TOM 1.wav' },
-    // { sample: TOM2, name: 'TOM 2.wav' },
-    // { sample: TOM3, name: 'TOM 3.wav' },
-    // { sample: TOM4, name: 'TOM 4.wav' },
-  ].map(({ sample, name }, id) => createSample(sample, name, id)),
+  samples: [],
   // patterns[pattern][padId][{sample}] => createSample(...)
   // patterns [
   //   pattern [
@@ -353,7 +364,7 @@ function reducer(state, action) {
         ...state,
         samples: [
           ...state.samples,
-          createSample(action.buffer, action.name, state.samples.length),
+          createSample(action.sample, action.name, state.samples.length),
         ],
       };
     case 'record-perf-toggle':
@@ -579,8 +590,6 @@ const loop = new Tone.Sequence(
 
 loop.start();
 
-let dispatchEvent;
-
 function start(state) {
   // Stop the audiopool preview if it's playing
   state.samples[state.activeSampleId].sample.stop();
@@ -612,6 +621,10 @@ const App = () => {
   }
 
   const hasSamples = state.samples.length > 0;
+
+  useEffect(() => {
+    loadInitialSamples();
+  }, []);
 
   useEffect(() => {
     if (!initialMountRef.current && hasSamples) {
