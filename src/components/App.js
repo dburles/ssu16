@@ -69,7 +69,8 @@ function createFilter() {
 }
 
 function createReverb() {
-  const reverb = new Tone.Reverb();
+  // Default: 1.5.
+  const reverb = new Tone.Reverb(2);
   reverb.wet.value = 0;
   // This is async and we don't wait on it, but it shouldn't matter.
   reverb.generate();
