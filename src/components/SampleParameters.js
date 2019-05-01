@@ -41,10 +41,14 @@ const SampleParameters = props => {
   const reverbWetRef = useRef();
 
   return (
-    <SampleParametersContainer flexDirection="column" disabled={props.disabled}>
+    <SampleParametersContainer
+      flexDirection="column"
+      disabled={props.disabled}
+      py={3}
+    >
       <Header>Sound</Header>
 
-      <Flex pt={0} p={3} alignItems="center">
+      <Flex pt={0} px={3} alignItems="center">
         <TitleSecondary flex={1}>Lock</TitleSecondary>
         <Button
           disabled={props.disabled}
@@ -58,6 +62,8 @@ const SampleParameters = props => {
           {props.locked ? <Lock /> : <Unlock />}
         </Button>
       </Flex>
+
+      <Space py={2} />
 
       <Control>
         <TitleSecondary>Volume</TitleSecondary>
@@ -178,19 +184,14 @@ const SampleParameters = props => {
         />
       </Control>
 
-      {/* TODO <Control>
-        <Title>Length</Title>
-        <Input type="range" min={0} max={15} width={1} />
-      </Control> */}
-
-      <Control py={3}>
+      <Box px={3}>
         <IconButton
           {...(props.disabled
             ? { disabled: props.disabled }
             : { onClick: props.onDelete })}
           icon={<Trash2 />}
         />
-      </Control>
+      </Box>
     </SampleParametersContainer>
   );
 };
