@@ -217,7 +217,7 @@ const initialState = {
   copyingPattern: false,
   copiedPatterns: [],
   activeStep: 0,
-  help: true,
+  help: false,
   soundPoolMuted: false,
   patternChainPlaybackPos: 0,
 };
