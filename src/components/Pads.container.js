@@ -1,5 +1,6 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import { startOffset } from '../lib/conversion';
 import Pads from './Pads';
 
 // prettier-ignore
@@ -30,7 +31,7 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
       sound => sound.id === state.activeSampleId,
     );
     sample.playbackRate = chromaticMap[padId];
-    sample.start(undefined, start / 1000);
+    sample.start(undefined, startOffset(start, sample.buffer.length));
     dispatch({
       type: 'playback-rate',
       lastPlayedPlaybackRate: chromaticMap[padId],

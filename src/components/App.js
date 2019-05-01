@@ -2,7 +2,7 @@ import React, { useReducer, useEffect, useRef } from 'react';
 import { Flex, Box } from 'rebass';
 import Tone from 'tone';
 import bpmTap from '../lib/bpm';
-import { sampleLengthToSeconds } from '../lib/conversion';
+import { startOffset } from '../lib/conversion';
 import Metronome from '../samples/Metronome.flac';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
@@ -588,9 +588,7 @@ const loop = new Tone.Sequence(
         }
         sample.start(
           time + offset / 1000,
-          start === 0
-            ? undefined
-            : start * sampleLengthToSeconds(sample.buffer.length),
+          startOffset(start, sample.buffer.length),
           duration === 0 ? undefined : `${duration}n`,
         );
         prevSamples[id] = sample;
