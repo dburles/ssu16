@@ -674,7 +674,6 @@ const patternPlaybackLoop = new Tone.Loop(time => {
     mutableState.patternChain[mutableState.patternChainPlaybackPos];
 
   Tone.Draw.schedule(() => {
-    console.log(currentPattern);
     dispatchEvent({ type: 'set-active-pattern', padId: currentPattern });
   }, time);
 
