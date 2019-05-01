@@ -68,6 +68,14 @@ function createFilter() {
   return new Tone.Filter(filterFreqDefault, 'lowpass', -24);
 }
 
+function createReverb() {
+  const reverb = new Tone.Reverb();
+  reverb.wet.value = 0;
+  // This is async and we don't wait on it, but it shouldn't matter.
+  reverb.generate();
+  return reverb;
+}
+
 function createPanner() {
   return new Tone.Panner();
 }
@@ -83,10 +91,11 @@ export function createSound(buffer) {
 
   const filter = createFilter();
   const panner = createPanner();
+  const reverb = createReverb();
 
-  player.chain(filter, panner, Tone.Master);
+  player.chain(panner, filter, reverb, Tone.Master);
 
-  return { player, filter, panner };
+  return { player, filter, panner, reverb };
 }
 
 let dispatchEvent;
@@ -159,10 +168,12 @@ function createSoundPoolInstance(sound, name, id) {
     duration: 0,
     // Are the sample parameters locked?
     locked: false,
-    filter: sound.filter,
     panner: sound.panner,
     pan: 0,
+    filter: sound.filter,
     filterFreq: filterFreqDefault,
+    reverb: sound.reverb,
+    reverbWet: 0,
   };
 }
 
@@ -297,6 +308,7 @@ function reduce(state, action) {
       duration,
       pan,
       filterFreq,
+      reverbWet,
     } = state.samples.find(sound => sound.id === state.activeSampleId);
 
     // Create a new set of Tone instances and copy values across.
@@ -305,6 +317,7 @@ function reduce(state, action) {
     sound.player.playbackRate = state.lastPlayedPlaybackRate;
     sound.panner.pan.value = pan;
     sound.filter.frequency.value = filterFreq;
+    sound.reverb.wet.value = reverbWet;
 
     const instance = {
       id: state.activeSampleId,
@@ -316,6 +329,8 @@ function reduce(state, action) {
       panner: sound.panner,
       filterFreq,
       filter: sound.filter,
+      reverb: sound.reverb,
+      reverbWet,
     };
 
     return {
@@ -601,6 +616,22 @@ function reduce(state, action) {
           patterns: updateActiveSoundInActivePattern(sound => {
             sound.filter.frequency.value = filterFreq;
             return { filterFreq };
+          }),
+        }),
+      };
+    }
+    case 'sound-reverb-wet': {
+      const reverbWet = Number(action.wet);
+      return {
+        ...state,
+        samples: updateActiveSound(sound => {
+          sound.reverb.wet.value = reverbWet;
+          return { reverbWet };
+        }),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(sound => {
+            sound.reverb.wet.value = reverbWet;
+            return { reverbWet };
           }),
         }),
       };

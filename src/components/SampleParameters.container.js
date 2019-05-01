@@ -2,8 +2,16 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch, disabled }) => {
-  const { volume, start, locked, offset, duration, pan, filterFreq } =
-    state.samples.find(sound => sound.id === state.activeSampleId) || {};
+  const {
+    volume,
+    start,
+    locked,
+    offset,
+    duration,
+    pan,
+    filterFreq,
+    reverbWet,
+  } = state.samples.find(sound => sound.id === state.activeSampleId) || {};
 
   return (
     <SampleParameters
@@ -42,6 +50,10 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
       filterFreq={filterFreq}
       onChangeFilterFreq={() => {
         dispatch({ type: 'sound-filter-freq', freq: event.target.value });
+      }}
+      reverbWet={reverbWet}
+      onChangeReverbWet={() => {
+        dispatch({ type: 'sound-reverb-wet', wet: event.target.value });
       }}
     />
   );

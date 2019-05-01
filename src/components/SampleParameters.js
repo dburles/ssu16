@@ -38,6 +38,7 @@ const SampleParameters = props => {
   const startRef = useRef();
   const durationRef = useRef();
   const filterFreqRef = useRef();
+  const reverbWetRef = useRef();
 
   return (
     <SampleParametersContainer flexDirection="column" disabled={props.disabled}>
@@ -93,7 +94,7 @@ const SampleParameters = props => {
         </datalist>
       </Control>
 
-      <Space py={3} />
+      <Space py={2} />
 
       <Control>
         <TitleSecondary>Offset</TitleSecondary>
@@ -126,7 +127,7 @@ const SampleParameters = props => {
         />
       </Control>
 
-      <Control flex={1}>
+      <Control>
         <TitleSecondary>Length</TitleSecondary>
         <Range
           disabled={props.disabled}
@@ -143,7 +144,9 @@ const SampleParameters = props => {
         />
       </Control>
 
-      <Control flex={1}>
+      <Space py={2} />
+
+      <Control>
         <TitleSecondary>Filter Cutoff</TitleSecondary>
         <Range
           disabled={props.disabled}
@@ -156,6 +159,22 @@ const SampleParameters = props => {
           onChange={props.onChangeFilterFreq}
           width={1}
           onMouseUp={() => filterFreqRef.current.blur()}
+        />
+      </Control>
+
+      <Control flex={1}>
+        <TitleSecondary>Reverb</TitleSecondary>
+        <Range
+          disabled={props.disabled}
+          ref={reverbWetRef}
+          type="range"
+          min={0}
+          max={1}
+          step={0.001}
+          value={props.reverbWet}
+          onChange={props.onChangeReverbWet}
+          width={1}
+          onMouseUp={() => reverbWetRef.current.blur()}
         />
       </Control>
 
