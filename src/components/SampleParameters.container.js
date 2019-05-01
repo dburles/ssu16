@@ -2,8 +2,9 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch, disabled }) => {
-  const { volume, start, locked, offset, duration } =
+  const { volume, start, locked, offset, duration, pan } =
     state.samples.find(sound => sound.id === state.activeSampleId) || {};
+
   return (
     <SampleParameters
       disabled={disabled}
@@ -33,6 +34,10 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
       duration={duration}
       onChangeDuration={() => {
         dispatch({ type: 'sound-duration', duration: event.target.value });
+      }}
+      pan={pan}
+      onChangePan={() => {
+        dispatch({ type: 'sound-pan', pan: event.target.value });
       }}
     />
   );

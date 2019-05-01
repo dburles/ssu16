@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { createPlayer } from './App';
+import { createSound } from './App';
 import Transport from './Transport';
 
 const modeKeyMap = {
@@ -39,12 +39,12 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
             type: 'audio/webm; codecs=opus',
           });
 
-          const sample = createPlayer();
-          await sample.load(URL.createObjectURL(blob));
+          const sound = createSound();
+          await sound.player.load(URL.createObjectURL(blob));
 
           dispatch({
-            type: 'add-sample',
-            sample,
+            type: 'add-sound',
+            sound,
             name,
           });
 

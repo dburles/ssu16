@@ -3,6 +3,7 @@ import { Flex, Box } from 'rebass';
 import Tone from 'tone';
 import bpmTap from '../lib/bpm';
 import { calcStartOffset, calcDuration } from '../lib/conversion';
+import info from '../lib/info';
 import Metronome from '../samples/Metronome.flac';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
@@ -53,12 +54,37 @@ import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
-export function createPlayer(buffer) {
-  const player = new Tone.Player(buffer).toMaster();
+// Some overall compression to keep the levels in check
+const masterCompressor = new Tone.Compressor({
+  threshold: -6,
+  ratio: 3,
+  attack: 0.5,
+  release: 0.1,
+});
+
+function createFilter() {
+  return new Tone.Filter(20000, 'lowpass', -24);
+}
+
+function createPanner() {
+  return new Tone.Panner();
+}
+
+Tone.Master.chain(masterCompressor);
+
+export function createSound(buffer) {
+  const player = new Tone.Player(buffer);
+
   // Eliminate clicks.
   player.fadeIn = 0.001;
   player.fadeOut = 0.001;
-  return player;
+
+  const filter = createFilter();
+  const panner = createPanner();
+
+  player.chain(filter, panner, Tone.Master);
+
+  return { player, filter, panner };
 }
 
 let dispatchEvent;
@@ -109,21 +135,20 @@ function loadInitialSamples() {
     // { buffer: TOM3, name: 'TOM 3.wav' },
     // { buffer: TOM4, name: 'TOM 4.wav' },
   ].forEach(async ({ buffer, name }) => {
-    const sample = createPlayer();
-    await sample.load(buffer);
-    dispatchEvent({ type: 'add-sample', sample, name });
+    const sound = createSound();
+    await sound.player.load(buffer);
+    dispatchEvent({ type: 'add-sound', sound, name });
   });
 }
 
-function createSample(sample, name, id) {
+// This creates a sound instance to be added into the sound pool.
+function createSoundPoolInstance(sound, name, id) {
   const volume = 60;
-  const { buffer } = sample;
-  sample.volume.value = volumeToDb(volume);
+  sound.player.volume.value = volumeToDb(volume);
 
   return {
     id,
-    sample,
-    buffer,
+    sample: sound.player, // TODO: Rename to 'player'.
     name,
     volume,
     start: 0,
@@ -132,6 +157,9 @@ function createSample(sample, name, id) {
     duration: 0,
     // Are the sample parameters locked?
     locked: false,
+    // filter: sound.filter,
+    panner: sound.panner,
+    pan: 0,
   };
 }
 
@@ -210,9 +238,15 @@ function volumeToDb(volume) {
   return Tone.gainToDb(Number(volume) / 100);
 }
 
-function reducer(state, action) {
-  console.log(action);
+function reducer(currentState, action) {
+  info('dispatch', action);
+  info('before', currentState);
+  const state = reduce(currentState, action);
+  info('after', state);
+  return state;
+}
 
+function reduce(state, action) {
   function parameterLocked() {
     return state.samples.find(sample => sample.id === state.activeSampleId)
       .locked;
@@ -250,20 +284,26 @@ function reducer(state, action) {
     });
   }
 
+  // Similar to a soundpool instance, however it's specific to each 'step'.
   function addSoundToStep() {
-    const { buffer, volume, start, offset, duration } = state.samples.find(
+    const { sample, volume, start, offset, duration, pan } = state.samples.find(
       sound => sound.id === state.activeSampleId,
     );
-    const sample = createPlayer(buffer);
-    sample.volume.value = volumeToDb(volume);
-    sample.playbackRate = state.lastPlayedPlaybackRate;
 
-    const sound = {
+    // Create a new set of Tone instances and copy values across.
+    const sound = createSound(sample.buffer);
+    sound.player.volume.value = volumeToDb(volume);
+    sound.player.playbackRate = state.lastPlayedPlaybackRate;
+    sound.panner.pan.value = pan;
+
+    const instance = {
       id: state.activeSampleId,
-      sample,
+      sample: sound.player, // TODO: Rename to 'player'.
       start,
       offset,
       duration,
+      pan,
+      panner: sound.panner,
     };
 
     return {
@@ -272,7 +312,7 @@ function reducer(state, action) {
         if (patternIndex === state.activePattern) {
           return pattern.map((step, stepIndex) => {
             if (stepIndex === action.padId) {
-              return [...step, sound];
+              return [...step, instance];
             }
             return step;
           });
@@ -354,9 +394,7 @@ function reducer(state, action) {
         ...(!parameterLocked() && {
           patterns: updateActiveSoundInActivePattern(sound => {
             sound.sample.volume.value = volumeToDb(action.volume);
-            return {
-              sample: sound.sample,
-            };
+            return { sample: sound.sample };
           }),
         }),
       };
@@ -380,12 +418,16 @@ function reducer(state, action) {
           ? [...state.patternChain, action.padId]
           : [action.padId],
       };
-    case 'add-sample':
+    case 'add-sound':
       return {
         ...state,
         samples: [
           ...state.samples,
-          createSample(action.sample, action.name, state.samples.length),
+          createSoundPoolInstance(
+            action.sound,
+            action.name,
+            state.samples.length,
+          ),
         ],
       };
     case 'record-perf-toggle':
@@ -519,6 +561,22 @@ function reducer(state, action) {
           })),
         }),
       };
+    case 'sound-pan': {
+      const pan = Number(action.pan);
+      return {
+        ...state,
+        samples: updateActiveSound(sound => {
+          sound.panner.pan.value = pan;
+          return { pan };
+        }),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(sound => {
+            sound.panner.pan.value = pan;
+            return { pan };
+          }),
+        }),
+      };
+    }
     default:
       throw new Error('Unknown dispatch action');
   }

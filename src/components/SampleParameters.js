@@ -7,14 +7,19 @@ import styled from 'styled-components';
 import Container from './Container';
 import Header from './Header';
 import IconButton from './IconButton';
-import Title from './Title';
+import Space from './Space';
+import TitleSecondary from './TitleSecondary';
 
 const Control = props => {
   return (
-    <Box p={3} {...props}>
+    <Box px={3} py={props.py} {...props}>
       {props.children}
     </Box>
   );
+};
+
+Control.defaultProps = {
+  py: 2,
 };
 
 const Range = styled.input`
@@ -28,6 +33,7 @@ const SampleParametersContainer = styled(Container)`
 
 const SampleParameters = props => {
   const volumeRef = useRef();
+  const panRef = useRef();
   const offsetRef = useRef();
   const startRef = useRef();
   const durationRef = useRef();
@@ -37,7 +43,7 @@ const SampleParameters = props => {
       <Header>Sound</Header>
 
       <Flex pt={0} p={3} alignItems="center">
-        <Title flex={1}>Lock</Title>
+        <TitleSecondary flex={1}>Lock</TitleSecondary>
         <Button
           disabled={props.disabled}
           as="div"
@@ -52,7 +58,7 @@ const SampleParameters = props => {
       </Flex>
 
       <Control>
-        <Title>Volume</Title>
+        <TitleSecondary>Volume</TitleSecondary>
         <Range
           disabled={props.disabled}
           ref={volumeRef}
@@ -67,7 +73,29 @@ const SampleParameters = props => {
       </Control>
 
       <Control>
-        <Title>Offset</Title>
+        <TitleSecondary>Pan</TitleSecondary>
+        <Range
+          list="tickmarks"
+          disabled={props.disabled}
+          ref={panRef}
+          type="range"
+          min={-1}
+          max={1}
+          step={0.001}
+          value={props.pan}
+          onChange={props.onChangePan}
+          width={1}
+          onMouseUp={() => panRef.current.blur()}
+        />
+        <datalist id="tickmarks">
+          <option value="0" />
+        </datalist>
+      </Control>
+
+      <Space py={3} />
+
+      <Control>
+        <TitleSecondary>Offset</TitleSecondary>
         <Range
           disabled={props.disabled}
           ref={offsetRef}
@@ -82,7 +110,7 @@ const SampleParameters = props => {
       </Control>
 
       <Control>
-        <Title>Start</Title>
+        <TitleSecondary>Start</TitleSecondary>
         <Range
           disabled={props.disabled}
           ref={startRef}
@@ -98,7 +126,7 @@ const SampleParameters = props => {
       </Control>
 
       <Control flex={1}>
-        <Title>Length</Title>
+        <TitleSecondary>Length</TitleSecondary>
         <Range
           disabled={props.disabled}
           ref={durationRef}
@@ -119,7 +147,7 @@ const SampleParameters = props => {
         <Input type="range" min={0} max={15} width={1} />
       </Control> */}
 
-      <Control>
+      <Control py={3}>
         <IconButton
           {...(props.disabled
             ? { disabled: props.disabled }

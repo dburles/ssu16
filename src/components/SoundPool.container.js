@@ -1,6 +1,6 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { createPlayer } from './App';
+import { createSound } from './App';
 import SoundPool from './SoundPool';
 
 const SoundPoolContainer = ({ dispatch, state }) => {
@@ -58,11 +58,11 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         samples={state.samples}
         onAddSamples={event => {
           Array.from(event.target.files).forEach(async file => {
-            const sample = createPlayer();
-            await sample.load(URL.createObjectURL(file));
+            const sound = createSound();
+            await sound.player.load(URL.createObjectURL(file));
             dispatch({
-              type: 'add-sample',
-              sample,
+              type: 'add-sound',
+              sound,
               name: file.name,
             });
             // This also works:
@@ -71,7 +71,7 @@ const SoundPoolContainer = ({ dispatch, state }) => {
             // reader.onload = onloadEvent => {
             //   const context = new AudioContext();
             //   context.decodeAudioData(onloadEvent.target.result, buffer => {
-            //     dispatch({ type: 'add-sample', buffer, name: file.name });
+            //     dispatch({ type: 'add-sound', buffer, name: file.name });
             //   });
             // };
           });
