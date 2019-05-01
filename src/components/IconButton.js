@@ -6,7 +6,7 @@ const IconButton = props => {
     <Button
       as="div"
       bg="transparent"
-      color="gray"
+      color={props.disabled ? 'darkGray' : 'gray'}
       onClick={props.onClick}
       px={0}
       py={0}

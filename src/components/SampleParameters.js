@@ -21,6 +21,11 @@ const Range = styled.input`
   width: 100%;
 `;
 
+const SampleParametersContainer = styled(Container)`
+  transition: opacity 2s ease;
+  opacity: ${props => (props.disabled ? '0.5' : '1')};
+`;
+
 const SampleParameters = props => {
   const volumeRef = useRef();
   const offsetRef = useRef();
@@ -28,15 +33,27 @@ const SampleParameters = props => {
   const durationRef = useRef();
 
   return (
-    <Container flexDirection="column">
-      <Header>Sound</Header>
+    <SampleParametersContainer flexDirection="column" disabled={props.disabled}>
+      <Flex>
+        <Header width={1}>Sound</Header>
+
+        <Title
+          p={3}
+          color="gray2"
+          style={{ visiblity: props.disabled ? 'hidden' : 'visible' }}
+        >
+          Inactive
+        </Title>
+      </Flex>
 
       <Flex pt={0} p={3} alignItems="center">
         <Title flex={1}>Lock</Title>
         <Button
+          disabled={props.disabled}
           as="div"
           onClick={props.onToggleSampleLock}
-          bg={props.locked ? 'base' : 'gray'}
+          bg={props.locked ? 'base' : props.disabled ? 'darkGray' : 'gray'}
+          color={props.disabled ? 'gray2' : 'white'}
           py={1}
           px={2}
         >
@@ -47,6 +64,7 @@ const SampleParameters = props => {
       <Control>
         <Title>Volume</Title>
         <Range
+          disabled={props.disabled}
           ref={volumeRef}
           type="range"
           min={0}
@@ -61,6 +79,7 @@ const SampleParameters = props => {
       <Control>
         <Title>Offset</Title>
         <Range
+          disabled={props.disabled}
           ref={offsetRef}
           type="range"
           min={0}
@@ -75,6 +94,7 @@ const SampleParameters = props => {
       <Control>
         <Title>Start</Title>
         <Range
+          disabled={props.disabled}
           ref={startRef}
           type="range"
           min={0}
@@ -90,6 +110,7 @@ const SampleParameters = props => {
       <Control flex={1}>
         <Title>Length</Title>
         <Range
+          disabled={props.disabled}
           ref={durationRef}
           type="range"
           min={0}
@@ -109,9 +130,14 @@ const SampleParameters = props => {
       </Control> */}
 
       <Control>
-        <IconButton onClick={props.onDelete} icon={<Trash2 />} />
+        <IconButton
+          {...(props.disabled
+            ? { disabled: props.disabled }
+            : { onClick: props.onDelete })}
+          icon={<Trash2 />}
+        />
       </Control>
-    </Container>
+    </SampleParametersContainer>
   );
 };
 

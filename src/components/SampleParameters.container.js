@@ -1,12 +1,12 @@
 import React from 'react';
 import SampleParameters from './SampleParameters';
 
-const SampleParametersContainer = ({ state, dispatch }) => {
-  const { volume, start, locked, offset, duration } = state.samples.find(
-    sound => sound.id === state.activeSampleId,
-  );
+const SampleParametersContainer = ({ state, dispatch, disabled }) => {
+  const { volume, start, locked, offset, duration } =
+    state.samples.find(sound => sound.id === state.activeSampleId) || {};
   return (
     <SampleParameters
+      disabled={disabled}
       volume={volume}
       offset={offset}
       onChangeOffset={event => {

@@ -702,7 +702,13 @@ const App = () => {
 
         <Flex style={{ maxHeight: '500px' }}>
           <SoundPool state={state} dispatch={dispatch} />
-          {hasSamples && <SampleParameters state={state} dispatch={dispatch} />}
+
+          <SampleParameters
+            state={state}
+            dispatch={dispatch}
+            disabled={!hasSamples}
+          />
+
           <Pads
             state={state}
             dispatch={dispatch}

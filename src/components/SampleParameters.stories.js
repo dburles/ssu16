@@ -6,8 +6,11 @@ import SampleParameters from './SampleParameters';
 const SampleParametersProps = {
   onChangeVolume: action('onChangeVolume'),
   volume: 100,
+  onDelete: action('onDelete'),
 };
 
-storiesOf('Components/SampleParameters', module).add('Default', () => (
-  <SampleParameters {...SampleParametersProps} />
-));
+storiesOf('Components/SampleParameters', module)
+  .add('Default', () => <SampleParameters {...SampleParametersProps} />)
+  .add('Disabled', () => (
+    <SampleParameters {...SampleParametersProps} disabled />
+  ));
