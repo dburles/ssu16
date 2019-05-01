@@ -62,8 +62,10 @@ const masterCompressor = new Tone.Compressor({
   release: 0.1,
 });
 
+const filterFreqDefault = 20000;
+
 function createFilter() {
-  return new Tone.Filter(20000, 'lowpass', -24);
+  return new Tone.Filter(filterFreqDefault, 'lowpass', -24);
 }
 
 function createPanner() {
@@ -157,9 +159,10 @@ function createSoundPoolInstance(sound, name, id) {
     duration: 0,
     // Are the sample parameters locked?
     locked: false,
-    // filter: sound.filter,
+    filter: sound.filter,
     panner: sound.panner,
     pan: 0,
+    filterFreq: filterFreqDefault,
   };
 }
 
@@ -286,15 +289,22 @@ function reduce(state, action) {
 
   // Similar to a soundpool instance, however it's specific to each 'step'.
   function addSoundToStep() {
-    const { sample, volume, start, offset, duration, pan } = state.samples.find(
-      sound => sound.id === state.activeSampleId,
-    );
+    const {
+      sample,
+      volume,
+      start,
+      offset,
+      duration,
+      pan,
+      filterFreq,
+    } = state.samples.find(sound => sound.id === state.activeSampleId);
 
     // Create a new set of Tone instances and copy values across.
     const sound = createSound(sample.buffer);
     sound.player.volume.value = volumeToDb(volume);
     sound.player.playbackRate = state.lastPlayedPlaybackRate;
     sound.panner.pan.value = pan;
+    sound.filter.frequency.value = filterFreq;
 
     const instance = {
       id: state.activeSampleId,
@@ -304,6 +314,8 @@ function reduce(state, action) {
       duration,
       pan,
       panner: sound.panner,
+      filterFreq,
+      filter: sound.filter,
     };
 
     return {
@@ -573,6 +585,22 @@ function reduce(state, action) {
           patterns: updateActiveSoundInActivePattern(sound => {
             sound.panner.pan.value = pan;
             return { pan };
+          }),
+        }),
+      };
+    }
+    case 'sound-filter-freq': {
+      const filterFreq = Number(action.freq);
+      return {
+        ...state,
+        samples: updateActiveSound(sound => {
+          sound.filter.frequency.value = filterFreq;
+          return { filterFreq };
+        }),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(sound => {
+            sound.filter.frequency.value = filterFreq;
+            return { filterFreq };
           }),
         }),
       };

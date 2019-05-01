@@ -2,7 +2,7 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch, disabled }) => {
-  const { volume, start, locked, offset, duration, pan } =
+  const { volume, start, locked, offset, duration, pan, filterFreq } =
     state.samples.find(sound => sound.id === state.activeSampleId) || {};
 
   return (
@@ -38,6 +38,10 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
       pan={pan}
       onChangePan={() => {
         dispatch({ type: 'sound-pan', pan: event.target.value });
+      }}
+      filterFreq={filterFreq}
+      onChangeFilterFreq={() => {
+        dispatch({ type: 'sound-filter-freq', freq: event.target.value });
       }}
     />
   );

@@ -37,6 +37,7 @@ const SampleParameters = props => {
   const offsetRef = useRef();
   const startRef = useRef();
   const durationRef = useRef();
+  const filterFreqRef = useRef();
 
   return (
     <SampleParametersContainer flexDirection="column" disabled={props.disabled}>
@@ -139,6 +140,22 @@ const SampleParameters = props => {
           width={1}
           onMouseUp={() => durationRef.current.blur()}
           style={{ direction: 'rtl' }}
+        />
+      </Control>
+
+      <Control flex={1}>
+        <TitleSecondary>Filter Cutoff</TitleSecondary>
+        <Range
+          disabled={props.disabled}
+          ref={filterFreqRef}
+          type="range"
+          min={0}
+          max={20000}
+          step={1}
+          value={props.filterFreq}
+          onChange={props.onChangeFilterFreq}
+          width={1}
+          onMouseUp={() => filterFreqRef.current.blur()}
         />
       </Control>
 
