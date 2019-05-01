@@ -275,8 +275,17 @@ function reducer(state, action) {
   }
 
   switch (action.type) {
-    case 'play-toggle':
+    case 'play-toggle': {
+      if (state.playing) {
+        state.patterns.forEach(pattern =>
+          pattern.forEach(step => step.forEach(sound => sound.sample.stop())),
+        );
+      } else {
+        // Stop the audiopool preview if it's playing
+        state.samples[state.activeSampleId].sample.stop();
+      }
       return { ...state, playing: !state.playing };
+    }
     case 'bpm':
       return { ...state, bpm: action.bpm };
     case 'swing':
@@ -610,27 +619,18 @@ const loop = new Tone.Sequence(
 
 loop.start();
 
-function start(state) {
-  // Stop the audiopool preview if it's playing
-  state.samples[state.activeSampleId].sample.stop();
+function start() {
   // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
   Tone.Transport.start('+0.1');
   bpmTap.reset();
 }
 
-function stop(state) {
+function stop() {
   Tone.Transport.stop();
-  stopAllSounds(state);
   prevStep = 0;
   prevTime = 0;
   currentTick = 0;
   mutableState.patternChainPlaybackPos = 0;
-}
-
-function stopAllSounds(state) {
-  state.patterns.forEach(pattern =>
-    pattern.forEach(step => step.forEach(sound => sound.sample.stop())),
-  );
 }
 
 const App = () => {
@@ -649,14 +649,14 @@ const App = () => {
   useEffect(() => {
     if (!initialMountRef.current && hasSamples) {
       if (state.playing) {
-        start(state);
+        start();
       } else {
-        stop(state);
+        stop();
       }
     }
 
     initialMountRef.current = false;
-  }, [hasSamples, state, state.playing]);
+  }, [hasSamples, state.playing]);
 
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
