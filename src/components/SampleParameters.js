@@ -92,8 +92,8 @@ const SampleParameters = props => {
         <Range
           ref={durationRef}
           type="range"
-          min={1}
-          max={17}
+          min={0}
+          max={16}
           step={1}
           value={props.duration}
           onChange={props.onChangeDuration}
