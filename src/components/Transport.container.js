@@ -73,16 +73,20 @@ const TransportContainer = ({ state, dispatch, togglePlay }) => {
       />
       <KeyboardEventHandler
         handleKeys={['m']}
-        onKeyEvent={(key, event) => {
-          event.preventDefault();
+        onKeyEvent={() => {
           dispatch({ type: 'metronome-toggle' });
         }}
       />
       <KeyboardEventHandler
         handleKeys={['l']}
-        onKeyEvent={(key, event) => {
-          event.preventDefault();
+        onKeyEvent={() => {
           dispatch({ type: 'record-perf-toggle' });
+        }}
+      />
+      <KeyboardEventHandler
+        handleKeys={['\\']}
+        onKeyEvent={() => {
+          dispatch({ type: 'bpm-tap' });
         }}
       />
       <Transport

@@ -32,6 +32,7 @@ const Help = () => {
       <Item trigger="Arrow Up, Down">Soundpool</Item>
       <Item trigger="Shift + Pad">Sequence</Item>
       <Item trigger="L">Live Record</Item>
+      <Item trigger="\">Tap BPM</Item>
       <Item trigger="M">Metronome</Item>
     </Container>
   );
