@@ -194,7 +194,7 @@ const mutableState = {
   activePattern: 0,
   active32Step: 0,
   liveRecordTime: undefined,
-  metronome: true,
+  metronome: false,
   patternChainPlaybackPos: 0,
 };
 
@@ -517,39 +517,60 @@ function reducer(state, action) {
 }
 
 Tone.Transport.swingSubdivision = '16n';
-// Tone.Transport.loop = true;
-// Tone.Transport.loopEnd = '1';
 
 // Since each step will have a unique instance of 'sample', we can't call 'sample.restart'.
 // Instead, on each iteration we'll retain a record of the previous play, by the id.
 const prevSamples = {};
 
-let prevStep = 0;
-let prevTime = 0;
 let currentTick = 0;
 
 const liveRecordCaptureLoop = new Tone.Loop(time => {
   currentTick = time;
 }, '1i');
 
-// const metronomeLoop = new Tone.Loop(time => {
-//   if (mutableState.metronome) {
-//     metronome.start(time);
-//   }
-// }, '4n');
-
-// metronomeLoop.start();
 liveRecordCaptureLoop.start();
 
 const metronome = new Tone.Player(Metronome).toMaster();
 metronome.volume.value = volumeToDb(40);
 
-const loop = new Tone.Sequence(
-  (time, step) => {
-    if (mutableState.metronome && step % 4 === 0) {
-      metronome.start(time);
-    }
+const metronomeLoop = new Tone.Loop(time => {
+  if (mutableState.metronome) {
+    metronome.start(time);
+  }
+}, '4n');
 
+metronomeLoop.start();
+
+let currentPattern = 0;
+
+const patternPlaybackLoop = new Tone.Loop(time => {
+  currentPattern =
+    mutableState.patternChain[mutableState.patternChainPlaybackPos];
+
+  Tone.Draw.schedule(() => {
+    console.log(currentPattern);
+    dispatchEvent({ type: 'set-active-pattern', padId: currentPattern });
+  }, time);
+
+  if (
+    mutableState.patternChainPlaybackPos ===
+    mutableState.patternChain.length - 1
+  ) {
+    // We have reached the end of the pattern chain.
+    mutableState.patternChainPlaybackPos = 0;
+  } else {
+    // Move onto the next pattern.
+    mutableState.patternChainPlaybackPos += 1;
+  }
+}, '1n');
+
+patternPlaybackLoop.start();
+
+let prevStep = 0;
+let prevTime = 0;
+
+const mainLoop = new Tone.Sequence(
+  (time, step) => {
     if (mutableState.liveRecordTime !== undefined) {
       // console.log(mutableState.liveRecordTime, prevTime, time);
       const closestStep =
@@ -565,28 +586,6 @@ const loop = new Tone.Sequence(
       }, time);
 
       mutableState.liveRecordTime = undefined;
-    }
-
-    const currentPattern =
-      mutableState.patternChain[mutableState.patternChainPlaybackPos];
-
-    if (step === 0) {
-      Tone.Draw.schedule(() => {
-        dispatchEvent({ type: 'set-active-pattern', padId: currentPattern });
-      }, time);
-    }
-
-    if (step === 15) {
-      if (
-        mutableState.patternChainPlaybackPos ===
-        mutableState.patternChain.length - 1
-      ) {
-        // We have reached the end of the pattern.
-        mutableState.patternChainPlaybackPos = 0;
-      } else {
-        // Move onto the next pattern.
-        mutableState.patternChainPlaybackPos += 1;
-      }
     }
 
     mutableState.patterns[currentPattern][step].forEach(
@@ -608,8 +607,8 @@ const loop = new Tone.Sequence(
       dispatchEvent({ type: 'set-active-step', step });
     }, time);
 
-    prevTime = time;
     prevStep = step;
+    prevTime = time;
 
     // console.log(step, time);
   },
@@ -617,7 +616,7 @@ const loop = new Tone.Sequence(
   '16n',
 );
 
-loop.start();
+mainLoop.start();
 
 function start() {
   // https://github.com/Tonejs/Tone.js/wiki/Performance#scheduling-in-advance
@@ -671,18 +670,20 @@ const App = () => {
   }, [state.bpm, state.swing]);
 
   // Sync with mutableState.
+  // It's important that they are each self-contained,
+  // otherwise re-assigning unchanged values can cause funkyness.
   useEffect(() => {
     mutableState.patterns = state.patterns;
+  }, [state.patterns]);
+  useEffect(() => {
     mutableState.patternChain = state.patternChain;
+  }, [state.patternChain]);
+  useEffect(() => {
     mutableState.metronome = state.metronome;
+  }, [state.metronome]);
+  useEffect(() => {
     mutableState.patternChainPlaybackPos = state.patternChainPlaybackPos;
-  }, [
-    state.metronome,
-    state.patternChain,
-    state.patternChainPlaybackPos,
-    state.patterns,
-  ]);
-
+  }, [state.patternChainPlaybackPos]);
   useEffect(() => {
     mutableState.activePattern = state.activePattern;
   }, [state.activePattern]);
