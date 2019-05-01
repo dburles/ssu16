@@ -34,17 +34,7 @@ const SampleParameters = props => {
 
   return (
     <SampleParametersContainer flexDirection="column" disabled={props.disabled}>
-      <Flex>
-        <Header width={1}>Sound</Header>
-
-        <Title
-          p={3}
-          color="gray2"
-          style={{ visiblity: props.disabled ? 'hidden' : 'visible' }}
-        >
-          Inactive
-        </Title>
-      </Flex>
+      <Header>Sound</Header>
 
       <Flex pt={0} p={3} alignItems="center">
         <Title flex={1}>Lock</Title>
