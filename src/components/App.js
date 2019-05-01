@@ -2,6 +2,7 @@ import React, { useReducer, useEffect, useRef } from 'react';
 import { Flex, Box } from 'rebass';
 import Tone from 'tone';
 import bpmTap from '../lib/bpm';
+import { sampleLengthToSeconds } from '../lib/conversion';
 import Metronome from '../samples/Metronome.flac';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
@@ -119,6 +120,8 @@ function createSample(sample, name, id) {
     volume,
     start: 0,
     offset: 0,
+    // A division of 16th's, 0-16. 0 represents no limit.
+    duration: 0,
     // Are the sample parameters locked?
     locked: false,
   };
@@ -240,7 +243,7 @@ function reducer(state, action) {
   }
 
   function addSoundToStep() {
-    const { buffer, volume, start, offset } = state.samples.find(
+    const { buffer, volume, start, offset, duration } = state.samples.find(
       sound => sound.id === state.activeSampleId,
     );
     const sample = new Tone.Player(buffer).toMaster();
@@ -252,6 +255,7 @@ function reducer(state, action) {
       sample,
       start,
       offset,
+      duration,
     };
 
     return {
@@ -405,7 +409,7 @@ function reducer(state, action) {
         samples: updateActiveSound(() => ({ offset: Number(action.offset) })),
         ...(!parameterLocked() && {
           patterns: updateActiveSoundInActivePattern(() => ({
-            offset: action.offset,
+            offset: Number(action.offset),
           })),
         }),
       };
@@ -486,6 +490,18 @@ function reducer(state, action) {
         bpm: avg ? Math.round(avg) : state.bpm,
       };
     }
+    case 'sound-duration':
+      return {
+        ...state,
+        samples: updateActiveSound(() => ({
+          duration: Number(action.duration),
+        })),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(() => ({
+            duration: Number(action.duration),
+          })),
+        }),
+      };
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -565,12 +581,18 @@ const loop = new Tone.Sequence(
     }
 
     mutableState.patterns[currentPattern][step].forEach(
-      ({ id, sample, start, offset }) => {
+      ({ id, sample, start, offset, duration }) => {
         // Stop previous instance of this sample *in any step prior to this one*.
         if (prevSamples[id]) {
           prevSamples[id].stop();
         }
-        sample.start(time + offset / 1000, start / 1000);
+        sample.start(
+          time + offset / 1000,
+          start === 0
+            ? undefined
+            : start * sampleLengthToSeconds(sample.buffer.length),
+          duration === 0 ? undefined : `${duration}n`,
+        );
         prevSamples[id] = sample;
       },
     );

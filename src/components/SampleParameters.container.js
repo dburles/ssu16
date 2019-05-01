@@ -2,7 +2,7 @@ import React from 'react';
 import SampleParameters from './SampleParameters';
 
 const SampleParametersContainer = ({ state, dispatch }) => {
-  const { volume, start, locked, offset } = state.samples.find(
+  const { volume, start, locked, offset, duration } = state.samples.find(
     sound => sound.id === state.activeSampleId,
   );
   return (
@@ -29,6 +29,10 @@ const SampleParametersContainer = ({ state, dispatch }) => {
         ) {
           dispatch({ type: 'delete-active-sound' });
         }
+      }}
+      duration={duration}
+      onChangeDuration={() => {
+        dispatch({ type: 'sound-duration', duration: event.target.value });
       }}
     />
   );

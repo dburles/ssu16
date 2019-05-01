@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import Container from './Container';
 import Header from './Header';
 import IconButton from './IconButton';
-import Input from './Input';
 import Title from './Title';
 
 const Control = props => {
@@ -25,6 +24,8 @@ const Range = styled.input`
 const SampleParameters = props => {
   const volumeRef = useRef();
   const offsetRef = useRef();
+  const startRef = useRef();
+  const durationRef = useRef();
 
   return (
     <Container flexDirection="column">
@@ -71,14 +72,34 @@ const SampleParameters = props => {
         />
       </Control>
 
-      <Control flex={1}>
+      <Control>
         <Title>Start</Title>
-        <Input
-          type="number"
+        <Range
+          ref={startRef}
+          type="range"
           min={0}
+          max={1}
+          step={0.001}
           value={props.startPoint}
           onChange={props.onChangeStartPoint}
           width={1}
+          onMouseUp={() => startRef.current.blur()}
+        />
+      </Control>
+
+      <Control flex={1}>
+        <Title>Length</Title>
+        <Range
+          ref={durationRef}
+          type="range"
+          min={1}
+          max={17}
+          step={1}
+          value={props.duration}
+          onChange={props.onChangeDuration}
+          width={1}
+          onMouseUp={() => durationRef.current.blur()}
+          style={{ direction: 'rtl' }}
         />
       </Control>
 
