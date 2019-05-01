@@ -55,6 +55,7 @@ import Transport from './Transport.container';
 
 export function createPlayer(buffer) {
   const player = new Tone.Player(buffer).toMaster();
+  // Eliminate clicks.
   player.fadeIn = 0.001;
   player.fadeOut = 0.001;
   return player;
