@@ -482,7 +482,7 @@ function reducer(state, action) {
     case 'delete-all-sound':
       return {
         ...state,
-        patterns: [],
+        patterns: initialState.patterns,
         activePattern: 0,
         samples: [],
         activeSampleId: 0,
