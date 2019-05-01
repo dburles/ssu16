@@ -1,6 +1,6 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import Tone from 'tone';
+import { createPlayer } from './App';
 import SoundPool from './SoundPool';
 
 const SoundPoolContainer = ({ dispatch, state }) => {
@@ -58,7 +58,7 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         samples={state.samples}
         onAddSamples={event => {
           Array.from(event.target.files).forEach(async file => {
-            const sample = new Tone.Player().toMaster();
+            const sample = createPlayer();
             await sample.load(URL.createObjectURL(file));
             dispatch({
               type: 'add-sample',

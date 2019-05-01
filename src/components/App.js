@@ -53,6 +53,13 @@ import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
+export function createPlayer(buffer) {
+  const player = new Tone.Player(buffer).toMaster();
+  player.fadeIn = 0.001;
+  player.fadeOut = 0.001;
+  return player;
+}
+
 let dispatchEvent;
 
 function loadInitialSamples() {
@@ -101,7 +108,7 @@ function loadInitialSamples() {
     // { buffer: TOM3, name: 'TOM 3.wav' },
     // { buffer: TOM4, name: 'TOM 4.wav' },
   ].forEach(async ({ buffer, name }) => {
-    const sample = new Tone.Player().toMaster();
+    const sample = createPlayer();
     await sample.load(buffer);
     dispatchEvent({ type: 'add-sample', sample, name });
   });
@@ -246,7 +253,7 @@ function reducer(state, action) {
     const { buffer, volume, start, offset, duration } = state.samples.find(
       sound => sound.id === state.activeSampleId,
     );
-    const sample = new Tone.Player(buffer).toMaster();
+    const sample = createPlayer(buffer);
     sample.volume.value = volumeToDb(volume);
     sample.playbackRate = state.lastPlayedPlaybackRate;
 
