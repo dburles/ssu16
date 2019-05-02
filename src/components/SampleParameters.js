@@ -34,6 +34,7 @@ const SampleParametersContainer = styled(Container)`
 const SampleParameters = props => {
   const volumeRef = useRef();
   const panRef = useRef();
+  const pitchRef = useRef();
   const offsetRef = useRef();
   const startRef = useRef();
   const durationRef = useRef();
@@ -94,6 +95,26 @@ const SampleParameters = props => {
           onChange={props.onChangePan}
           width={1}
           onMouseUp={() => panRef.current.blur()}
+        />
+        <datalist id="tickmarks">
+          <option value="0" />
+        </datalist>
+      </Control>
+
+      <Control>
+        <TitleSecondary>Pitch</TitleSecondary>
+        <Range
+          list="tickmarks"
+          disabled={props.disabled}
+          ref={pitchRef}
+          type="range"
+          min={-24}
+          max={24}
+          step={1}
+          value={props.pitch}
+          onChange={props.onChangePitch}
+          width={1}
+          onMouseUp={() => pitchRef.current.blur()}
         />
         <datalist id="tickmarks">
           <option value="0" />

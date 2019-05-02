@@ -1,15 +1,9 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { calcStartOffset, calcDuration } from '../lib/conversion';
+import { generateChromaticMap } from '../lib/pitch';
 import Pads from './Pads';
 
-// prettier-ignore
-const chromaticMap = [
-  1.259921, 1.334839, 1.414213, 1.498307,
-  1       , 1.059463, 1.122462, 1.189207,
-  0.587401, 0.681792, 0.781797, 0.887748,
-  0.259921, 0.334839, 0.414213, 0.498307
-];
 // prettier-ignore
 const keyMapSeq = {
   'shift+1': 0 , 'shift+2': 1 , 'shift+3': 2 , 'shift+4': 3,
@@ -27,10 +21,12 @@ const keyMap = {
 
 const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
   function perform(padId) {
-    const { sample, start, duration } = state.samples.find(
+    const { sample, start, duration, pitch } = state.samples.find(
       sound => sound.id === state.activeSampleId,
     );
-    sample.playbackRate = chromaticMap[padId];
+    const chromaticMap = generateChromaticMap(pitch);
+    const playbackRate = chromaticMap[padId];
+    sample.playbackRate = playbackRate;
     sample.start(
       undefined,
       calcStartOffset(start, sample.buffer.length),
@@ -38,7 +34,7 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
     );
     dispatch({
       type: 'playback-rate',
-      lastPlayedPlaybackRate: chromaticMap[padId],
+      lastPlayedPlaybackRate: playbackRate,
     });
     if (state.recordingPrf) {
       onLiveRecord();

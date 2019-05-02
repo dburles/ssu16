@@ -4,7 +4,9 @@ import Tone from 'tone';
 import bpmTap from '../lib/bpm';
 import { calcStartOffset, calcDuration } from '../lib/conversion';
 import info from '../lib/info';
+import { transpose } from '../lib/pitch';
 import Metronome from '../samples/Metronome.flac';
+import Piano from '../samples/pianoc3.wav';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
 import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
 import CowBell from '../samples/Roland_TR-707/CowBell.wav';
@@ -118,6 +120,7 @@ function loadInitialSamples() {
     { buffer: Snare1, name: 'Snare1.wav' },
     { buffer: Snare2, name: 'Snare2.wav' },
     { buffer: Tamb, name: 'Tamb.wav' },
+    { buffer: Piano, name: 'Piano.wav' },
     // { buffer: Snare2, name: 'Snare2.wav' },
     // { buffer: BDHEAVY, name: 'BD HEAVY.wav' },
     // { buffer: BDMD1, name: 'BD MD 1.wav' },
@@ -175,6 +178,8 @@ function createSoundPoolInstance(sound, name, id) {
     filterFreq: filterFreqDefault,
     reverb: sound.reverb,
     reverbWet: 0,
+    // between -24...+24
+    pitch: 0,
   };
 }
 
@@ -332,6 +337,7 @@ function reduce(state, action) {
       filter: sound.filter,
       reverb: sound.reverb,
       reverbWet,
+      originalPlaybackRate: state.lastPlayedPlaybackRate,
     };
 
     return {
@@ -637,6 +643,24 @@ function reduce(state, action) {
         }),
       };
     }
+    case 'sound-pitch': {
+      const pitch = Number(action.pitch);
+      return {
+        ...state,
+        samples: updateActiveSound(() => ({
+          pitch,
+        })),
+        ...(!parameterLocked() && {
+          patterns: updateActiveSoundInActivePattern(sound => {
+            sound.sample.playbackRate = transpose(
+              sound.originalPlaybackRate,
+              pitch,
+            );
+            return { pitch };
+          }),
+        }),
+      };
+    }
     default:
       throw new Error('Unknown dispatch action');
   }
@@ -826,7 +850,7 @@ const App = () => {
           />
         </Box>
 
-        <Flex style={{ maxHeight: '500px' }}>
+        <Flex style={{ height: '550px' }}>
           <SoundPool state={state} dispatch={dispatch} />
 
           <SampleParameters

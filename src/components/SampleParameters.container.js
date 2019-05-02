@@ -11,6 +11,7 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
     pan,
     filterFreq,
     reverbWet,
+    pitch,
   } = state.samples.find(sound => sound.id === state.activeSampleId) || {};
 
   return (
@@ -54,6 +55,10 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
       reverbWet={reverbWet}
       onChangeReverbWet={() => {
         dispatch({ type: 'sound-reverb-wet', wet: event.target.value });
+      }}
+      pitch={pitch}
+      onChangePitch={() => {
+        dispatch({ type: 'sound-pitch', pitch: event.target.value });
       }}
     />
   );
