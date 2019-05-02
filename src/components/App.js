@@ -57,12 +57,13 @@ import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
 // Some overall compression to keep the levels in check
-const masterCompressor = new Tone.Compressor({
-  threshold: -6,
-  ratio: 3,
-  attack: 0.5,
-  release: 0.1,
-});
+// const masterCompressor = new Tone.Compressor({
+//   threshold: -6,
+//   ratio: 3,
+//   attack: 0.5,
+//   release: 0.1,
+// });
+// Tone.Master.chain(masterCompressor);
 
 const filterFreqDefault = 20000;
 
@@ -82,8 +83,6 @@ function createReverb() {
 function createPanner() {
   return new Tone.Panner();
 }
-
-Tone.Master.chain(masterCompressor);
 
 export function createSound(buffer) {
   const player = new Tone.Player(buffer);
