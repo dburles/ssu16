@@ -12,13 +12,29 @@ const PatternParameters = props => {
       <Box p={3} pt={0}>
         <Button
           as="div"
+          width={1}
           onClick={props.toggleCopy}
           fontSize={1}
-          bg="transparent"
           border="1px solid"
-          color="gray"
+          bg={props.copying ? 'red' : 'transparent'}
+          borderColor={props.copying ? 'red' : 'gray'}
+          color={props.copying ? 'white' : 'gray'}
         >
           {props.copying ? 'DONE' : 'COPY'}
+        </Button>
+      </Box>
+      <Box p={3} pt={0}>
+        <Button
+          as="div"
+          width={1}
+          onClick={props.toggleChaining}
+          fontSize={1}
+          border="1px solid"
+          bg={props.chaining ? 'red' : 'transparent'}
+          borderColor={props.chaining ? 'red' : 'gray'}
+          color={props.chaining ? 'white' : 'gray'}
+        >
+          {props.chaining ? 'DONE' : 'CHAIN'}
         </Button>
       </Box>
     </Container>

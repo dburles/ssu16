@@ -265,7 +265,6 @@ export function reducer(state = initialState, action) {
         ...state,
         activePattern: action.padId,
         patternChainPlaybackPos: 0,
-        chaining: true,
         patternChain: state.chaining
           ? [...state.patternChain, action.padId]
           : [action.padId],
@@ -355,6 +354,7 @@ export function reducer(state = initialState, action) {
             playing: false,
             patternChain: [state.activePattern],
             copyingPattern: true,
+            chaining: false,
           };
     case 'copy-pattern-to':
       return state.copyingPattern
@@ -483,6 +483,11 @@ export function reducer(state = initialState, action) {
       return {
         ...state,
         latencyHint: state.latencyHint === 'fastest' ? 'playback' : 'fastest',
+      };
+    case 'pattern-chaining-toggle':
+      return {
+        ...state,
+        chaining: !state.chaining,
       };
     default:
       return state;
