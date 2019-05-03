@@ -1,6 +1,6 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { createSound } from './App';
+import { createSound } from '../lib/sound';
 import SoundPool from './SoundPool';
 
 const SoundPoolContainer = ({ dispatch, state }) => {

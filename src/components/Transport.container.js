@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
-import { createSound } from './App';
+import { createSound } from '../lib/sound';
 import Transport from './Transport';
 
 const modeKeyMap = {
@@ -8,9 +8,13 @@ const modeKeyMap = {
   '.': 'pat',
 };
 
-const TransportContainer = ({ state, dispatch, togglePlay }) => {
+const TransportContainer = ({ state, dispatch }) => {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
+
+  function togglePlay() {
+    dispatch({ type: 'play-toggle' });
+  }
 
   useEffect(() => {
     if (mediaRecorderRef.current) {
