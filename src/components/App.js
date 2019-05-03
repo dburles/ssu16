@@ -17,6 +17,7 @@ const App = ({
   bpm,
   dispatch,
   help,
+  latencyHint,
   metronome,
   patternChain,
   patternChainPlaybackPos,
@@ -48,8 +49,8 @@ const App = ({
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
     // Tone.context.latencyHint = playing ? 'interactive' : 'fastest';
-    Tone.context.latencyHint = 'fastest';
-  }, []);
+    Tone.context.latencyHint = latencyHint;
+  }, [latencyHint]);
 
   useEffect(() => {
     Tone.Transport.swing = swing / 100;
@@ -112,6 +113,7 @@ export default connect(
     bpm,
     dispatch,
     help,
+    latencyHint,
     metronome,
     patternChain,
     patternChainPlaybackPos,
@@ -124,6 +126,7 @@ export default connect(
     bpm,
     dispatch,
     help,
+    latencyHint,
     metronome,
     patternChain,
     patternChainPlaybackPos,

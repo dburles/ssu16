@@ -2,6 +2,7 @@ import React from 'react';
 import Bell from 'react-feather/dist/icons/bell';
 import BellOff from 'react-feather/dist/icons/bell-off';
 import Circle from 'react-feather/dist/icons/circle';
+import Cpu from 'react-feather/dist/icons/cpu';
 import HelpCircle from 'react-feather/dist/icons/help-circle';
 import Mic from 'react-feather/dist/icons/mic';
 import Play from 'react-feather/dist/icons/play';
@@ -119,6 +120,18 @@ const Transport = props => {
           onClick={props.onToggleMetronome}
         >
           {props.metronome ? <Bell /> : <BellOff />}
+        </Button>
+      </TransportSection>
+      <Space mx={1} />
+      <TransportSection>
+        <Button
+          as="div"
+          bg={props.latencyHint === 'fastest' ? 'purple' : 'gray2'}
+          py={1}
+          px={2}
+          onClick={props.onToggleLatencyHint}
+        >
+          <Cpu />
         </Button>
       </TransportSection>
       <Divider />

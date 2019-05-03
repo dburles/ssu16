@@ -14,6 +14,7 @@ const TransportContainer = ({
   bpm,
   dispatch,
   help,
+  latencyHint,
   metronome,
   mode,
   playing,
@@ -147,6 +148,10 @@ const TransportContainer = ({
         onTap={() => {
           dispatch({ type: 'bpm-tap' });
         }}
+        latencyHint={latencyHint}
+        onToggleLatencyHint={() => {
+          dispatch({ type: 'latency-hint-toggle' });
+        }}
       />
     </>
   );
@@ -158,6 +163,7 @@ export default connect(
     bpm,
     dispatch,
     help,
+    latencyHint,
     metronome,
     mode,
     playing,
@@ -170,6 +176,7 @@ export default connect(
     bpm,
     dispatch,
     help,
+    latencyHint,
     metronome,
     mode,
     playing,

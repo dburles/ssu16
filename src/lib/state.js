@@ -60,6 +60,7 @@ export const initialState = {
   help: false,
   soundPoolMuted: false,
   patternChainPlaybackPos: 0,
+  latencyHint: 'fastest',
 };
 
 // Values shared with React state, but are referenced by
@@ -478,6 +479,11 @@ export function reducer(state = initialState, action) {
         }),
       };
     }
+    case 'latency-hint-toggle':
+      return {
+        ...state,
+        latencyHint: state.latencyHint === 'fastest' ? 'playback' : 'fastest',
+      };
     default:
       return state;
   }
