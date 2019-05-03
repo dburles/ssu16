@@ -23,12 +23,14 @@ const PadsContainer = ({
   activePattern,
   activeSampleId,
   activeStep,
+  chaining,
   copiedPatterns,
   copyingPattern,
   dispatch,
   mode,
   onLiveRecord,
   patternChain,
+  patternChainPending,
   patterns,
   recordingPrf,
   samples,
@@ -93,6 +95,9 @@ const PadsContainer = ({
       if (copyingPattern) {
         return [activePattern, ...copiedPatterns];
       }
+      if (chaining) {
+        return patternChainPending;
+      }
       return patternChain;
     }
     return [];
@@ -152,11 +157,13 @@ export default connect(
     activePattern,
     activeSampleId,
     activeStep,
+    chaining,
     copiedPatterns,
     copyingPattern,
     dispatch,
     mode,
     patternChain,
+    patternChainPending,
     patterns,
     recordingPrf,
     samples,
@@ -164,11 +171,13 @@ export default connect(
     activePattern,
     activeSampleId,
     activeStep,
+    chaining,
     copiedPatterns,
     copyingPattern,
     dispatch,
     mode,
     patternChain,
+    patternChainPending,
     patterns,
     recordingPrf,
     samples,

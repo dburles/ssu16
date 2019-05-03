@@ -47,6 +47,8 @@ export const initialState = {
   swing: 0,
   mode: 'seq',
   patternChain: [0],
+  // For building a pattern chain prior to confirming.
+  patternChainPending: [],
   chaining: false,
   recordingPrf: false,
   recordingAudio: false,
@@ -265,9 +267,10 @@ export function reducer(state = initialState, action) {
         ...state,
         activePattern: action.padId,
         patternChainPlaybackPos: 0,
-        patternChain: state.chaining
-          ? [...state.patternChain, action.padId]
-          : [action.padId],
+        patternChainPending: state.chaining
+          ? [...state.patternChainPending, action.padId]
+          : [],
+        patternChain: state.chaining ? state.patternChain : [action.padId],
       };
     case 'add-sound':
       return {
@@ -485,10 +488,21 @@ export function reducer(state = initialState, action) {
         latencyHint: state.latencyHint === 'fastest' ? 'playback' : 'fastest',
       };
     case 'pattern-chaining-toggle':
-      return {
-        ...state,
-        chaining: !state.chaining,
-      };
+      if (state.chaining) {
+        return {
+          ...state,
+          chaining: false,
+          patternChain: state.patternChainPending.length
+            ? state.patternChainPending
+            : state.patternChain,
+        };
+      } else {
+        return {
+          ...state,
+          chaining: true,
+          patternChainPending: [],
+        };
+      }
     default:
       return state;
   }
