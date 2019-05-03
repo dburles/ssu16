@@ -1,14 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PatternParameters from './PatternParameters.container';
 
-const ContextParametersContainer = ({ state, dispatch }) => {
+const ContextParametersContainer = ({ mode }) => {
   const componentMap = {
     prf: null,
     seq: null,
-    pat: <PatternParameters state={state} dispatch={dispatch} />,
+    pat: <PatternParameters />,
   };
 
-  return componentMap[state.mode];
+  return componentMap[mode];
 };
 
-export default ContextParametersContainer;
+export default connect(({ mode }) => ({ mode }))(ContextParametersContainer);

@@ -12,10 +12,22 @@ import SampleParameters from './SampleParameters.container';
 import SoundPool from './SoundPool.container';
 import Transport from './Transport.container';
 
-const App = ({ state, dispatch }) => {
+const App = ({
+  activePattern,
+  bpm,
+  dispatch,
+  help,
+  metronome,
+  patternChain,
+  patternChainPlaybackPos,
+  patterns,
+  playing,
+  samples,
+  swing,
+}) => {
   const initialMountRef = useRef(true);
 
-  const hasSamples = state.samples.length > 0;
+  const hasSamples = samples.length > 0;
 
   useEffect(() => {
     loadInitialSamples();
@@ -23,7 +35,7 @@ const App = ({ state, dispatch }) => {
 
   useEffect(() => {
     if (!initialMountRef.current && hasSamples) {
-      if (state.playing) {
+      if (playing) {
         start();
       } else {
         stop();
@@ -31,46 +43,44 @@ const App = ({ state, dispatch }) => {
     }
 
     initialMountRef.current = false;
-  }, [hasSamples, state.playing]);
+  }, [hasSamples, playing]);
 
   useEffect(() => {
     // https://tonejs.github.io/docs/r13/Context#latencyhint
-    // Tone.context.latencyHint = state.playing ? 'interactive' : 'fastest';
+    // Tone.context.latencyHint = playing ? 'interactive' : 'fastest';
     Tone.context.latencyHint = 'fastest';
   }, []);
 
   useEffect(() => {
-    Tone.Transport.swing = state.swing / 100;
-    Tone.Transport.bpm.value = state.bpm;
+    Tone.Transport.swing = swing / 100;
+    Tone.Transport.bpm.value = bpm;
     bpmTap.reset();
-  }, [state.bpm, state.swing]);
+  }, [bpm, swing]);
 
   // Sync with mutableState.
   // It's important that they are each self-contained,
   // otherwise re-assigning unchanged values can cause funkyness.
   useEffect(() => {
-    mutableState.patterns = state.patterns;
-  }, [state.patterns]);
+    mutableState.patterns = patterns;
+  }, [patterns]);
   useEffect(() => {
-    mutableState.patternChain = state.patternChain;
-  }, [state.patternChain]);
+    mutableState.patternChain = patternChain;
+  }, [patternChain]);
   useEffect(() => {
-    mutableState.metronome = state.metronome;
-  }, [state.metronome]);
+    mutableState.metronome = metronome;
+  }, [metronome]);
   useEffect(() => {
-    mutableState.patternChainPlaybackPos = state.patternChainPlaybackPos;
-  }, [state.patternChainPlaybackPos]);
+    mutableState.patternChainPlaybackPos = patternChainPlaybackPos;
+  }, [patternChainPlaybackPos]);
   useEffect(() => {
-    mutableState.activePattern = state.activePattern;
-  }, [state.activePattern]);
+    mutableState.activePattern = activePattern;
+  }, [activePattern]);
 
   return (
     <Flex m={1} justifyContent="center">
       <Flex flexDirection="column">
         <Box>
           <Transport
-            state={state}
-            dispatch={dispatch}
             togglePlay={() => {
               dispatch({ type: 'play-toggle' });
             }}
@@ -78,28 +88,48 @@ const App = ({ state, dispatch }) => {
         </Box>
 
         <Flex style={{ height: '550px' }}>
-          <SoundPool state={state} dispatch={dispatch} />
+          <SoundPool />
 
-          <SampleParameters
-            state={state}
-            dispatch={dispatch}
-            disabled={!hasSamples}
-          />
+          <SampleParameters disabled={!hasSamples} />
 
           <Pads
-            state={state}
-            dispatch={dispatch}
             onLiveRecord={() => {
               mutableState.liveRecordTime = mutableState.currentTick;
             }}
           />
-          <ContextParameters state={state} dispatch={dispatch} />
+          <ContextParameters />
         </Flex>
 
-        {state.help && <Help />}
+        {help && <Help />}
       </Flex>
     </Flex>
   );
 };
 
-export default connect(state => ({ state }))(App);
+export default connect(
+  ({
+    activePattern,
+    bpm,
+    dispatch,
+    help,
+    metronome,
+    patternChain,
+    patternChainPlaybackPos,
+    patterns,
+    playing,
+    samples,
+    swing,
+  }) => ({
+    activePattern,
+    bpm,
+    dispatch,
+    help,
+    metronome,
+    patternChain,
+    patternChainPlaybackPos,
+    patterns,
+    playing,
+    samples,
+    swing,
+  }),
+)(App);

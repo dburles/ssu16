@@ -1,10 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PatternParameters from './PatternParameters';
 
-const PatternParametersContainer = ({ dispatch, state }) => {
+const PatternParametersContainer = ({ copyingPattern, dispatch }) => {
   return (
     <PatternParameters
-      copying={state.copyingPattern}
+      copying={copyingPattern}
       toggleCopy={() => {
         dispatch({ type: 'copy-pattern-toggle' });
       }}
@@ -12,4 +13,6 @@ const PatternParametersContainer = ({ dispatch, state }) => {
   );
 };
 
-export default PatternParametersContainer;
+export default connect(({ copyingPattern }) => ({ copyingPattern }))(
+  PatternParametersContainer,
+);

@@ -1,9 +1,15 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import { connect } from 'react-redux';
 import { createSound } from '../lib/sound';
 import SoundPool from './SoundPool';
 
-const SoundPoolContainer = ({ dispatch, state }) => {
+const SoundPoolContainer = ({
+  activeSampleId,
+  dispatch,
+  samples,
+  soundPoolMuted,
+}) => {
   return (
     <>
       <KeyboardEventHandler
@@ -11,13 +17,13 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         onKeyEvent={(key, event) => {
           event.preventDefault();
 
-          const activeSoundIndex = state.samples.findIndex(
-            sample => sample.id === state.activeSampleId,
+          const activeSoundIndex = samples.findIndex(
+            sample => sample.id === activeSampleId,
           );
 
           if (
             (key === 'up' && activeSoundIndex === 0) ||
-            (key === 'down' && activeSoundIndex + 1 === state.samples.length)
+            (key === 'down' && activeSoundIndex + 1 === samples.length)
           ) {
             return;
           }
@@ -25,37 +31,35 @@ const SoundPoolContainer = ({ dispatch, state }) => {
           const index =
             key === 'up' ? activeSoundIndex - 1 : activeSoundIndex + 1;
 
-          if (!state.soundPoolMuted) {
-            const activeSound = state.samples.find(
-              sample => sample.id === state.activeSampleId,
+          if (!soundPoolMuted) {
+            const activeSound = samples.find(
+              sample => sample.id === activeSampleId,
             );
             activeSound.sample.stop();
-            state.samples[index].sample.start();
+            samples[index].sample.start();
           }
 
           dispatch({
             type: 'active-sample',
-            sampleId: state.samples[index].id,
+            sampleId: samples[index].id,
           });
         }}
       />
       <SoundPool
-        activeSampleId={state.activeSampleId}
+        activeSampleId={activeSampleId}
         onSoundPress={sampleId => {
-          if (!state.soundPoolMuted) {
-            const activeSound = state.samples.find(
-              sample => sample.id === state.activeSampleId,
+          if (!soundPoolMuted) {
+            const activeSound = samples.find(
+              sample => sample.id === activeSampleId,
             );
-            const pressedSound = state.samples.find(
-              sample => sample.id === sampleId,
-            );
+            const pressedSound = samples.find(sample => sample.id === sampleId);
 
             activeSound.sample.stop();
             pressedSound.sample.start();
           }
           dispatch({ type: 'active-sample', sampleId });
         }}
-        samples={state.samples}
+        samples={samples}
         onAddSamples={event => {
           Array.from(event.target.files).forEach(async file => {
             const sound = createSound();
@@ -88,10 +92,17 @@ const SoundPoolContainer = ({ dispatch, state }) => {
         onMute={() => {
           dispatch({ type: 'soundpool-mute-toggle' });
         }}
-        muted={state.soundPoolMuted}
+        muted={soundPoolMuted}
       />
     </>
   );
 };
 
-export default SoundPoolContainer;
+export default connect(
+  ({ activeSampleId, dispatch, samples, soundPoolMuted }) => ({
+    activeSampleId,
+    dispatch,
+    samples,
+    soundPoolMuted,
+  }),
+)(SoundPoolContainer);

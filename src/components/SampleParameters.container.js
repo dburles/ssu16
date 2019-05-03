@@ -1,7 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import SampleParameters from './SampleParameters';
 
-const SampleParametersContainer = ({ state, dispatch, disabled }) => {
+const SampleParametersContainer = ({
+  samples,
+  activeSampleId,
+  dispatch,
+  disabled,
+}) => {
   const {
     volume,
     start,
@@ -12,7 +18,7 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
     filterFreq,
     reverbWet,
     pitch,
-  } = state.samples.find(sound => sound.id === state.activeSampleId) || {};
+  } = samples.find(sound => sound.id === activeSampleId) || {};
 
   return (
     <SampleParameters
@@ -64,4 +70,7 @@ const SampleParametersContainer = ({ state, dispatch, disabled }) => {
   );
 };
 
-export default SampleParametersContainer;
+export default connect(({ samples, activeSampleId }) => ({
+  samples,
+  activeSampleId,
+}))(SampleParametersContainer);

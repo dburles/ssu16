@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import { connect } from 'react-redux';
 import { createSound } from '../lib/sound';
 import Transport from './Transport';
 
@@ -8,7 +9,19 @@ const modeKeyMap = {
   '.': 'pat',
 };
 
-const TransportContainer = ({ state, dispatch }) => {
+const TransportContainer = ({
+  activePattern,
+  bpm,
+  dispatch,
+  help,
+  metronome,
+  mode,
+  playing,
+  recordAudioWhileHeld,
+  recordingAudio,
+  recordingPrf,
+  swing,
+}) => {
   const mediaRecorderRef = useRef(null);
   const chunksRef = useRef([]);
 
@@ -18,10 +31,10 @@ const TransportContainer = ({ state, dispatch }) => {
 
   useEffect(() => {
     if (mediaRecorderRef.current) {
-      const method = state.recordingAudio ? 'start' : 'stop';
+      const method = recordingAudio ? 'start' : 'stop';
       mediaRecorderRef.current[method]();
     }
-  }, [state.recordingAudio]);
+  }, [recordingAudio]);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -94,15 +107,15 @@ const TransportContainer = ({ state, dispatch }) => {
         }}
       />
       <Transport
-        pattern={state.activePattern}
+        pattern={activePattern}
         onChangeMode={mode => {
           dispatch({ type: 'mode', mode });
         }}
-        mode={state.mode}
-        bpm={state.bpm}
-        playing={state.playing}
-        recordingPrf={state.recordingPrf}
-        recordingAudio={state.recordingAudio}
+        mode={mode}
+        bpm={bpm}
+        playing={playing}
+        recordingPrf={recordingPrf}
+        recordingAudio={recordingAudio}
         onTogglePlay={() => {
           togglePlay();
         }}
@@ -121,16 +134,16 @@ const TransportContainer = ({ state, dispatch }) => {
         onToggleAudioRecordMode={() => {
           dispatch({ type: 'audio-record-mode' });
         }}
-        recordAudioWhileHeld={state.recordAudioWhileHeld}
-        swing={state.swing}
-        metronome={state.metronome}
+        recordAudioWhileHeld={recordAudioWhileHeld}
+        swing={swing}
+        metronome={metronome}
         onToggleMetronome={() => {
           dispatch({ type: 'metronome-toggle' });
         }}
         onToggleHelp={() => {
           dispatch({ type: 'help-toggle' });
         }}
-        help={state.help}
+        help={help}
         onTap={() => {
           dispatch({ type: 'bpm-tap' });
         }}
@@ -139,4 +152,30 @@ const TransportContainer = ({ state, dispatch }) => {
   );
 };
 
-export default TransportContainer;
+export default connect(
+  ({
+    activePattern,
+    bpm,
+    dispatch,
+    help,
+    metronome,
+    mode,
+    playing,
+    recordAudioWhileHeld,
+    recordingAudio,
+    recordingPrf,
+    swing,
+  }) => ({
+    activePattern,
+    bpm,
+    dispatch,
+    help,
+    metronome,
+    mode,
+    playing,
+    recordAudioWhileHeld,
+    recordingAudio,
+    recordingPrf,
+    swing,
+  }),
+)(TransportContainer);

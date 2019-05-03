@@ -1,9 +1,9 @@
 import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import { connect } from 'react-redux';
 import { calcStartOffset, calcDuration } from '../lib/conversion';
 import { generateChromaticMap } from '../lib/pitch';
 import Pads from './Pads';
-
 // prettier-ignore
 const keyMapSeq = {
   'shift+1': 0 , 'shift+2': 1 , 'shift+3': 2 , 'shift+4': 3,
@@ -19,10 +19,23 @@ const keyMap = {
   'z': 12, 'x': 13, 'c': 14, 'v': 15,
 };
 
-const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
+const PadsContainer = ({
+  activePattern,
+  activeSampleId,
+  activeStep,
+  copiedPatterns,
+  copyingPattern,
+  dispatch,
+  mode,
+  onLiveRecord,
+  patternChain,
+  patterns,
+  recordingPrf,
+  samples,
+}) => {
   function perform(padId) {
-    const { sample, start, duration, pitch } = state.samples.find(
-      sound => sound.id === state.activeSampleId,
+    const { sample, start, duration, pitch } = samples.find(
+      sound => sound.id === activeSampleId,
     );
     const chromaticMap = generateChromaticMap(pitch);
     const playbackRate = chromaticMap[padId];
@@ -36,7 +49,7 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
       type: 'playback-rate',
       lastPlayedPlaybackRate: playbackRate,
     });
-    if (state.recordingPrf) {
+    if (recordingPrf) {
       onLiveRecord();
     }
   }
@@ -44,7 +57,7 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
     dispatch({ type: 'toggle-step', padId });
   }
   function pattern(padId) {
-    if (state.copyingPattern) {
+    if (copyingPattern) {
       return dispatch({ type: 'copy-pattern-to', padId });
     }
     return dispatch({ type: 'pattern-select', padId });
@@ -55,7 +68,7 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
     pat: pattern,
   };
   function press(padId) {
-    modeFuncMap[state.mode](padId);
+    modeFuncMap[mode](padId);
   }
   const modeFuncMapKeys = {
     prf: perform,
@@ -63,32 +76,32 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
     pat: pattern,
   };
   function keyPress(padId) {
-    modeFuncMapKeys[state.mode](padId);
+    modeFuncMapKeys[mode](padId);
   }
 
   function litPads() {
-    if (state.mode === 'seq' || state.mode === 'prf') {
-      return state.patterns[state.activePattern]
+    if (mode === 'seq' || mode === 'prf') {
+      return patterns[activePattern]
         .map((step, n) => {
-          return step.some(sample => sample.id === state.activeSampleId)
+          return step.some(sample => sample.id === activeSampleId)
             ? n
             : undefined;
         })
         .filter(value => value !== undefined);
     }
-    if (state.mode === 'pat') {
-      if (state.copyingPattern) {
-        return [state.activePattern, ...state.copiedPatterns];
+    if (mode === 'pat') {
+      if (copyingPattern) {
+        return [activePattern, ...copiedPatterns];
       }
-      return state.patternChain;
+      return patternChain;
     }
     return [];
   }
 
   function litIndicators() {
-    if (state.mode === 'pat') {
+    if (mode === 'pat') {
       // Displays lit indicators that contain any active steps
-      return state.patterns
+      return patterns
         .map((pattern, patternIndex) => {
           return pattern.reduce((acc, step) => {
             return acc + step.length;
@@ -98,12 +111,12 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
         })
         .filter(active => active !== undefined);
     }
-    return [state.activeStep];
+    return [activeStep];
   }
 
   function flashingIndicators() {
-    if (state.mode === 'pat' && state.copyingPattern) {
-      return [state.activePattern];
+    if (mode === 'pat' && copyingPattern) {
+      return [activePattern];
     }
     return [];
   }
@@ -134,4 +147,30 @@ const PadsContainer = ({ state, dispatch, onLiveRecord }) => {
   );
 };
 
-export default PadsContainer;
+export default connect(
+  ({
+    activePattern,
+    activeSampleId,
+    activeStep,
+    copiedPatterns,
+    copyingPattern,
+    dispatch,
+    mode,
+    patternChain,
+    patterns,
+    recordingPrf,
+    samples,
+  }) => ({
+    activePattern,
+    activeSampleId,
+    activeStep,
+    copiedPatterns,
+    copyingPattern,
+    dispatch,
+    mode,
+    patternChain,
+    patterns,
+    recordingPrf,
+    samples,
+  }),
+)(PadsContainer);
