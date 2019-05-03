@@ -2,6 +2,7 @@ import React from 'react';
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import { connect } from 'react-redux';
 import { createSound } from '../lib/sound';
+import { alphabeticSort } from '../lib/utils';
 import SoundPool from './SoundPool';
 
 const SoundPoolContainer = ({
@@ -102,7 +103,7 @@ export default connect(
   ({ activeSampleId, dispatch, samples, soundPoolMuted }) => ({
     activeSampleId,
     dispatch,
-    samples,
+    samples: [...samples].sort((a, b) => alphabeticSort(a.name, b.name)),
     soundPoolMuted,
   }),
 )(SoundPoolContainer);

@@ -43,7 +43,7 @@ export const initialState = {
   activePattern: 0,
   activeSampleId: 0,
   lastPlayedPlaybackRate: 1,
-  bpm: 120,
+  bpm: 90,
   swing: 0,
   mode: 'seq',
   patternChain: [0],

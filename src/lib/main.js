@@ -1,54 +1,30 @@
 import Tone from 'tone';
-import Rhodes from '../samples/chord.wav';
+import bass from '../samples/lofi-hiphop/bass.wav';
+import cello from '../samples/lofi-hiphop/cello.wav';
+import rhodes from '../samples/lofi-hiphop/chord.wav';
+import fx from '../samples/lofi-hiphop/fx.wav';
+import hat1 from '../samples/lofi-hiphop/hat1.wav';
+import hat2 from '../samples/lofi-hiphop/hat2.wav';
+import hat3 from '../samples/lofi-hiphop/hat3.wav';
+import hat4 from '../samples/lofi-hiphop/hat4.wav';
+import insert from '../samples/lofi-hiphop/insert.wav';
+import kayageum from '../samples/lofi-hiphop/kayageum.wav';
+import kick1 from '../samples/lofi-hiphop/kick1.wav';
+import kick2 from '../samples/lofi-hiphop/kick2.wav';
+import kick3 from '../samples/lofi-hiphop/kick3.wav';
+import kick4 from '../samples/lofi-hiphop/kick4.wav';
+import paah from '../samples/lofi-hiphop/paah.wav';
+import snare1 from '../samples/lofi-hiphop/snare1.wav';
+import snare2 from '../samples/lofi-hiphop/snare2.wav';
+import snare3 from '../samples/lofi-hiphop/snare3.wav';
+import snare4 from '../samples/lofi-hiphop/snare4.wav';
+import yo from '../samples/lofi-hiphop/yo.wav';
 import Metronome from '../samples/Metronome.flac';
-import Piano from '../samples/pianoc3.wav';
-import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
-import BassDrum2 from '../samples/Roland_TR-707/BassDrum2.wav';
-import CowBell from '../samples/Roland_TR-707/CowBell.wav';
-import Crash from '../samples/Roland_TR-707/Crash.wav';
-import HandClap from '../samples/Roland_TR-707/HandClap.wav';
-import HhC from '../samples/Roland_TR-707/HhC.wav';
-import HhO from '../samples/Roland_TR-707/HhO.wav';
-import HiTom from '../samples/Roland_TR-707/HiTom.wav';
-import LowTom from '../samples/Roland_TR-707/LowTom.wav';
-import MedTom from '../samples/Roland_TR-707/MedTom.wav';
-import Ride from '../samples/Roland_TR-707/Ride.wav';
-import RimShot from '../samples/Roland_TR-707/RimShot.wav';
-import Snare1 from '../samples/Roland_TR-707/Snare1.wav';
-import Snare2 from '../samples/Roland_TR-707/Snare2.wav';
-import Tamb from '../samples/Roland_TR-707/Tamb.wav';
 import bpmTap from './bpm';
 import { calcStartOffset, calcDuration, volumeToDb } from './conversion';
 import { createSound } from './sound';
 import { mutableState } from './state';
 import store from './store';
-// import BDHEAVY from '../samples/RX11/BD HEAVY.wav';
-// import BDMD1 from '../samples/RX11/BD MD 1.wav';
-// import BDMD2 from '../samples/RX11/BD MD 2.wav';
-// import CLAPS1 from '../samples/RX11/CLAPS 1.wav';
-// import CLAPS2 from '../samples/RX11/CLAPS 2.wav';
-// import COWBELL1 from '../samples/RX11/COWBELL 1.wav';
-// import COWBELL2 from '../samples/RX11/COWBELL 2.wav';
-// import HHCLOSED1 from '../samples/RX11/HH CLOSED 1.wav';
-// import HHCLOSED2 from '../samples/RX11/HH CLOSED 2.wav';
-// import HHCLOSEDPEDAL from '../samples/RX11/HH CLOSED PEDAL.wav';
-// import HHOPEN1 from '../samples/RX11/HH OPEN 1.wav';
-// import HHOPEN2 from '../samples/RX11/HH OPEN 2.wav';
-// import RIMSHOT1 from '../samples/RX11/RIMSHOT 1.wav';
-// import RIMSHOT2 from '../samples/RX11/RIMSHOT 2.wav';
-// import SDHEAVY from '../samples/RX11/SD HEAVY.wav';
-// import SDHITUNE1 from '../samples/RX11/SD HI TUNE 1.wav';
-// import SDHITUNE2 from '../samples/RX11/SD HI TUNE 2.wav';
-// import SDHITUNE3 from '../samples/RX11/SD HI TUNE 3.wav';
-// import SDHITUNE4 from '../samples/RX11/SD HI TUNE 4.wav';
-// import SDHITUNE5 from '../samples/RX11/SD HI TUNE 5.wav';
-// import SDLIGHT from '../samples/RX11/SD LIGHT.wav';
-// import SDMEDIUM from '../samples/RX11/SD MEDIUM.wav';
-// import SHAKER from '../samples/RX11/SHAKER.wav';
-// import TOM1 from '../samples/RX11/TOM 1.wav';
-// import TOM2 from '../samples/RX11/TOM 2.wav';
-// import TOM3 from '../samples/RX11/TOM 3.wav';
-// import TOM4 from '../samples/RX11/TOM 4.wav';
 
 // Some overall compression to keep the levels in check
 // const masterCompressor = new Tone.Compressor({
@@ -61,51 +37,26 @@ import store from './store';
 
 export function loadInitialSamples() {
   return [
-    { buffer: BassDrum1, name: 'BassDrum1.wav' },
-    { buffer: BassDrum2, name: 'BassDrum2.wav' },
-    { buffer: CowBell, name: 'CowBell.wav' },
-    { buffer: Crash, name: 'Crash.wav' },
-    { buffer: HandClap, name: 'HandClap.wav' },
-    { buffer: HhC, name: 'HhC.wav' },
-    { buffer: HhO, name: 'HhO.wav' },
-    { buffer: HiTom, name: 'HiTom.wav' },
-    { buffer: LowTom, name: 'LowTom.wav' },
-    { buffer: MedTom, name: 'MedTom.wav' },
-    { buffer: Ride, name: 'Ride.wav' },
-    { buffer: RimShot, name: 'RimShot.wav' },
-    { buffer: Snare1, name: 'Snare1.wav' },
-    { buffer: Snare2, name: 'Snare2.wav' },
-    { buffer: Tamb, name: 'Tamb.wav' },
-    { buffer: Piano, name: 'Piano.wav' },
-    { buffer: Rhodes, name: 'Rhodes.wav' },
-    // { buffer: Snare2, name: 'Snare2.wav' },
-    // { buffer: BDHEAVY, name: 'BD HEAVY.wav' },
-    // { buffer: BDMD1, name: 'BD MD 1.wav' },
-    // { buffer: BDMD2, name: 'BD MD 2.wav' },
-    // { buffer: CLAPS1, name: 'CLAPS 1.wav' },
-    // { buffer: CLAPS2, name: 'CLAPS 2.wav' },
-    // { buffer: COWBELL1, name: 'COWBELL 1.wav' },
-    // { buffer: COWBELL2, name: 'COWBELL 2.wav' },
-    // { buffer: HHCLOSED1, name: 'HH CLOSED 1.wav' },
-    // { buffer: HHCLOSED2, name: 'HH CLOSED 2.wav' },
-    // { buffer: HHCLOSEDPEDAL, name: 'HH CLOSED PEDAL.wav' },
-    // { buffer: HHOPEN1, name: 'HH OPEN 1.wav' },
-    // { buffer: HHOPEN2, name: 'HH OPEN 2.wav' },
-    // { buffer: RIMSHOT1, name: 'RIMSHOT 1.wav' },
-    // { buffer: RIMSHOT2, name: 'RIMSHOT 2.wav' },
-    // { buffer: SDHEAVY, name: 'SD HEAVY.wav' },
-    // { buffer: SDHITUNE1, name: 'SD HI TUNE 1.wav' },
-    // { buffer: SDHITUNE2, name: 'SD HI TUNE 2.wav' },
-    // { buffer: SDHITUNE3, name: 'SD HI TUNE 3.wav' },
-    // { buffer: SDHITUNE4, name: 'SD HI TUNE 4.wav' },
-    // { buffer: SDHITUNE5, name: 'SD HI TUNE 5.wav' },
-    // { buffer: SDLIGHT, name: 'SD LIGHT.wav' },
-    // { buffer: SDMEDIUM, name: 'SD MEDIUM.wav' },
-    // { buffer: SHAKER, name: 'SHAKER.wav' },
-    // { buffer: TOM1, name: 'TOM 1.wav' },
-    // { buffer: TOM2, name: 'TOM 2.wav' },
-    // { buffer: TOM3, name: 'TOM 3.wav' },
-    // { buffer: TOM4, name: 'TOM 4.wav' },
+    { buffer: bass, name: 'bass' },
+    { buffer: rhodes, name: 'chord' },
+    { buffer: fx, name: 'fx' },
+    { buffer: hat1, name: 'hat1' },
+    { buffer: hat2, name: 'hat2' },
+    { buffer: hat3, name: 'hat3' },
+    { buffer: hat4, name: 'hat4' },
+    { buffer: kick1, name: 'kick1' },
+    { buffer: kick2, name: 'kick2' },
+    { buffer: kick3, name: 'kick3' },
+    { buffer: kick4, name: 'kick4' },
+    { buffer: snare1, name: 'snare1' },
+    { buffer: snare2, name: 'snare2' },
+    { buffer: snare3, name: 'snare3' },
+    { buffer: snare4, name: 'snare4' },
+    { buffer: cello, name: 'cello' },
+    { buffer: kayageum, name: 'kayageum' },
+    { buffer: insert, name: 'insert' },
+    { buffer: paah, name: 'paah' },
+    { buffer: yo, name: 'yo' },
   ].forEach(async ({ buffer, name }) => {
     const sound = createSound();
     await sound.player.load(buffer);
