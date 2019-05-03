@@ -1,4 +1,5 @@
 import Tone from 'tone';
+import Rhodes from '../samples/chord.wav';
 import Metronome from '../samples/Metronome.flac';
 import Piano from '../samples/pianoc3.wav';
 import BassDrum1 from '../samples/Roland_TR-707/BassDrum1.wav';
@@ -76,6 +77,7 @@ export function loadInitialSamples() {
     { buffer: Snare2, name: 'Snare2.wav' },
     { buffer: Tamb, name: 'Tamb.wav' },
     { buffer: Piano, name: 'Piano.wav' },
+    { buffer: Rhodes, name: 'Rhodes.wav' },
     // { buffer: Snare2, name: 'Snare2.wav' },
     // { buffer: BDHEAVY, name: 'BD HEAVY.wav' },
     // { buffer: BDMD1, name: 'BD MD 1.wav' },
