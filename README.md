@@ -1,31 +1,47 @@
-# parcel-react-base
+# Sound Sequencing Unit 16
 
-An opinionated starter with the very latest Eslint and React configuration.
+SSU16 or Sound Sequencing Unit 16. A sequencer/sampler for the browser. https://ssu16.netlify.com/. Tested primarily on Chrome.
 
-https://github.com/dburles/parcel-react-base
+![Screenshot](https://github.com/dburles/ssu16/blob/master/screenshot.png)
 
 ## Features
 
-* [Parcel](https://parceljs.org/) 📦
-* [Reach Router](https://reach.tech/router) ⛓
-* [Styled Components](https://www.styled-components.com/) 💅
-* [Styled System](https://jxnblk.com/styled-system/) ⬢
-* [Rebass](https://rebassjs.org/) ⚛️
-* [eslint-plugin-import-order-alphabetical](https://github.com/janpaul123/eslint-plugin-import-order-alphabetical) ⚙️
-* [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks) 
-* React fragment [short syntax](https://reactjs.org/docs/fragments.html#short-syntax) support `<>...</>`
-* [browserslist](https://github.com/browserslist/browserslist) configuration 📝
-* Ensure nothing terrible ends up in your code with pre-commit linting via [lint-staged](https://github.com/okonet/lint-staged) and [husky](https://github.com/typicode/husky) 🚫💩
+* Step sequencing
+* Live recording
+* 16 Patterns
+* Pattern chaining
+* Pattern copy
+* Sample import
+* Parameter locking
+* Parameters: Volume, Pan, Pitch, Offset, Start, Length, Filter, and Reverb
+* Tap BPM
+* Swing
+* Metronome
+* Keyboard shortcuts
 
-## Setup
+## Technology
+
+* Tonejs
+* Parcel
+* React
+* Redux
+* styled-components
+* styled-system
+* Rebass
+* Storybook
+* Feather icons
+
+## Development
 
 `npm i`
 
 `npm start` (development)
 
-## Recommended
+## Build
 
-Enable Eslint `--fix` on save in your editor.
+`npm i`
+
+`npm run build`
 
 ### License
 MIT
