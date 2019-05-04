@@ -8,6 +8,7 @@ SSU16 or Sound Sequencing Unit 16. A sequencer/sampler for the browser. https://
 
 * Step sequencing
 * Live recording
+* Sampling
 * 16 Patterns
 * Pattern chaining
 * Pattern copy
