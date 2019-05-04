@@ -1,4 +1,4 @@
-# Sound Sequencing Unit 16
+# SSU16: Sound Sequencing Unit
 
 SSU16 or Sound Sequencing Unit 16. A sequencer/sampler for the browser. https://ssu16.netlify.com/. 
 
