@@ -34,13 +34,17 @@ Tested primarily on Chrome.
 * Storybook
 * Feather icons
 
-## Development
+## Todo
+
+Documentation
+
+### Development
 
 `npm i`
 
 `npm start` (development)
 
-## Build
+### Build
 
 `npm i`
 
