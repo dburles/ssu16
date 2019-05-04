@@ -1,8 +1,10 @@
 # Sound Sequencing Unit 16
 
-SSU16 or Sound Sequencing Unit 16. A sequencer/sampler for the browser. https://ssu16.netlify.com/. Tested primarily on Chrome.
+SSU16 or Sound Sequencing Unit 16. A sequencer/sampler for the browser. https://ssu16.netlify.com/. 
 
-![Screenshot](https://github.com/dburles/ssu16/blob/master/screenshot.png)
+Tested primarily on Chrome.
+
+![Screenshot](https://github.com/dburles/ssu16/blob/master/screenshot2.png)
 
 ## Features
 
