@@ -36,7 +36,7 @@ import store from './store';
 // Tone.Master.chain(masterCompressor);
 
 export function loadInitialSamples() {
-  return [
+  const samples = [
     { buffer: bass, name: 'bass' },
     { buffer: rhodes, name: 'chord' },
     { buffer: fx, name: 'fx' },
@@ -57,10 +57,23 @@ export function loadInitialSamples() {
     { buffer: insert, name: 'insert' },
     { buffer: paah, name: 'paah' },
     { buffer: yo, name: 'yo' },
-  ].forEach(async ({ buffer, name }) => {
+  ].map(({ buffer, name }) => {
     const sound = createSound();
-    await sound.player.load(buffer);
-    store.dispatch({ type: 'add-sound', sound, name });
+    return new Promise(resolve =>
+      sound.player.load(buffer).then(() =>
+        resolve({
+          name,
+          sound,
+        }),
+      ),
+    );
+  });
+
+  // Load buffers in parallel.
+  Promise.all(samples).then(loadedSamples => {
+    loadedSamples.forEach(({ name, sound }) =>
+      store.dispatch({ type: 'add-sound', name, sound }),
+    );
   });
 }
 
