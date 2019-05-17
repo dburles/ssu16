@@ -144,7 +144,7 @@ const SampleParameters = props => {
             onChange={props.onChangeFilterFreq}
           />
         </Control>
-
+        {/*
         <Control>
           <TitleSecondary>Reverb</TitleSecondary>
           <Knob
@@ -156,6 +156,7 @@ const SampleParameters = props => {
             onChange={props.onChangeReverbWet}
           />
         </Control>
+        */}
       </Flex>
 
       <Box flex={1} />

@@ -58,7 +58,7 @@ export function createSound(buffer) {
   const panner = createPanner();
   const reverb = createReverb();
 
-  player.chain(panner, filter, reverb, Tone.Master);
+  player.chain(panner, filter, Tone.Master);
 
   return { player, filter, panner, reverb };
 }
