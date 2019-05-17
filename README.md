@@ -4,7 +4,7 @@ SSU16 or Sound Sequencing Unit 16. A sequencer/sampler for the browser. https://
 
 Tested primarily on Chrome.
 
-![Screenshot](https://github.com/dburles/ssu16/blob/master/screenshot2.png)
+![Screenshot](https://github.com/dburles/ssu16/blob/master/screenshot3.png)
 
 ## Features
 
@@ -16,7 +16,7 @@ Tested primarily on Chrome.
 * Pattern copy
 * Sample import
 * Parameter locking
-* Parameters: Volume, Pan, Pitch, Offset, Start, Length, Filter, and Reverb
+* Parameters: Volume, Pan, Pitch, Offset, Start, Length and Filter
 * Tap BPM
 * Swing
 * Metronome
