@@ -7,6 +7,7 @@ import App from './components/App';
 import GlobalStyle from './components/GlobalStyle';
 import store from './lib/store';
 import theme from './theme';
+import './load-knobs';
 
 render(
   <ThemeProvider theme={theme}>

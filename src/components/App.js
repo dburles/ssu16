@@ -88,7 +88,7 @@ const App = ({
           />
         </Box>
 
-        <Flex style={{ height: '550px' }}>
+        <Flex>
           <SoundPool />
 
           <SampleParameters disabled={!hasSamples} />
