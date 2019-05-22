@@ -91,7 +91,7 @@ const App = ({
         <Flex>
           <SoundPool />
 
-          <SampleParameters disabled={!hasSamples} />
+          {hasSamples && <SampleParameters />}
 
           <Pads
             onLiveRecord={() => {

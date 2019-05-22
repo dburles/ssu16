@@ -24,8 +24,6 @@ Control.defaultProps = {
 };
 
 const SampleParametersContainer = styled(Container)`
-  transition: opacity 2s ease;
-  opacity: ${props => (props.disabled ? '0.5' : '1')};
   width: 150px;
 `;
 
