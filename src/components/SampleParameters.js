@@ -127,7 +127,6 @@ const SampleParameters = props => {
             step={1}
             value={props.duration}
             onChange={props.onChangeDuration}
-            style={{ direction: 'rtl' }}
           />
         </Control>
 

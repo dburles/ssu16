@@ -14,7 +14,7 @@ export function createSoundPoolInstance(sound, name, id) {
     start: 0,
     offset: 0,
     // A division of 16th's, 0-16. 0 represents no limit.
-    duration: 0,
+    duration: 16,
     // Are the sample parameters locked?
     locked: false,
     panner: sound.panner,

@@ -155,7 +155,7 @@ const mainLoop = new Tone.Sequence(
         sample.start(
           time + offset / 1000,
           calcStartOffset(start, sample.buffer.length),
-          calcDuration(duration),
+          calcDuration(16 - duration),
         );
         prevSamples[id] = sample;
       },
