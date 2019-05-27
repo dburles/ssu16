@@ -45,7 +45,7 @@ const PadsContainer = ({
     sample.start(
       undefined,
       calcStartOffset(start, sample.buffer.length),
-      calcDuration(duration),
+      calcDuration(16 - duration),
     );
     dispatch({
       type: 'playback-rate',
