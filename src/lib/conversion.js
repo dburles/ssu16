@@ -15,3 +15,7 @@ export function calcDuration(duration) {
 export function volumeToDb(volume) {
   return Tone.gainToDb(Number(volume) / 100);
 }
+
+export function calcFrequency(n, range = 100) {
+  return (range - Math.sqrt(Math.pow(range, 2) - Math.pow(n, 2))) * 200;
+}

@@ -135,7 +135,7 @@ const SampleParameters = props => {
           <Knob
             disabled={props.disabled}
             min={0}
-            max={20000}
+            max={100}
             step={1}
             value={props.filterFreq}
             onChange={props.onChangeFilterFreq}

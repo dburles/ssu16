@@ -1,5 +1,5 @@
 import bpmTap from './bpm';
-import { volumeToDb } from './conversion';
+import { volumeToDb, calcFrequency } from './conversion';
 import { transpose } from './pitch';
 import { createSound, createSoundPoolInstance } from './sound';
 
@@ -434,15 +434,16 @@ export function reducer(state = initialState, action) {
     }
     case 'sound-filter-freq': {
       const filterFreq = Number(action.freq);
+
       return {
         ...state,
         samples: updateActiveSound(sound => {
-          sound.filter.frequency.value = filterFreq;
+          sound.filter.frequency.value = calcFrequency(filterFreq);
           return { filterFreq };
         }),
         ...(!parameterLocked() && {
           patterns: updateActiveSoundInActivePattern(sound => {
-            sound.filter.frequency.value = filterFreq;
+            sound.filter.frequency.value = calcFrequency(filterFreq);
             return { filterFreq };
           }),
         }),
