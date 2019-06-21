@@ -4,6 +4,7 @@ import Trash2 from 'react-feather/dist/icons/trash-2';
 import Unlock from 'react-feather/dist/icons/unlock';
 import { Button, Box, Flex } from 'rebass';
 import styled from 'styled-components';
+import { FILTER_MAX } from '../lib/constants';
 import Container from './Container';
 import Header from './Header';
 import IconButton from './IconButton';
@@ -135,7 +136,7 @@ const SampleParameters = props => {
           <Knob
             disabled={props.disabled}
             min={0}
-            max={100}
+            max={FILTER_MAX}
             step={1}
             value={props.filterFreq}
             onChange={props.onChangeFilterFreq}

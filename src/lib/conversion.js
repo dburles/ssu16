@@ -1,4 +1,5 @@
 import Tone from 'tone';
+import { FILTER_MAX } from './constants';
 
 export function sampleLengthToSeconds(sampleLength, sampleRate = 44.1) {
   return sampleLength / sampleRate / 1000;
@@ -16,6 +17,8 @@ export function volumeToDb(volume) {
   return Tone.gainToDb(Number(volume) / 100);
 }
 
-export function calcFrequency(n, range = 100) {
-  return (range - Math.sqrt(Math.pow(range, 2) - Math.pow(n, 2))) * 200;
+export function calcFrequency(n) {
+  return (
+    (FILTER_MAX - Math.sqrt(Math.pow(FILTER_MAX, 2) - Math.pow(n, 2))) * 200
+  );
 }
