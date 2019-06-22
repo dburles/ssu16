@@ -1,1 +1,1 @@
-export const FILTER_MAX = 100;
+export const FILTER_MAX = 1000;

@@ -19,6 +19,6 @@ export function volumeToDb(volume) {
 
 export function calcFrequency(n) {
   return (
-    (FILTER_MAX - Math.sqrt(Math.pow(FILTER_MAX, 2) - Math.pow(n, 2))) * 200
+    (FILTER_MAX - Math.sqrt(Math.pow(FILTER_MAX, 2) - Math.pow(n, 2))) * 20
   );
 }
